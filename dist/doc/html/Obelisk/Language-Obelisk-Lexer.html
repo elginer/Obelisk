@@ -1,0 +1,340 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>Language.Obelisk.Lexer</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+><SCRIPT TYPE="text/javascript"
+>window.onload = function () {setSynopsis("mini_Language-Obelisk-Lexer.html")};</SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>Obelisk-0.0.1: An simple object oriented language, with a strongly typed form of duck-typing.</TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>Language.Obelisk.Lexer</FONT
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Description</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Perform lexical analysis on Obelisk source
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aobdef"
+>obdef</A
+> ::  LanguageDef st</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aobtok"
+>obtok</A
+> ::  TokenParser st</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Apar_open"
+>par_open</A
+> :: Parser <A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Apar_close"
+>par_close</A
+> :: Parser <A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aob_lex"
+>ob_lex</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Either.html#t%3AEither"
+>Either</A
+> ParseError [<A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+>]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Alex"
+>lex</A
+> :: (<A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+> -&gt; <A HREF="Language-Obelisk-Parser-Monad.html#t%3AParse"
+>Parse</A
+>) -&gt; <A HREF="Language-Obelisk-Parser-Monad.html#t%3AParse"
+>Parse</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Atlex"
+>tlex</A
+> :: Parser <A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Documentation</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:obdef"
+><A NAME="v%3Aobdef"
+></A
+></A
+><B
+>obdef</B
+> ::  LanguageDef st</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Obelisk language definition 
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:obtok"
+><A NAME="v%3Aobtok"
+></A
+></A
+><B
+>obtok</B
+> ::  TokenParser st</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Obelisk token parser
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:par_open"
+><A NAME="v%3Apar_open"
+></A
+></A
+><B
+>par_open</B
+> :: Parser <A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Parse the open parenthesis
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:par_close"
+><A NAME="v%3Apar_close"
+></A
+></A
+><B
+>par_close</B
+> :: Parser <A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Parse the close parenthesis
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:ob_lex"
+><A NAME="v%3Aob_lex"
+></A
+></A
+><B
+>ob_lex</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AFilePath"
+>FilePath</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Either.html#t%3AEither"
+>Either</A
+> ParseError [<A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+>]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Take obelisk source and return a list of tokens or an error.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:lex"
+><A NAME="v%3Alex"
+></A
+></A
+><B
+>lex</B
+> :: (<A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+> -&gt; <A HREF="Language-Obelisk-Parser-Monad.html#t%3AParse"
+>Parse</A
+>) -&gt; <A HREF="Language-Obelisk-Parser-Monad.html#t%3AParse"
+>Parse</A
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Lexical analyzer for parsers generated by Happy
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v:tlex"
+><A NAME="v%3Atlex"
+></A
+></A
+><B
+>tlex</B
+> :: Parser <A HREF="Language-Obelisk-Lexer-Token.html#t%3AToken"
+>Token</A
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Parse a token with parsec
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.4.2</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>

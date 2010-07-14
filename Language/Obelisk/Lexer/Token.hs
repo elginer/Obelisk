@@ -25,4 +25,18 @@ data Token =
      LocalSetter
    | -- The end of file
      TEOF
-   deriving Show
+
+instance Show Token where
+   show t =
+      case t of
+         TInt i -> show i
+         TTrue  -> "true"
+         TFalse -> "false"
+         TDef   -> "def"
+         TParOpen -> "("
+         TParClose -> ")"
+         TVar v    -> v
+         TOp op    -> op
+         TIf       -> "if"
+         LocalSetter -> ":"
+         TEOF        -> "end of file"

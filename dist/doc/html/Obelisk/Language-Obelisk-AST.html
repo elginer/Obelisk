@@ -1,0 +1,599 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>Language.Obelisk.AST</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+><SCRIPT TYPE="text/javascript"
+>window.onload = function () {setSynopsis("mini_Language-Obelisk-AST.html")};</SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>Obelisk-0.0.1: An simple object oriented language, with a strongly typed form of duck-typing.</TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>Language.Obelisk.AST</FONT
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Description</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Abstract syntax tree for Obelisk
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A HREF="#t%3AObelisk"
+>Obelisk</A
+> v m = <A HREF="#v%3AObelisk"
+>Obelisk</A
+> [<A HREF="Language-Obelisk-AST.html#t%3AStmt"
+>Stmt</A
+> v m]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AStmt"
+>Stmt</A
+> v m </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+>= <A HREF="#v%3ADef"
+>Def</A
+> m [v] (<A HREF="Language-Obelisk-AST.html#t%3AReturner"
+>Returner</A
+> v m)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AIf"
+>If</A
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AReturner"
+>Returner</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AReturner"
+>Returner</A
+> v m)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3ASetLocal"
+>SetLocal</A
+> m v (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3ASetGlobal"
+>SetGlobal</A
+> m v (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AStmtExp"
+>StmtExp</A
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AReturner"
+>Returner</A
+> v m = <A HREF="#v%3AReturner"
+>Returner</A
+> m (<A HREF="Language-Obelisk-AST.html#t%3AObelisk"
+>Obelisk</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AExp"
+>Exp</A
+> v m </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+>= <A HREF="#v%3AApply"
+>Apply</A
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m) [<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AInfix"
+>Infix</A
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AOVar"
+>OVar</A
+> m v</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AOInt"
+>OInt</A
+> m <A HREF="/usr/local/share/doc/ghc/libraries/integer/GHC-Integer.html#t%3AInteger"
+>Integer</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AOBool"
+>OBool</A
+> m <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Documentation</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>newtype</SPAN
+>  <A NAME="t:Obelisk"
+><A NAME="t%3AObelisk"
+></A
+></A
+><B
+>Obelisk</B
+> v m </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>The obelisk AST is parametrized over a variable type v, and a metadata type m
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Obelisk"
+><A NAME="v%3AObelisk"
+></A
+></A
+><B
+>Obelisk</B
+> [<A HREF="Language-Obelisk-AST.html#t%3AStmt"
+>Stmt</A
+> v m]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:Stmt"
+><A NAME="t%3AStmt"
+></A
+></A
+><B
+>Stmt</B
+> v m </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Statements in obelisk
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Def"
+><A NAME="v%3ADef"
+></A
+></A
+><B
+>Def</B
+> m [v] (<A HREF="Language-Obelisk-AST.html#t%3AReturner"
+>Returner</A
+> v m)</TD
+><TD CLASS="rdoc"
+>Define a function
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:If"
+><A NAME="v%3AIf"
+></A
+></A
+><B
+>If</B
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AReturner"
+>Returner</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AReturner"
+>Returner</A
+> v m)</TD
+><TD CLASS="rdoc"
+>If the expression is true, then evaluate the first piece of code, else the second
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:SetLocal"
+><A NAME="v%3ASetLocal"
+></A
+></A
+><B
+>SetLocal</B
+> m v (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+><TD CLASS="rdoc"
+>Set the local variable v equal to the result of the expression
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:SetGlobal"
+><A NAME="v%3ASetGlobal"
+></A
+></A
+><B
+>SetGlobal</B
+> m v (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+><TD CLASS="rdoc"
+>Set the global variable v equal to the result of the expression
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:StmtExp"
+><A NAME="v%3AStmtExp"
+></A
+></A
+><B
+>StmtExp</B
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+><TD CLASS="rdoc"
+>Evaluate an expression
+</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:Returner"
+><A NAME="t%3AReturner"
+></A
+></A
+><B
+>Returner</B
+> v m </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>If a piece of code is to return a value, the last item must be an expression
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Returner"
+><A NAME="v%3AReturner"
+></A
+></A
+><B
+>Returner</B
+> m (<A HREF="Language-Obelisk-AST.html#t%3AObelisk"
+>Obelisk</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t:Exp"
+><A NAME="t%3AExp"
+></A
+></A
+><B
+>Exp</B
+> v m </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Expressions in obelisk
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v:Apply"
+><A NAME="v%3AApply"
+></A
+></A
+><B
+>Apply</B
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m) [<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m]</TD
+><TD CLASS="rdoc"
+>Function application
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:Infix"
+><A NAME="v%3AInfix"
+></A
+></A
+><B
+>Infix</B
+> m (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m) (<A HREF="Language-Obelisk-AST.html#t%3AExp"
+>Exp</A
+> v m)</TD
+><TD CLASS="rdoc"
+>Infix application
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:OVar"
+><A NAME="v%3AOVar"
+></A
+></A
+><B
+>OVar</B
+> m v</TD
+><TD CLASS="rdoc"
+>A variable
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:OInt"
+><A NAME="v%3AOInt"
+></A
+></A
+><B
+>OInt</B
+> m <A HREF="/usr/local/share/doc/ghc/libraries/integer/GHC-Integer.html#t%3AInteger"
+>Integer</A
+></TD
+><TD CLASS="rdoc"
+>An integer
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v:OBool"
+><A NAME="v%3AOBool"
+></A
+></A
+><B
+>OBool</B
+> m <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+></TD
+><TD CLASS="rdoc"
+>A literal boolean
+</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.4.2</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>

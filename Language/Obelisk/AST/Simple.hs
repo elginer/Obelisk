@@ -1,18 +1,36 @@
 -- | A Simple AST, as parsed from source code
 module Language.Obelisk.AST.Simple 
    (module Language.Obelisk.AST
-   ,SimpleObelisk)
+   ,CodeFragment (..)
+   ,SimpleObelisk
+   ,SimpleStmt
+   ,SimpleExp
+   ,SimpleReturner
+   ,pretty)
    where
 
 import Language.Obelisk.AST
 
 import Text.Parsec.Pos 
 
--- | The obelisk AST, where variables are strings, and the metadata is the source location of the AST component 
-type SimpleObelisk = Obelisk String SourcePos
+-- | A code fragment displayed in error reporting makes debugging easier for users
+data CodeFragment = CodeFragment
+   {pos :: SourcePos
+   ,code :: String
+   }
+   deriving Show
 
-type SimpleStmt = Stmt String SourcePos
+-- | Pretty should be a class!
+pretty :: CodeFragment -> String
+pretty c = unlines $
+   ["In " ++ show (pos c)
+   ,"Near code:"] ++ map ('\t' :) (lines $ code c)
 
-type SimpleExp = Exp String SourcePos
+-- | The obelisk AST, where variables are strings, and the metadata is a code fragment near the AST component 
+type SimpleObelisk = Obelisk String CodeFragment 
 
-type SimpleReturner = Returner String SourcePos
+type SimpleStmt = Stmt String CodeFragment
+
+type SimpleExp = Exp String CodeFragment
+
+type SimpleReturner = Returner String CodeFragment

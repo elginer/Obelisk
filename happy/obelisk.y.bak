@@ -11,10 +11,12 @@ import Language.Obelisk.Lexer.Token
 
 import Language.Obelisk.AST.Simple
 
+import Text.Parsec.Pos
+
 parse :: Parse
 
 terror :: Token -> OParser a
-terror = fail . ("Caused by token: " ++) . show 
+terror = fail . show 
 
 }
 
@@ -48,44 +50,53 @@ terror = fail . ("Caused by token: " ++) . show
 
 {- Declare precedence -}
 
+%right set
+%left op
+
 %%
 
 {- Get the source position -}
-Pos :: { CodeFragment }
+Pos :: { SourcePos }
 Pos : {- empty -} {% get_pos}
 
 {- Parse the AST -}
 Obelisk :: { SimpleObelisk }
-Obelisk : Stmts   { Obelisk $ reverse $1 }
+Obelisk : Stmts   { Obelisk $1 }
 
 {- Parse a list of statements -}
 Stmts :: { [SimpleStmt] }
 Stmts : {- empty -}   { [] }
+      | Stmt          { [$1] }
       | Stmts Stmt    { $2 : $1 }
 
-{- Parse a statement -}
+{- Parse a statement, wrapped in parenthesis -}
 Stmt :: { SimpleStmt }
-Stmt : {- Expressions without parentheses -}
-       Stmtexp { $1 }
-     | {- Statements in parenthesis -}
-       '(' PStmt ')'  { $2 }
+Stmt : Stmtexp    { $1 }
+     | '(' Stmt1 ')'   { $2 }
 
-{- A statement in parenthesis -}
-PStmt :: { SimpleStmt }
-PStmt : Def      { $1 }
-      | If       { $1 }
-      | LocalSet { $1 }
-      | PStmtexp { $1 }
 
+
+{- Parse a statement -}
+Stmt1 :: { SimpleStmt }
+Stmt1 : Def        { $1 }
+      | If         { $1 }
+      | LocalSet   { $1 }
 
 {- Define a function -}
 Def :: { SimpleStmt }
-Def : Pos def var Vars Returner   { Def $1 $3 $4 $5 }
+Def : Pos def var FArgs Returner   { Def $1 $3 $4 $5 }
+
+{- A function's formal arguments -}
+FArgs :: { [String] }
+FArgs : {- empty -}    { [] }
+      | '(' Vars ')'   { $2 }
+
 
 {- A list of variables -}
 Vars :: { [String] }
-Vars : {- empty -}        { [] }
+Vars : var        { [$1] }
      | Vars var   { $2 : $1 }
+
 
 {- If statement -}
 If :: { SimpleStmt }
@@ -93,35 +104,41 @@ If : Pos if Exp Returner Returner   { If $1 $3 $4 $5 }
 
 {- Set a local variable -}
 LocalSet :: { SimpleStmt }
-LocalSet : Pos set var Exp   { SetLocal $1 $3 $4 }
+LocalSet : Pos var set Exp   { SetLocal $1 $2 $4 }
 
-{- An expression within parenthesis acting as a statement -}
-PStmtexp :: { SimpleStmt }
-PStmtexp : Pos PExp { StmtExp $1 $2 }
-
-{- Execute a terminal expression -}
+{- Execute an expression -}
 Stmtexp :: { SimpleStmt }
-Stmtexp : Pos TExp  { StmtExp $1 $2 }
+Stmtexp : Pos '(' PExp ')'  { StmtExp $1 $3 }
 
-{- An terminal expression -}
-TExp :: { SimpleExp }
-TExp : Var   { $1 }
-    | Int    { $1 }
-    | Bool   { $1 }
+{- An expression within parenthesis, so using some rules without. -}
+PExp :: { SimpleExp }
+PExp : Apply   { $1 }
+     | Infix   { $1 }
+     | Var     { $1 }
+     | Int     { $1 }
+     | Bool    { $1 }
+   
 
 {- An expression -}
 Exp :: { SimpleExp }
-Exp : TExp           { $1 }
-    | '(' PExp ')'   { $2 }
-
-{- An expression found within parenthesis -}
-PExp :: { SimpleExp }
-PExp : Apply { $1 }
-     | Infix { $1 }
+Exp : PApply   { $1 }
+    | PInfix   { $1 }
+    | Var     { $1 }
+    | Int     { $1 }
+    | Bool    { $1 }
 
 {- Function application. -}
 Apply :: { SimpleExp }
-Apply : Pos Exp Exps  { Apply $1 $2 $3 }
+Apply : Pos Exp Exps   { Apply $1 $2 $3 }
+
+{- Infix application. -}
+Infix :: { SimpleExp }
+Infix : Pos Exp op Exp   { Infix $1 $2 $3 $4 }
+
+
+{- Function application. -}
+PApply :: { SimpleExp }
+PApply : Pos '(' Exp Exps ')'   { Apply $1 $3 $4 }
 
 {- A list of expressions -}
 Exps :: { [SimpleExp] }
@@ -129,8 +146,8 @@ Exps : {- empty -}   { [] }
      | Exps Exp      { $2 : $1 }
 
 {- Infix application. -}
-Infix :: { SimpleExp }
-Infix : Pos Exp op Exp   { Infix $1 $2 $3 $4}
+PInfix :: { SimpleExp }
+PInfix : Pos '(' Exp op Exp ')'   { Infix $1 $3 $4 $5}
 
 {- Variable used in expressions -}
 Var :: { SimpleExp }
@@ -143,8 +160,8 @@ Int : Pos int   { OInt $1 $2 }
 {- Booleans -}
 Bool :: { SimpleExp }
 Bool : Pos true   { OBool $1 True }
-     | Pos false  { OBool $1 False }
+     | Pos false  { OBool $1 True }
 
 {- Returning code -}
 Returner :: { SimpleReturner }
-Returner : Pos '(' Stmts ')'  { Returner $1 (reverse $3) }
+Returner : Pos '(' Obelisk Exp ')'  { Returner $1 $3 $4 }
