@@ -1,0 +1,45 @@
+<html>
+   <head>
+   <style type="text/css">
+   .code {background-color: #222222; font-size: x-large; font-family: monospace; color: yellow;}
+   body {font-family: sans-serif;}
+   </style>
+   </head>
+   <body>
+      <h1>The Obelisk Programming Language</h2>
+      <h2>Copyright John Morrice 2010</h2>
+      <h3>Released under the terms of the GNU GPL-3.  See the file 'LICENCE'.</h3>
+      <p>Obelisk is a strongly typed object oriented programming language.  Obelisk's type system intends to be a form of strongly typed 'duck typing'.<p>
+      <p>Contents:
+         </br>
+         <a href="#syntax">1. Syntax</a>
+      </p>
+      <a name="syntax">
+      <h2>Syntax</h1>
+      <p>Obelisk's syntax is described by this <a href="happy/obelisk.y">happy file.</a></p>
+      <p>Here is a description in mock-bnf.</p>
+      <p class="code">
+            obelisk: '(' stmt ')' obelisk</br></br>
+
+            stmt: def | if | localset | globalset | stmtexp</br></br>
+
+            def: 'def' '(' vars ')' '(' obelisk exp ')'</br></br>
+
+            if:  'if' exp '(' obelisk exp ')' '(' obelisk exp ')'</br></br>
+
+            localset: var '=' exp</br></br>
+
+            globalset: var '@=' exp</br></br>
+
+            stmtexp: exp</br></br>
+
+            exp: number | var | '(' vars ')' | '(' exp operator exp ')' | 'true' | 'false'</br></br>
+
+            vars: var vars
+             
+      </p>
+      <p>Here is an example, which defines a function called add:</p>
+      <a name="example1"><p class="code">(def add (x y) ((x + y)))</p></a></a>
+      </p>
+   </body>
+</html>

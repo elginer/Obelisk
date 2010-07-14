@@ -1,0 +1,30 @@
+Name:		Obelisk	
+Version:	0.0.1
+Cabal-Version:  >= 1.2
+License:	GPL-3
+License-File:	LICENCE
+Author:		John Morrice
+Category:	Compilers/Interpreters
+Synopsis:       An simple object oriented language, with a strongly typed form of duck-typing.
+Build-type:	Simple
+
+Library
+   Build-Depends: base>=4, parsec>=3, filepath
+   Exposed-modules:
+      Language.Obelisk
+      Language.Obelisk.Lexer
+      Language.Obelisk.Lexer.Token
+      Language.Obelisk.Parser
+      Language.Obelisk.Scoper
+      Language.Obelisk.TypeChecker
+      Language.Obelisk.Optimizer
+      Language.Obelisk.Emitter
+      Language.Obelisk.AST
+      Language.Obelisk.AST.Simple
+      Language.Obelisk.AST.Transformer
+
+Executable lextest
+   Main-is: tests/lex.hs
+   Other-modules:
+      Language.Obelisk.Lexer
+      Language.Obelisk.Lexer.Token
