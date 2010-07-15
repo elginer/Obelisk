@@ -20,14 +20,17 @@ putTest r = putStrLn $
    M.ParseFail s -> s
 
 success =
-   ["(def howdy x y z ((x y z)))"
-   ,"(def a (b) where ((let b a)))"]
+   ["(A # def howdy x y z ((x y z)))"
+   ,"(A # def a (b) where ((A # let b a)))"
+   ,"(Int -> Double -> TripleVodka # def a ())"
+   ,"(A # def x () where ((Int -> Double # let z a)))"
+   ]
 
 failure =
-   ["(let a (6 + 3))"
+   ["(A # let a (6 + 3))"
    ,"((("
    ,")))"
-   ,"(let a (def x ())"
-   ,"(let def 3)"
-   ,"(if let (3) (4))"
+   ,"(A # let a (def x ())"
+   ,"(A # let def 3)"
+   ,"(A # if let (3) (4))"
    ]

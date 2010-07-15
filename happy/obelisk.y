@@ -4,7 +4,8 @@ module Language.Obelisk.Parser where
 
 import Prelude hiding (lex)
 
-import Language.Obelisk.Parser.Monad as M
+import Language.Obelisk.Parser.Monad hiding (eparse, run_parser)
+import qualified Language.Obelisk.Parser.Monad as M
 
 import Language.Obelisk.Lexer
 import Language.Obelisk.Lexer.Token
@@ -51,6 +52,9 @@ eparse = M.eparse parse
    false     { TFalse }
    where     { TWhere }
    let       { TConstant }
+   classname { TClassName $$ }
+   '->'      { TArrow }
+   '#'       { TTypeTerm }
    '('       { TParOpen }
    ')'       { TParClose }
 
@@ -59,6 +63,23 @@ eparse = M.eparse parse
 {- Get the source position -}
 Pos :: { CodeFragment }
 Pos : {- empty -} {% get_pos}
+
+{- Parse a quantified type -}
+QType :: { QType }
+QType : Type '#'  { QType [] $1 }
+
+{- Parse a type -}
+Type :: { Type }
+Type : TypeNames   { Type $ reverse $1 }
+
+{- Parse a list of type names seperated by arrows -}
+TypeNames :: { [TypeName] }
+TypeNames : TypeNames '->' TypeName   { $3 : $1 }
+          | TypeName                  { [$1] }
+
+{- A type name -}
+TypeName :: { TypeName }
+TypeName : classname   { TypeClassName $1 }
 
 {- Parse the AST -}
 Obelisk :: { SimpleObelisk }
@@ -77,13 +98,13 @@ Defs : Defs '(' Def ')'    { $3 : $1 }
 
 {- A function definition -}
 FDef :: { SimpleFDef }
-FDef : Pos def var Vars Block WhereClause  { Def $1 $3 $4 $5 $6 }
+FDef : Pos QType def var Vars Block WhereClause  { Def $1 $2 $4 $5 $6 $7 }
 
 
 {- Define a function or a constant -}
 Def :: { SimpleDef }
-Def : FDef                                { FDef $1 } 
-    | Pos let var Exp                     { Constant $1 $3 $4 }
+Def : FDef                   { FDef $1 } 
+    | Pos QType let var Exp   { Constant $1 $2 $4 $5 }
 
 {- A where clause -}
 WhereClause :: { [SimpleDef]}

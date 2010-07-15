@@ -35,7 +35,7 @@ class ScopeChecker s where
 
 -- Check the function contains no scope errors, including duplicate names
 instance ScopeChecker FDef where
-   scope_check (Def (_, cf) dname fargs bl wh) = 
+   scope_check (Def (_, cf) _ dname fargs bl wh) = 
       dup_errs ++ scope_check bl ++ concat (map scope_check wh)
       where
       dup_errs = where_fargs_clash ++ fargs_dup ++ where_dup
@@ -52,7 +52,7 @@ instance ScopeChecker Def where
    scope_check d =
       case d of
          FDef def       -> scope_check def
-         Constant _ _ e -> scope_check e
+         Constant _ _ _ e -> scope_check e
 
 -- Check the expression contains no scope errors
 instance ScopeChecker Exp where
@@ -109,8 +109,8 @@ form_env f =
 
 -- Transform simple to scoped function definitions
 instance Scoper FDef where
-   scope' env@(ClosureTable fvs) (Def cf name fargs bl wh) =
-      Def (env, cf) name fargs (recurse (bl_env) bl) (map (recurse where_env) wh)
+   scope' env@(ClosureTable fvs) (Def cf typ name fargs bl wh) =
+      Def (env, cf) typ name fargs (recurse (bl_env) bl) (map (recurse where_env) wh)
       where
       bl_env = form_env name wh
       where_env = form_env name $ filter (\d ->
@@ -125,7 +125,7 @@ instance Scoper Def where
    scope' env d =
       case d of
          FDef def          -> FDef $ scope' env def
-         Constant fr v exp -> Constant (env, fr) v $ scope' env exp
+         Constant fr typ v exp -> Constant (env, fr) typ v $ scope' env exp
 
 -- Transform simple to scoped expressions
 instance Scoper Exp where

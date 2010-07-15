@@ -34,11 +34,21 @@ data ClosureEntry = ClosureEntry
 instance Fragment ScopedDef where
    fragment d =
       case d of
-      FDef f              -> fragment f
-      Constant (_,cf) _ _ -> cf
+      FDef f                -> fragment f
+      Constant (_,cf) _ _ _ -> cf
 
 instance Fragment ScopedFDef where
-  fragment (Def (_,cf) _ _ _ _) = cf 
+  fragment (Def (_,cf) _ _ _ _ _) = cf 
+
+instance Fragment ScopedExp where
+   fragment e =
+      case e of
+         If (_, cf) _ _ _ -> cf
+         Apply (_, cf) _ _ -> cf
+         Infix (_, cf) _ _ -> cf
+         OVar (_, cf) _ -> cf
+         OInt (_, cf) _ -> cf
+         OBool (_, cf) _ -> cf
 
 -- | The scoped AST, with functions having closure tables generated for them.
 type ScopedObelisk = Obelisk String (ClosureTable, CodeFragment)

@@ -48,5 +48,7 @@ instance Show Token where
          TIf       -> "if"
          TConstant -> "let"
          TWhere    -> "where"
+         TArrow    -> "->"
+         TTypeTerm -> "#"
          TClassName c -> c
          TEOF      -> "end of file"

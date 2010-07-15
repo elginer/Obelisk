@@ -17,11 +17,16 @@ Library
       Language.Obelisk.Parser
       Language.Obelisk.Scoper
       Language.Obelisk.TypeChecker
+      Language.Obelisk.TypeChecker.Typed
       Language.Obelisk.Emitter
       Language.Obelisk.Error
       Language.Obelisk.AST
       Language.Obelisk.AST.Simple
       Language.Obelisk.AST.Transformer
+   Other-modules:
+      Language.Obelisk.TypeChecker.Def
+      Language.Obelisk.TypeChecker.Block
+      Language.Obelisk.TypeChecker.Expression
 
 Executable lex
    Main-is: tests/lex.hs

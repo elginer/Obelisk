@@ -29,7 +29,7 @@ data CodeFragment = CodeFragment
 
 instance Pretty CodeFragment where
    pretty c = unlines $
-      ["In " ++ show (pos c)
+      ["\nIn " ++ show (pos c)
       ,"Near code:"] ++ map ('\t' :) (lines $ code c)
 
 -- | Get a code fragment from the ast
@@ -37,7 +37,7 @@ class Fragment ast where
    fragment :: ast -> CodeFragment
 
 instance Fragment SimpleFDef where
-   fragment (Def f _ _ _ _) = f 
+   fragment (Def f _ _ _ _ _) = f 
 
 -- | The obelisk AST, where variables are strings, and the metadata is a code fragment near the AST component 
 type SimpleObelisk = Obelisk String CodeFragment 
