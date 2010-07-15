@@ -23,8 +23,14 @@ Library
       Language.Obelisk.AST.Simple
       Language.Obelisk.AST.Transformer
 
-Executable lextest
+Executable lex
    Main-is: tests/lex.hs
    Other-modules:
       Language.Obelisk.Lexer
       Language.Obelisk.Lexer.Token
+
+Executable parse
+   Main-is: tests/parse.hs
+   Other-modules:
+      Language.Obelisk.Parser
+      Language.Obelisk.Parser.Monad

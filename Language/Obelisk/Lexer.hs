@@ -25,10 +25,10 @@ obdef = LanguageDef
    ,commentEnd     = "*/"
    ,commentLine    = "//"
    ,nestedComments = False
-   ,identStart     = letter <|> char '_'
-   ,identLetter    = alphaNum <|> char '_'
-   ,opStart        = oneOf ":!#$%&*+./<=>?@\\^|-~"
-   ,opLetter       = oneOf ":!#$%&*+./<=>?@\\^|-~"
+   ,identStart     = letter
+   ,identLetter    = alphaNum <|> oneOf "_?"
+   ,opStart        = oneOf ":!#$%&*+./<=>@\\^|-~"
+   ,opLetter       = oneOf ":!#$%&*+./<=>@\\^|-~"
    ,reservedNames  = ["def", "true", "false"]
    ,reservedOpNames = [":"]
    ,caseSensitive   = True}
