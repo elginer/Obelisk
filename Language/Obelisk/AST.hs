@@ -18,12 +18,18 @@ data Def v m =
      Constant m v (Exp v m)
    deriving Show
 
--- | Def name
-name :: Def String m -> String
-name d =
-   case d of
-      FDef (Def _ n _ _ _)  -> n
-      Constant _ v _        -> v
+-- | AST elements with names
+class Named ast where
+   name :: ast a m -> a
+
+instance Named Def where
+   name d =
+      case d of
+         FDef f         -> name f 
+         Constant _ v _ -> v
+
+instance Named FDef where
+   name (Def _ n _ _ _) = n
 
 -- | A block of code
 data Block v m = Block m [Exp v m] 

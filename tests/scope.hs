@@ -33,4 +33,7 @@ failure =
    ,"// A define cannot see another's where clause\n(def x () where ((: z 0)))\n(def y (z))"
    ,"// In a where clause a define cannot see constants\n(def x () where ((: z 0) (def y (z))))"
    ,"// A constant in a where clause cannot see other constants\n(def x () where ((: z 0) (: y z)))"
+   ,"// Two top level functions cannot have the same name\n(def x ()) (def x ())"
+   ,"// Two where clause members cannot share the same name\n(def x () where ((: y 0) (: y 1)))"
+   ,"// A where clause member cannot share the same name as a function's argument\n(def x y () where ((: y 0)))"
    ]

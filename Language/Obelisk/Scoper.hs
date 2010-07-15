@@ -15,13 +15,13 @@ import qualified Data.Set as S
 
 data ScopeError = 
    OutOfScope String CodeFragment
-   | WhereDuplicateName String CodeFragment
+   | DuplicateName String CodeFragment
 
 instance Pretty ScopeError where
    pretty (OutOfScope v cf) = unlines $
       ("Not in scope: " ++ v ++ "\n\tNear ") : map ("\t\t" ++) (lines (pretty cf))
-   pretty (WhereDuplicateName v cf) = unlines $
-      ("A where clause definition has the same name as another variable or definition in the same scope: " ++ v ++ "\n\tNear ") : map ("\t\t" ++) (lines (pretty cf))
+   pretty (DuplicateName v cf) = unlines $
+      ("A definition has the same name as another variable or definition in the same scope: " ++ v ++ "\n\tNear ") : map ("\t\t" ++) (lines (pretty cf))
 -- | Scoping transformation
 class Scoper s where
    scope' :: ClosureTable -- ^ The free variables in the current environment
@@ -35,13 +35,16 @@ class ScopeChecker s where
 
 -- Check the function contains no scope errors, including duplicate names
 instance ScopeChecker FDef where
-   scope_check (Def _ dname fargs bl wh) = 
+   scope_check (Def (_, cf) dname fargs bl wh) = 
       dup_errs ++ scope_check bl ++ concat (map scope_check wh)
       where
-      dup_errs = map (uncurry WhereDuplicateName) $ filter (\wf -> S.member (fst wf) clash) wh_frgs
+      dup_errs = where_fargs_clash ++ fargs_dup ++ where_dup
+      fargs_dup = find_duplicates id (const cf) fargs
+      where_dup = find_duplicates name fragment wh 
+      where_fargs_clash = map (uncurry DuplicateName) $ filter (\wf -> S.member (fst wf) clash) wh_frgs
       clash = S.intersection (S.fromList $ dname : fargs) (S.fromList $ map name wh)
       wh_frgs = map (\d ->
-         (name d, dcf d)) wh
+         (name d, fragment d)) wh
       
 
 -- Check the definition contains no scope errors
@@ -82,8 +85,20 @@ escope (Obelisk defs) =
       then Right $ Obelisk scoped
       else Left $ compiler_error "Scope error" $ intercalate "\n\n" $ map pretty errs
    where
-   errs = concat $ map scope_check scoped
+   errs = duplicate_top_level defs ++ concat (map scope_check scoped)
    scoped = map (scope' $ ClosureTable $ form_env "" $ map FDef defs) defs
+
+-- | Check for duplicate top level functions
+duplicate_top_level :: [SimpleFDef] -> [ScopeError]
+duplicate_top_level = find_duplicates name fragment
+
+-- | Find duplicate entries of a data-type
+find_duplicates :: (a -> String) -> (a -> CodeFragment) -> [a] -> [ScopeError]
+find_duplicates name dcf = snd .
+   foldr (\d (s, es) ->
+      if S.member (name d) s
+         then (s, DuplicateName (name d) (dcf d) : es)
+         else (S.insert (name d) s, es)) (S.empty, []) 
 
 -- | Gather the names of definitions
 form_env :: String -- ^ The function in which these definitions were made

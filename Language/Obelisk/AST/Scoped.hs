@@ -1,6 +1,10 @@
+{-# OPTIONS
+    -XTypeSynonymInstances
+#-}
 -- | An AST with tables allowing construction of environments for closures.
 module Language.Obelisk.AST.Scoped
    (module Language.Obelisk.AST
+   ,Fragment (..)
    ,ClosureTable (..)
    ,ClosureEntry (..)
    ,CodeFragment (..)
@@ -8,8 +12,7 @@ module Language.Obelisk.AST.Scoped
    ,ScopedObelisk
    ,ScopedDef
    ,ScopedExp
-   ,ScopedBlock
-   ,dcf)
+   ,ScopedBlock)
    where
 
 import Language.Obelisk.AST.Simple
@@ -27,13 +30,15 @@ data ClosureEntry = ClosureEntry
    , def_name :: String}
    deriving Show
 
--- | Code fragment from def
-dcf :: ScopedDef -> CodeFragment
-dcf d =
-   case d of
-   FDef (Def (_,cf) _ _ _ _) -> cf
-   Constant (_,cf) _ _       -> cf
 
+instance Fragment ScopedDef where
+   fragment d =
+      case d of
+      FDef f              -> fragment f
+      Constant (_,cf) _ _ -> cf
+
+instance Fragment ScopedFDef where
+  fragment (Def (_,cf) _ _ _ _) = cf 
 
 -- | The scoped AST, with functions having closure tables generated for them.
 type ScopedObelisk = Obelisk String (ClosureTable, CodeFragment)

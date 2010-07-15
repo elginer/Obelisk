@@ -1,6 +1,10 @@
+{-# OPTIONS
+    -XTypeSynonymInstances
+#-}
 -- | A Simple AST, as parsed from source code
 module Language.Obelisk.AST.Simple 
    (module Language.Obelisk.AST
+   ,Fragment (..)
    ,CodeFragment (..)
    ,Pretty (..)
    ,SimpleObelisk
@@ -27,6 +31,13 @@ instance Pretty CodeFragment where
    pretty c = unlines $
       ["In " ++ show (pos c)
       ,"Near code:"] ++ map ('\t' :) (lines $ code c)
+
+-- | Get a code fragment from the ast
+class Fragment ast where
+   fragment :: ast -> CodeFragment
+
+instance Fragment SimpleFDef where
+   fragment (Def f _ _ _ _) = f 
 
 -- | The obelisk AST, where variables are strings, and the metadata is a code fragment near the AST component 
 type SimpleObelisk = Obelisk String CodeFragment 
