@@ -3,9 +3,9 @@ module Language.Obelisk.AST.Simple
    (module Language.Obelisk.AST
    ,CodeFragment (..)
    ,SimpleObelisk
-   ,SimpleStmt
+   ,SimpleDef
    ,SimpleExp
-   ,SimpleReturner
+   ,SimpleBlock
    ,pretty)
    where
 
@@ -29,8 +29,8 @@ pretty c = unlines $
 -- | The obelisk AST, where variables are strings, and the metadata is a code fragment near the AST component 
 type SimpleObelisk = Obelisk String CodeFragment 
 
-type SimpleStmt = Stmt String CodeFragment
+type SimpleDef = Def String CodeFragment
 
 type SimpleExp = Exp String CodeFragment
 
-type SimpleReturner = Returner String CodeFragment
+type SimpleBlock = Block String CodeFragment

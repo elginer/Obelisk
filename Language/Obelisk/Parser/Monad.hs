@@ -22,11 +22,19 @@ run_parser :: Parse    -- ^ The parser
            -> FilePath -- ^ The source name
            -> String   -- ^ The input
            -> IO SimpleObelisk
-run_parser (OParser par) fp i = do
+run_parser par fp i = do
    putStrLn $ "Parsing " ++ fp ++ "..."
-   case par i $ CodeFragment (newPos fp 1 1) "" of
+   case eparse par fp i of
       ParseOK ob -> return ob
       ParseFail s -> error s
+
+-- | Execute a parser
+eparse :: Parse -- ^ The parser
+       -> FilePath -- ^ The source name
+       -> String -- ^ The input
+       -> ParseResult SimpleObelisk
+eparse (OParser par) fp i =
+   par i $ CodeFragment (newPos fp 1 1) ""
 
 instance Monad OParser where
    return a = 

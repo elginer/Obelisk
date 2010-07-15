@@ -21,22 +21,25 @@ data Token =
      TOp String
    | -- | An if statement
      TIf
-   | -- | Local set operator
-     LocalSetter
+   | -- | Constant set operator
+     TConstant
+   | -- | 'where' clause
+     TWhere 
    | -- The end of file
      TEOF
 
 instance Show Token where
    show t =
       case t of
-         TInt i -> show i
-         TTrue  -> "true"
-         TFalse -> "false"
-         TDef   -> "def"
-         TParOpen -> "("
+         TInt i    -> show i
+         TTrue     -> "true"
+         TFalse    -> "false"
+         TDef      -> "def"
+         TParOpen  -> "("
          TParClose -> ")"
          TVar v    -> v
          TOp op    -> op
          TIf       -> "if"
-         LocalSetter -> ":"
-         TEOF        -> "end of file"
+         TConstant -> ":"
+         TWhere    -> "where"
+         TEOF      -> "end of file"

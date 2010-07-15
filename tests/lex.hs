@@ -11,7 +11,7 @@ lex_test =
 
 tests =
    ["(def nice"
-   ,")))"
+   ,"))) where"
    ,"123"
    ,"1 2 3"
    ,"//howdy\n(def (c) (x c))"

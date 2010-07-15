@@ -3,11 +3,9 @@ module Language.Obelisk where
 
 import Prelude hiding (lex)
 
-import Language.Obelisk.Parser.Monad
 import Language.Obelisk.Parser
 import Language.Obelisk.Scoper
 import Language.Obelisk.TypeChecker
-import Language.Obelisk.Optimizer
 import Language.Obelisk.Emitter
 
 import System.FilePath
@@ -28,4 +26,4 @@ compile_file f = do
 compile :: FilePath -> String -> IO String
 compile fp i = do
    putStrLn $ "Compiling " ++ fp ++ "..."
-   run_parser parse fp i >>= scope >>= check >>= optimize >>= emit  
+   run_parser fp i >>= scope >>= check >>= emit  

@@ -4,7 +4,7 @@ module Language.Obelisk.Parser where
 
 import Prelude hiding (lex)
 
-import Language.Obelisk.Parser.Monad
+import Language.Obelisk.Parser.Monad as M
 
 import Language.Obelisk.Lexer
 import Language.Obelisk.Lexer.Token
@@ -15,6 +15,13 @@ parse :: Parse
 
 terror :: Token -> OParser a
 terror = fail . ("Caused by token: " ++) . show 
+
+-- Convienence parsers
+run_parser :: FilePath -> String -> IO SimpleObelisk
+run_parser = M.run_parser parse
+
+eparse :: FilePath -> String -> ParseResult SimpleObelisk
+eparse = M.eparse parse
 
 }
 
@@ -42,11 +49,10 @@ terror = fail . ("Caused by token: " ++) . show
    op        { TOp $$ }
    true      { TTrue }
    false     { TFalse }
-   set  { LocalSetter }
+   where     { TWhere }
+   ':'       { TConstant }
    '('       { TParOpen }
    ')'       { TParClose }
-
-{- Declare precedence -}
 
 %%
 
@@ -56,31 +62,22 @@ Pos : {- empty -} {% get_pos}
 
 {- Parse the AST -}
 Obelisk :: { SimpleObelisk }
-Obelisk : Stmts   { Obelisk $ reverse $1 }
+Obelisk : Defs   { Obelisk $ reverse $1 }
 
-{- Parse a list of statements -}
-Stmts :: { [SimpleStmt] }
-Stmts : {- empty -}   { [] }
-      | Stmts Stmt    { $2 : $1 }
+{- A list of definitions -}
+Defs :: { [SimpleDef] }
+Defs : Defs '(' Def ')'    { $3 : $1 }
+     | {- empty -} { [] }
 
-{- Parse a statement -}
-Stmt :: { SimpleStmt }
-Stmt : {- Expressions without parentheses -}
-       Stmtexp { $1 }
-     | {- Statements in parenthesis -}
-       '(' PStmt ')'  { $2 }
+{- Define a function or a constant -}
+Def :: { SimpleDef }
+Def : Pos def var Vars Block WhereClause  { Def $1 $3 $4 $5 $6 }
+    | Pos ':' var Exp                     { Constant $1 $3 $4 }
 
-{- A statement in parenthesis -}
-PStmt :: { SimpleStmt }
-PStmt : Def      { $1 }
-      | If       { $1 }
-      | LocalSet { $1 }
-      | PStmtexp { $1 }
-
-
-{- Define a function -}
-Def :: { SimpleStmt }
-Def : Pos def var Vars Returner   { Def $1 $3 $4 $5 }
+{- A where clause -}
+WhereClause :: { [SimpleDef]}
+WhereClause : where '(' Defs ')'  { $3 }
+            | {- empty -}   { [] }
 
 {- A list of variables -}
 Vars :: { [String] }
@@ -88,20 +85,8 @@ Vars : {- empty -}        { [] }
      | Vars var   { $2 : $1 }
 
 {- If statement -}
-If :: { SimpleStmt }
-If : Pos if Exp Returner Returner   { If $1 $3 $4 $5 }
-
-{- Set a local variable -}
-LocalSet :: { SimpleStmt }
-LocalSet : Pos set var Exp   { SetLocal $1 $3 $4 }
-
-{- An expression within parenthesis acting as a statement -}
-PStmtexp :: { SimpleStmt }
-PStmtexp : Pos PExp { StmtExp $1 $2 }
-
-{- Execute a terminal expression -}
-Stmtexp :: { SimpleStmt }
-Stmtexp : Pos TExp  { StmtExp $1 $2 }
+If :: { SimpleExp }
+If : Pos if Exp Block Block   { If $1 $3 $4 $5 }
 
 {- An terminal expression -}
 TExp :: { SimpleExp }
@@ -118,6 +103,7 @@ Exp : TExp           { $1 }
 PExp :: { SimpleExp }
 PExp : Apply { $1 }
      | Infix { $1 }
+     | If    { $1 }
 
 {- Function application. -}
 Apply :: { SimpleExp }
@@ -145,6 +131,6 @@ Bool :: { SimpleExp }
 Bool : Pos true   { OBool $1 True }
      | Pos false  { OBool $1 False }
 
-{- Returning code -}
-Returner :: { SimpleReturner }
-Returner : Pos '(' Stmts ')'  { Returner $1 (reverse $3) }
+{- Block of code -}
+Block :: { SimpleBlock }
+Block : Pos '(' Exps ')'  { Block $1 (reverse $3) }

@@ -29,7 +29,7 @@ obdef = LanguageDef
    ,identLetter    = alphaNum <|> oneOf "_?"
    ,opStart        = oneOf ":!#$%&*+./<=>@\\^|-~"
    ,opLetter       = oneOf ":!#$%&*+./<=>@\\^|-~"
-   ,reservedNames  = ["def", "true", "false"]
+   ,reservedNames  = ["def", "if", "true", "false", "where"]
    ,reservedOpNames = [":"]
    ,caseSensitive   = True}
 
@@ -94,7 +94,8 @@ tlex =
    <|> (T.reserved obtok "false" >> return TFalse)
    <|> (T.reserved obtok "def" >> return TDef)
    <|> (T.reserved obtok "if" >> return TIf)
-   <|> (T.reservedOp obtok ":" >> return LocalSetter)
+   <|> (T.reserved obtok "where" >> return TWhere)
+   <|> (T.reservedOp obtok ":" >> return TConstant)
    <|> par_open
    <|> par_close
    <|> fmap TVar (T.identifier obtok)

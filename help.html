@@ -16,31 +16,44 @@
          <a href="#syntax">1. Syntax</a>
       </p>
       <a name="syntax">
-      <h2>Syntax</h1>
-      <p>Obelisk's syntax is described by this <a href="happy/obelisk.y">happy file.</a></p>
-      <p>Here is a description in mock-bnf.</p>
-      <p class="code">
-            obelisk: stmt obelisk</br></br>
+         <h2>Syntax</h1>
+         <p>
+            Obelisk's syntax is described by this <a href="happy/obelisk.y">happy file.</a>
+         </p>
+         <p>
+            Here is a description in mock-bnf.
+         </p>
+         <p class="code">
+            // The source is a list of definitions</br>
+            obelisk: def obelisk</br></br>
 
-            stmt: '(' stmtcomplex ')' | stmtexp</br></br>
+            // definitions are either a function...</br>
+            def: '(' 'def' vars '(' stmts ')' [ 'where' '(' obelisk ')' ] ')</br>
+               // or a constant</br>
+               &nbsp;&nbsp;&nbsp;| '(' ':' var exp ')' </br></br>
 
-            stmtcomplex: def | if | localset | globalset</br></br>
-
-            def: 'def' vars '(' obelisk exp ')'</br></br>
-
-            if:  'if' exp '(' obelisk exp ')' '(' obelisk exp ')'</br></br>
-
-            localset: ':' var exp</br></br>
+            // A statement is a list of expressions</br>
+            stmts: stmtexp stmts </br></br>
 
             stmtexp: exp</br></br>
 
-            exp: number | var | '(' vars ')' | '(' exp operator exp ')' | 'true' | 'false'</br></br>
+            // An expression, to be evaluated at runtime
+            exp: if | number | var | '(' vars ')' | '(' exp operator exp ')' | 'true' | 'false'</br></br>
 
+            // An if statement.</br>
+            if:  'if' exp '(' obelisk exp ')' '(' obelisk exp ')'</br></br>
+
+            // A list of variables </br>
             vars: var vars
              
-      </p>
-      <p>Here is an example, which defines a function called add:</p>
-      <a name="example1"><p class="code">(def add (x y) ((x + y)))</p></a></a>
-      </p>
+         </p>
+         <p>Here is an example, which defines a function called add:</p>
+         <a name="example1">
+            <p class="code">
+               (def add x y</br>
+               &nbsp;&nbsp;&nbsp;((x + y)))
+            </p>
+         </a>
+      </a>
    </body>
 </html>

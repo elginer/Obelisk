@@ -17,7 +17,6 @@ Library
       Language.Obelisk.Parser
       Language.Obelisk.Scoper
       Language.Obelisk.TypeChecker
-      Language.Obelisk.Optimizer
       Language.Obelisk.Emitter
       Language.Obelisk.AST
       Language.Obelisk.AST.Simple
