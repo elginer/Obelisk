@@ -25,10 +25,16 @@
          </p>
          <p class="code">
             // The source is a list of definitions</br>
-            obelisk: def obelisk</br></br>
+            obelisk: fdef obelisk</br></br>
+
+            // A function definition
+            fdef: '(' 'def' vars '(' stmts ')' [ 'where' '(' defs ')' ] ')</br></br>
+
+            // A list of definitions
+            defs: def defs
 
             // definitions are either a function...</br>
-            def: '(' 'def' vars '(' stmts ')' [ 'where' '(' obelisk ')' ] ')</br>
+            def: fdef</br>
                // or a constant</br>
                &nbsp;&nbsp;&nbsp;| '(' ':' var exp ')' </br></br>
 

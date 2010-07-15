@@ -5,6 +5,8 @@ import Text.Parsec.Pos
 
 import Language.Obelisk.AST.Simple
 
+import Language.Obelisk.Error
+
 -- | Our overall parser type
 type Parse = OParser SimpleObelisk
 
@@ -21,11 +23,10 @@ newtype OParser a = OParser (String -> CodeFragment -> ParseResult a)
 run_parser :: Parse    -- ^ The parser
            -> FilePath -- ^ The source name
            -> String   -- ^ The input
-           -> IO SimpleObelisk
+           -> SimpleObelisk
 run_parser par fp i = do
-   putStrLn $ "Parsing " ++ fp ++ "..."
    case eparse par fp i of
-      ParseOK ob -> return ob
+      ParseOK ob -> ob
       ParseFail s -> error s
 
 -- | Execute a parser
@@ -49,9 +50,7 @@ instance Monad OParser where
             ParseFail err -> ParseFail err
 
    fail err = OParser $ \_ fr ->
-      ParseFail $ unlines $
-         "\n\tParse error: " : map ("\t\t" ++) (lines err ++ lines (pretty fr))
-
+      ParseFail $ compiler_error "Parse error" $ err ++ pretty fr 
 -- | Get the current source code position and code fragment
 get_pos :: OParser CodeFragment
 get_pos = OParser $ const ParseOK

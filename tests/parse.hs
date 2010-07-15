@@ -5,20 +5,26 @@ import qualified Language.Obelisk.Parser.Monad as M
 
 import Control.Monad
 
-main = mapM (\ t -> do
-   putStrLn $ "\n\nTest: " ++ t ++ "\n\n"
-   putTest $ eparse "Test-suite" t) tests
+main = 
+   run_tests "success" success >> run_tests "failure" failure
+
+run_tests name =
+   mapM (\ t -> do
+      putStrLn $ "The parser must report " ++ name ++ "!"
+      putStrLn $ "\n\nTest: " ++ t ++ "\n\n"
+      putTest $ eparse name t)
 
 putTest r = putStrLn $
    case r of
    M.ParseOK ob -> show ob
    M.ParseFail s -> s
 
-tests =
+success =
    ["(def howdy x y z ((x y z)))"
-   ,"(: y (if x (y) (z)))"
-   ,"(def a (b) where ((: b a)))"
-   ,"(: a (6 + 3))"
+   ,"(def a (b) where ((: b a)))"]
+
+failure =
+   ["(: a (6 + 3))"
    ,"((("
    ,")))"
    ,"(: a (def x ())"

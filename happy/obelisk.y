@@ -17,7 +17,7 @@ terror :: Token -> OParser a
 terror = fail . ("Caused by token: " ++) . show 
 
 -- Convienence parsers
-run_parser :: FilePath -> String -> IO SimpleObelisk
+run_parser :: FilePath -> String -> SimpleObelisk
 run_parser = M.run_parser parse
 
 eparse :: FilePath -> String -> ParseResult SimpleObelisk
@@ -62,16 +62,27 @@ Pos : {- empty -} {% get_pos}
 
 {- Parse the AST -}
 Obelisk :: { SimpleObelisk }
-Obelisk : Defs   { Obelisk $ reverse $1 }
+Obelisk : FDefs   { Obelisk $ reverse $1 }
+
+{- A list of function definitions -}
+FDefs :: { [SimpleFDef] }
+FDefs : FDefs '(' FDef ')'    { $3 : $1 }
+     | {- empty -} { [] }
+
 
 {- A list of definitions -}
 Defs :: { [SimpleDef] }
 Defs : Defs '(' Def ')'    { $3 : $1 }
      | {- empty -} { [] }
 
+{- A function definition -}
+FDef :: { SimpleFDef }
+FDef : Pos def var Vars Block WhereClause  { Def $1 $3 $4 $5 $6 }
+
+
 {- Define a function or a constant -}
 Def :: { SimpleDef }
-Def : Pos def var Vars Block WhereClause  { Def $1 $3 $4 $5 $6 }
+Def : FDef                                { FDef $1 } 
     | Pos ':' var Exp                     { Constant $1 $3 $4 }
 
 {- A where clause -}

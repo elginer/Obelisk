@@ -15,7 +15,7 @@ import Control.Monad
 -- | Compile a source file
 compile_file :: FilePath -> IO ()
 compile_file f = do
-   readFile source >>= (compile source >=> writeFile (addExtension source "cpp"))
+   readFile source >>= (compile source >=> writeFile (addExtension source "c"))
    where
    source = 
       if takeExtension f == "obk"
@@ -26,4 +26,4 @@ compile_file f = do
 compile :: FilePath -> String -> IO String
 compile fp i = do
    putStrLn $ "Compiling " ++ fp ++ "..."
-   run_parser fp i >>= scope >>= check >>= emit  
+   return $ emit $ check $ scope $ run_parser fp i 

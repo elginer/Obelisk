@@ -2,14 +2,17 @@
 module Language.Obelisk.AST.Simple 
    (module Language.Obelisk.AST
    ,CodeFragment (..)
+   ,Pretty (..)
    ,SimpleObelisk
    ,SimpleDef
+   ,SimpleFDef
    ,SimpleExp
-   ,SimpleBlock
-   ,pretty)
+   ,SimpleBlock)
    where
 
 import Language.Obelisk.AST
+
+import Language.Obelisk.AST.Pretty
 
 import Text.Parsec.Pos 
 
@@ -20,14 +23,15 @@ data CodeFragment = CodeFragment
    }
    deriving Show
 
--- | Pretty should be a class!
-pretty :: CodeFragment -> String
-pretty c = unlines $
-   ["In " ++ show (pos c)
-   ,"Near code:"] ++ map ('\t' :) (lines $ code c)
+instance Pretty CodeFragment where
+   pretty c = unlines $
+      ["In " ++ show (pos c)
+      ,"Near code:"] ++ map ('\t' :) (lines $ code c)
 
 -- | The obelisk AST, where variables are strings, and the metadata is a code fragment near the AST component 
 type SimpleObelisk = Obelisk String CodeFragment 
+
+type SimpleFDef = FDef String CodeFragment
 
 type SimpleDef = Def String CodeFragment
 
