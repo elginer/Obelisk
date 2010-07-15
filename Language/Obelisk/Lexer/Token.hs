@@ -24,7 +24,13 @@ data Token =
    | -- | Constant set operator
      TConstant
    | -- | 'where' clause
-     TWhere 
+     TWhere
+   | -- | The name of a class
+     TClassName String
+   | -- | A function arrow
+     TArrow
+   | -- | A type terminator
+     TTypeTerm 
    | -- The end of file
      TEOF
 
@@ -40,6 +46,7 @@ instance Show Token where
          TVar v    -> v
          TOp op    -> op
          TIf       -> "if"
-         TConstant -> ":"
+         TConstant -> "let"
          TWhere    -> "where"
+         TClassName c -> c
          TEOF      -> "end of file"

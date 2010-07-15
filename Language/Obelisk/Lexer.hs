@@ -25,18 +25,25 @@ obdef = LanguageDef
    ,commentEnd     = "*/"
    ,commentLine    = "//"
    ,nestedComments = False
-   ,identStart     = letter
+   ,identStart     = lower
    ,identLetter    = alphaNum <|> oneOf "_?"
    ,opStart        = oneOf ":!#$%&*+./<=>@\\^|-~"
    ,opLetter       = oneOf ":!#$%&*+./<=>@\\^|-~"
-   ,reservedNames  = ["def", "if", "true", "false", "where"]
-   ,reservedOpNames = [":"]
+   ,reservedNames  = ["def", "if", "true", "false", "where", "let"]
+   ,reservedOpNames = ["->", "#"]
    ,caseSensitive   = True}
 
 -- | Obelisk token parser
 obtok :: TokenParser st
 obtok =
    makeTokenParser obdef 
+
+-- | Parse a class name
+class_name :: Parser Token
+class_name = do
+   fst <- upper
+   rst <- many alphaNum
+   return $ TClassName $ fst : rst
 
 -- | Parse the open parenthesis
 par_open :: Parser Token
@@ -95,7 +102,10 @@ tlex =
    <|> (T.reserved obtok "def" >> return TDef)
    <|> (T.reserved obtok "if" >> return TIf)
    <|> (T.reserved obtok "where" >> return TWhere)
-   <|> (T.reservedOp obtok ":" >> return TConstant)
+   <|> (T.reserved obtok "let" >> return TConstant)
+   <|> (T.reservedOp obtok "->" >> return TArrow)
+   <|> (T.reservedOp obtok "#" >> return TTypeTerm)
+   <|> class_name 
    <|> par_open
    <|> par_close
    <|> fmap TVar (T.identifier obtok)

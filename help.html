@@ -39,7 +39,7 @@
          // definitions are either a function...</br>
          def: fdef</br>
             &nbsp;&nbsp;&nbsp;// or a constant</br>
-            &nbsp;&nbsp;&nbsp;| '(' ':' var exp ')' </br></br>
+            &nbsp;&nbsp;&nbsp;| '(' 'let' var exp ')' </br></br>
 
          // A statement is a list of expressions</br>
          stmts: stmtexp stmts </br></br>
@@ -92,9 +92,9 @@
          // Increment an integer by 1</br>
          (def inc1 x (y)</br>
          &nbsp;&nbsp;&nbsp;where</br>
-         &nbsp;&nbsp;&nbsp;((: y (x + 1))))
+         &nbsp;&nbsp;&nbsp;((let y (x + 1))))
          </br></br>
-         (def inc2 x (incer x)</br>
+         (def inc2 x ((incer x))</br>
          &nbsp;&nbsp;&nbsp;where</br>
          &nbsp;&nbsp;&nbsp;((def incer z ((z + 1)))))
 
@@ -114,13 +114,13 @@
             (def foo ()</br>
             &nbsp;&nbsp;&nbsp;where</br>
             &nbsp;&nbsp;&nbsp;((def bar zob ((zob + 1)))</br>
-            &nbsp;&nbsp;&nbsp;&nbsp;(: baz (bar 3))))
+            &nbsp;&nbsp;&nbsp;&nbsp;(let baz (bar 3))))
             </br></br>
             // This is illegal</br>
             (def foo ()</br>
             &nbsp;&nbsp;&nbsp;where</br>
             &nbsp;&nbsp;&nbsp;((def bar (baz))</br>
-            &nbsp;&nbsp;&nbsp;&nbsp;(: baz 0)))
+            &nbsp;&nbsp;&nbsp;&nbsp;(let baz 0)))
          </p>
       </a>
       <p>
@@ -131,11 +131,11 @@
          // These are illegal</br>
          (def foo bar ()</br>
          &nbsp;&nbsp;&nbsp;where</br>
-         &nbsp;&nbsp;&nbsp;((: bar 0)))
+         &nbsp;&nbsp;&nbsp;((let bar 0)))
          </br></br>
          (def foo ()</br>
          &nbsp;&nbsp;&nbsp;where</br>
-         &nbsp;&nbsp;&nbsp;((: bar 0))</br>
+         &nbsp;&nbsp;&nbsp;((let bar 0))</br>
          &nbsp;&nbsp;&nbsp;&nbsp;(def bar ()))
          </p>
          <p>

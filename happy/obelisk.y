@@ -50,7 +50,7 @@ eparse = M.eparse parse
    true      { TTrue }
    false     { TFalse }
    where     { TWhere }
-   ':'       { TConstant }
+   let       { TConstant }
    '('       { TParOpen }
    ')'       { TParClose }
 
@@ -83,7 +83,7 @@ FDef : Pos def var Vars Block WhereClause  { Def $1 $3 $4 $5 $6 }
 {- Define a function or a constant -}
 Def :: { SimpleDef }
 Def : FDef                                { FDef $1 } 
-    | Pos ':' var Exp                     { Constant $1 $3 $4 }
+    | Pos let var Exp                     { Constant $1 $3 $4 }
 
 {- A where clause -}
 WhereClause :: { [SimpleDef]}

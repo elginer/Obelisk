@@ -11,7 +11,7 @@ main =
 run_tests name =
    mapM (\ t -> do
       putStrLn $ "The parser must report " ++ name ++ "!"
-      putStrLn $ "\n\nTest: " ++ t ++ "\n\n"
+      putStrLn $ "\n\nTest:\n" ++ t ++ "\n\n"
       putTest $ eparse name t)
 
 putTest r = putStrLn $
@@ -21,13 +21,13 @@ putTest r = putStrLn $
 
 success =
    ["(def howdy x y z ((x y z)))"
-   ,"(def a (b) where ((: b a)))"]
+   ,"(def a (b) where ((let b a)))"]
 
 failure =
-   ["(: a (6 + 3))"
+   ["(let a (6 + 3))"
    ,"((("
    ,")))"
-   ,"(: a (def x ())"
-   ,"(: def 3)"
-   ,"(if : (3) (4))"
+   ,"(let a (def x ())"
+   ,"(let def 3)"
+   ,"(if let (3) (4))"
    ]

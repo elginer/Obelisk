@@ -16,4 +16,4 @@ tests =
    ,"1 2 3"
    ,"//howdy\n(def (c) (x c))"
    ,"/* all is well */ + 1"
-   ,": : : : 222"]
+   ,"let let let let 222"]

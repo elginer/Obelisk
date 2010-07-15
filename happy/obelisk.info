@@ -15,7 +15,7 @@ Grammar
 	Defs ->                                            (6)
 	FDef -> Pos def var Vars Block WhereClause         (7)
 	Def -> FDef                                        (8)
-	Def -> Pos ':' var Exp                             (9)
+	Def -> Pos let var Exp                             (9)
 	WhereClause -> where '(' Defs ')'                  (10)
 	WhereClause ->                                     (11)
 	Vars ->                                            (12)
@@ -50,7 +50,7 @@ Terminals
 	true           { TTrue }
 	false          { TFalse }
 	where          { TWhere }
-	':'            { TConstant }
+	let            { TConstant }
 	'('            { TParOpen }
 	')'            { TParClose }
 
@@ -465,7 +465,7 @@ State 37
 	Defs -> Defs '(' . Def ')'                          (rule 5)
 
 	def            reduce using rule 1
-	':'            reduce using rule 1
+	let            reduce using rule 1
 
 	Pos            goto state 39
 	FDef           goto state 40
@@ -481,10 +481,10 @@ State 38
 State 39
 
 	FDef -> Pos . def var Vars Block WhereClause        (rule 7)
-	Def -> Pos . ':' var Exp                            (rule 9)
+	Def -> Pos . let var Exp                            (rule 9)
 
 	def            shift, and enter state 8
-	':'            shift, and enter state 49
+	let            shift, and enter state 49
 
 
 State 40
@@ -601,14 +601,14 @@ State 48
 
 State 49
 
-	Def -> Pos ':' . var Exp                            (rule 9)
+	Def -> Pos let . var Exp                            (rule 9)
 
 	var            shift, and enter state 50
 
 
 State 50
 
-	Def -> Pos ':' var . Exp                            (rule 9)
+	Def -> Pos let var . Exp                            (rule 9)
 
 	int            reduce using rule 1
 	var            reduce using rule 1
@@ -648,7 +648,7 @@ State 53
 
 State 54
 
-	Def -> Pos ':' var Exp .                            (rule 9)
+	Def -> Pos let var Exp .                            (rule 9)
 
 	')'            reduce using rule 9
 
