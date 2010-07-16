@@ -10,7 +10,7 @@ main =
 
 run_tests name =
    mapM (\ t -> do
-      putStrLn $ "The parser must report " ++ name ++ "!"
+      putStrLn $ "\n\nThe parser must report " ++ name ++ ":"
       putStrLn $ "\n\nTest:\n" ++ t ++ "\n\n"
       putTest $ eparse name t)
 

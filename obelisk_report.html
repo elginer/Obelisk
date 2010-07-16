@@ -1,0 +1,292 @@
+<html>
+   <head>
+      <title>The Obelisk Programming Language</title>
+      <style type="text/css">
+      .code {background-color: #222222; font-size: x-large; font-family: monospace; color: yellow;}
+      .banner {text-align: center;}
+      div.columnholder {width: 100%; height: 200px;}
+      div.column {border: 2px solid yellow; width: 500px; float: left; height: 200px;}
+      body {font-family: sans-serif;}
+      </style>
+   </head>
+   <body>
+      <h1 class="banner">The Obelisk Programming Language Report</h2>
+      <h2 class="banner">Copyright John Morrice 2010</h2>
+      <h3 class="banner">Released under the terms of the GNU GPL-3.  See the file 'LICENCE'.</h3>
+      <p>Obelisk is a general purpose systems programming language.  Its type system supports parametric polymorphism (generics), as well as objects and classes with inheritance (subtype polymorphism).  Obelisk supports anonymous and higher order functions and tail-call optimization.<p>
+      <p><b>Contents:</b>
+         </br>
+         &nbsp;&nbsp;&nbsp;<a href="#intro">1. Introduction</a></br>
+         &nbsp;&nbsp;&nbsp;<a href="#syntax">2. Syntax</a></br>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#lexicalsyntax">2.1 Lexical syntax</a></br>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#reservedwords">2.1.1 Reserved words</a>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#syntaxproper">2.2 Syntax proper</a></br>
+         &nbsp;&nbsp;&nbsp;<a href="#semantics">3. Semantics</a></br>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scope">3.1 Scoping rules</a></br>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#types">3.2 Types</a></br>
+      </p>
+      <a name="intro">
+         <h1>1. Introduction</h1>
+      </a>
+      <p>
+         This file is a report on the current state of the Obelisk programming language.  It is structured as a compiler:  each stage in compilation process is described, and in the order of execution of the Obelisk compiler.</br></br>
+         What I mean by this is first the lexical rules are described (associated with lexical analysis), before moving on to describe the syntax (associated with parsing, after lexical analysis in the compiler chain), and so on, for all stages of the compiler, or equivalently with all aspects of the Obelisk programming language.</br></br>
+         The advantage this approach is that each subsection can be analysed with respect to a single compiler subsystem.  So if you are confused, or you suspect the a subsection of this report to be at odds with the behaviour of the compiler, you can easily find the code which represents that subsection and find clarification.</br></br>
+         In aid to that, links to files within appropriate subsystems can be found in italics at the beginning of every subsection.
+      </p>
+      <a name="syntax">
+         <h1>2. Syntax</h1>
+      </a>
+      <a name="lexicalsyntax">
+         <h2>2.1 Lexical syntax</h2>
+      </a>
+      <p>
+         <i>Lexical syntax is associated with the <a href="Language/Obelisk/Lexer.hs">lexer</a>.</i>
+      </p>
+      <p>
+         Before parsing, Obelisk source undergoes lexical analysis where comments and whitespace are removed.  The legal tokens are then parsed as set out in <a href="#syntaxproper">section 2.2 Syntax proper</a>.</br></br>
+         Whitespace consists of the space character, aswell as the following characters, represented here by their escape codes:
+      </p>
+      <p class="code">
+         \n\t\r
+      </p>
+      <p>
+         Obelisk supports both line and block comments.</br></br>
+         Line comments are started by the token <span class="code">//</span> and last until the next newline.</br></br>
+         Block comments are started by the token <span class="code">/*</span> and last until the token <span class="code">*/</span>.  Block comments in Obelisk are not nested.</br></br>
+         Here is an example lexical analysis parse.  The left column represents source* prior to lexical analysis.  The right hand side represents source after lexical analysis.</br></br>
+      </p>
+      <div class="columnholder">
+         <div class="column code">
+            <p>
+               // I say, you look very gruntled Jeeves!
+               </br>
+               </br>
+               (Void # def functional programming</br>
+               &nbsp;&nbsp;&nbsp;((is fun)))
+               </br>
+               </br>
+               /* That was a bit pointless
+               </br>
+               &nbsp;&nbsp;&nbsp;but hey ho, it was just an example! */</br>
+            </p>
+         </div>
+         <div class="column code">
+            <p>
+               (Void # def functional programming ((is fun)))
+            </p>
+         </div>
+      </div>
+      <a name="reservedwords">
+         <h2>2.1.1 Reserved words</h2>
+      </a>
+      <p>
+         Reserved words are identified during lexical analysis.  These reserved words are:
+      </p>
+      <p class="code">
+         def</br></br>
+         where</br></br>
+         let</br></br>
+         true</br></br>
+         false</br></br>
+         #</br></br>
+         -&gt;
+      </p>
+     
+      <a name="syntaxproper">
+         <h2>2.2 Syntax proper</h2>
+      </a>
+      <p>
+         <i>Obelisk's syntax is described by this <a href="happy/obelisk.y">happy file.</a></i>
+      </p>
+      <p>
+         Following is the syntax of Obelisk in pseudo bnf.  Text within apostrophes is <span class="code">'literal'</span>. <span class="code">#</span> indicates a comment till the end of line.  Curly brackets enclose optional elements, eg <span class="code">{ exercise }</span>.  Backslashes enclose a perl-style regular expression, eg <span class="code">/(wub)+/</span>. A pipe <span class="code">|</span> seperates alternatives.</a>
+      </p>
+      <p class="code">
+         # The source is a list of definitions</br>
+         obelisk: fdef obelisk | fdef</br></br>
+
+         # A function definition</br>
+         fdef: '(' ftype 'def' vars block { 'where' '(' { defs } ')' } ')'</br></br>
+
+         # A function's type</br>
+         ftype: classname | classname '-&gt;' classname </br></br>
+
+         # A list of definitions</br>
+         defs: def defs | def </br></br>
+
+         # definitions are either a function...</br>
+         def: fdef</br>
+            &nbsp;&nbsp;&nbsp;| # or a constant</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'(' stype 'let' var exp ')' </br></br>
+
+         # A simple type</br>
+         stype: classname</br></br>
+
+         # A list of expressions</br>
+         exps: exp exps | exp </br></br>
+
+         # An expression, to be evaluated at runtime</br>
+         exp: if | integer | var | '(' vars ')' | '(' exp operator exp ')' | 'true' | 'false'</br></br>
+
+         # An if statement.</br>
+         if:  'if' exp block block</br></br>
+
+         # A block of code</br>
+         block: '(' { exps } ')'</br></br>
+
+         # A list of variables </br>
+         vars: var+</br></br>
+
+         # A variable is one lower case letter followed by zero or more alphanumeric characters or the ? or _ characters.</br>
+         var: /[a-z]([a-z]|[A-z]|[0-9]|_|?)*/</br></br>
+
+         # An integer</br>
+         integer: /[0-9]+/</br></br>
+
+         # A classname is an upper case letter followed by zero or more alphanumeric characters</br>
+         classname: /[A-Z]([a-z]|[A-z]|[0-9])*/
+             
+      </p>
+
+      <p>Here is an example of a valid program, to give a concrete example of syntax use.</p>
+      <a name="example2">
+         <p class="code">
+            // An accumulating implementation of the factorial function.  Tail recursive.</br>
+            (Int -&gt; Int #</br>
+            def factorial x </br>
+            &nbsp;&nbsp;&nbsp;((fact 1 x))</br>
+            &nbsp;&nbsp;&nbsp;where</br>
+            &nbsp;&nbsp;&nbsp;((Int -&gt; Int -&gt; Int #</br>
+            &nbsp;&nbsp;&nbsp;def fact acc i</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((if (i &gt; 0)</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((fact (i * acc) (i - 1)))</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(acc))))))
+         </p>
+      </a>
+      <a name="semantics">
+         <h1>
+            3. Semantics
+         </h1>
+      </a>
+      <a name="scope">
+         <h2>
+            3.1 Scope
+         </h2>
+      </a>
+      <p>
+         <i>The <a href="Language/Obelisk/Scoper.hs">scoper</a> ensures scoping rules are obeyed.</i>
+      </p>
+      <p>
+         An obelisk source file consists of a series of top level function definitions.</br>
+         These definitions are always in scope.</br>
+      </p>
+      <a name="example3.1">
+         <p class="code">
+            // The functions x and y can each return the other, because they share the same scope.</br>
+            (Void # def x (y))</br>
+            (Void # def y (x))</br>
+         </p>
+      </a>
+      <p>
+         Each function definition has an optional where clause, which can introduce new functions and constants into the scope of the function.
+      </p>
+      <a name="example3.2">
+      <p class="code">
+         // Increment an integer by 1</br>
+         (Int -&gt; Int # def inc1 x (y)</br>
+         &nbsp;&nbsp;&nbsp;where</br>
+         &nbsp;&nbsp;&nbsp;((Int # let y (x + 1))))
+         </br></br>
+         (Int -&gt; Int # def inc2 x ((incer x))</br>
+         &nbsp;&nbsp;&nbsp;where</br>
+         &nbsp;&nbsp;&nbsp;((Int -&gt; Int # def incer z ((z + 1)))))
+
+      </p>
+      </a>
+      <p>
+         Function definitions within a where clause can see one another, and a constant can take the value of a function.  However, functions defined within a where clause cannot see constants (as the constants may depend on the functions for their value).
+      </p>
+      <a name="example3.3">
+         <p class="code">
+            // These are legal</br>
+            (Void # def foo ()</br>
+            &nbsp;&nbsp;&nbsp;where</br>
+            &nbsp;&nbsp;&nbsp;((Void # def bar (baz))</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(Void # def baz (bar))))
+            </br></br>
+            (Void # def foo ()</br>
+            &nbsp;&nbsp;&nbsp;where</br>
+            &nbsp;&nbsp;&nbsp;((Int -&gt; Int # def bar zob ((zob + 1)))</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(Int # let baz (bar 3))))
+            </br></br>
+            // This is illegal</br>
+            (Void # def foo ()</br>
+            &nbsp;&nbsp;&nbsp;where</br>
+            &nbsp;&nbsp;&nbsp;((Int # def bar (baz))</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;(Int # let baz 0)))
+         </p>
+      </a>
+      <p>
+         It is also illegal for a constant or function declared within a where clause to share a name either with a formal argument of the function to which the where clause belongs, or with another member of the same where clause.  Similarly, it is illegal for two top level functions to have the same name, and for a function to have two formal arguments with the same name.
+      </p>
+      <a name="example3.4">
+         <p class="code">
+         // These are illegal</br>
+         (Void # def foo bar ()</br>
+         &nbsp;&nbsp;&nbsp;where</br>
+         &nbsp;&nbsp;&nbsp;((Int # let bar 0)))
+         </br></br>
+         (Void # def foo ()</br>
+         &nbsp;&nbsp;&nbsp;where</br>
+         &nbsp;&nbsp;&nbsp;((Int # let bar 0))</br>
+         &nbsp;&nbsp;&nbsp;&nbsp;(Void # def bar ()))
+         </p>
+         <p>
+            These rules ensure that there is no ambiguity in the naming of variables.
+         </p>
+      </a>
+      <a name="types"><h2>3.2 Types</h2></a>
+      <p>
+         <i>The <a href="Language/Obelisk/TypeChecker.hs">typechecker</a> ensures that the rules of the type system are obeyed.</i>
+      </p>
+      <p>
+         Obelisk is a strongly typed language and as such there are certain rules that must be obeyed as regards types.</br></br>
+         Firstly, types must be declared before every function or constant definition.</br></br>
+         A single type indicates a simple data type, or a function of no arguments.</br></br>
+         A number of type names seperated by '-&gt;' symbols indicates a function with arguments.  Of these types, all but the last are the types of the function's arguments, while the last is the type of the value the function returns.
+      </p>
+      <a name>
+         <p class="code">
+            // The code before the # symbol is the type signature.</br>
+            // This is a function of 2 arguments, an Int and a Bool.  It returns an Int.</br>
+            (Int -&gt; Bool -&gt; Int #</br>
+            def maybe_inc n should</br>
+            &nbsp;&nbsp;&nbsp;((if should</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((n + m))</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(n)))</br>
+            &nbsp;&nbsp;&nbsp;where</br>
+            &nbsp;&nbsp;&nbsp;// The constant here has the type Int.</br>
+            &nbsp;&nbsp;&nbsp;((Int # let m 1)))
+         </p>
+      </a>
+      <p>
+         The type of a <a href="#block">block</a> is the type of the last expression.  If a block is empty, its type is <span class="code">Void</span>.</br></br>
+
+         The return type of a <a href="#functions">function</a> is the type of its block</br></br>
+
+         In <a href="#application">function application</a> the type of the each actual argument must match the type of the formal argument to which it is applied.  The overall type of this expression is the return type of the function.</br></br>
+
+         In an <a href="#if">if statement</a>, <span class="code">if test (a) (b)</span> the type of <span class="code">test</span> must be <span class="code">Bool</span>.  Also, the types of <span class="code">a</span> and <span class="code">b</span> must be the same.</br></br>
+       
+<h1>OI!!!!!!!!!! GET IT SMELT!!!!!! Must have syntactic representation of difference between unevaluated and evaluated functions!</h1>
+         It is important to note that a function of no arguments and return type <span class="code">a</span> does not have type equivalence with a variable of type <span class="code">a</span>.  For example:
+      </p>
+      <p class="code">
+      // foo's block returns a</br>
+      (A # def foo (a))</br></br>
+      
+      // bar calls 
+      </p>
+   </body>
+</html>

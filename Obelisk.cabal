@@ -27,7 +27,6 @@ Library
       Language.Obelisk.AST.CodeFragment
    Other-modules:
       Language.Obelisk.TypeChecker.Def
-      Language.Obelisk.TypeChecker.Block
       Language.Obelisk.TypeChecker.Expression
 
 Executable lex

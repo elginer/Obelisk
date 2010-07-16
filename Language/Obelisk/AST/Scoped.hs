@@ -4,17 +4,19 @@
 -- | An AST with tables allowing construction of environments for closures.
 module Language.Obelisk.AST.Scoped
    (module Language.Obelisk.AST
+   ,module Language.Obelisk.AST.CodeFragment
    ,Fragment (..)
    ,ClosureTable (..)
    ,ClosureEntry (..)
    ,CodeFragment (..)
-   ,Pretty (..)
    ,ScopedObelisk
    ,ScopedDef
+   ,ScopedFDef
    ,ScopedExp
    ,ScopedBlock)
    where
 
+import Language.Obelisk.AST.CodeFragment
 import Language.Obelisk.AST.Simple
 import Language.Obelisk.AST
 
@@ -30,7 +32,6 @@ data ClosureEntry = ClosureEntry
    , def_name :: String}
    deriving Show
 
-
 instance Fragment ScopedDef where
    fragment d =
       case d of
@@ -45,10 +46,16 @@ instance Fragment ScopedExp where
       case e of
          If (_, cf) _ _ _ -> cf
          Apply (_, cf) _ _ -> cf
-         Infix (_, cf) _ _ -> cf
+         Infix (_, cf) _ _ _ -> cf
          OVar (_, cf) _ -> cf
          OInt (_, cf) _ -> cf
          OBool (_, cf) _ -> cf
+
+instance Fragment ScopedBlock where
+   fragment (Block (_,cf) es) =
+      if null es
+         then cf
+         else fragment $ last es
 
 -- | The scoped AST, with functions having closure tables generated for them.
 type ScopedObelisk = Obelisk String (ClosureTable, CodeFragment)

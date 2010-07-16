@@ -13,9 +13,7 @@ module Language.Obelisk.AST.Simple
    where
 
 import Language.Obelisk.AST
-import Language.Obelisk.CodeFragment
-
-import Text.Parsec.Pos 
+import Language.Obelisk.AST.CodeFragment
 
 instance Fragment SimpleFDef where
    fragment (Def f _ _ _ _ _) = f 

@@ -1,3 +1,7 @@
+{-#
+   OPTIONS
+   -XTypeSynonymInstances
+#-}
 -- | Pretty printing!
 module Language.Obelisk.Pretty where
 
@@ -8,12 +12,12 @@ class Pretty p where
            -> ShowS -- | Shown, waiting for a string to be joined to the end.
 
 instance Pretty String where
-   pretty s i = pspace . (s ++)
+   pretty' s i = pspace i . (s ++)
 
 -- | Space before a pretty printed line
 pspace :: Int -> ShowS 
-pspace i = (('\n' : replicate i '\t') ++)
+pspace i = (('\n' : replicate (i * 3) ' ') ++)
 
 -- | Pretty print!
-pretty :: Pretty p -> String
-pretty p = pretty p 0 ""
+pretty :: Pretty p => p -> String
+pretty p = pretty' p (-1) ""

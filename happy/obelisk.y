@@ -64,17 +64,17 @@ eparse = M.eparse parse
 Pos :: { CodeFragment }
 Pos : {- empty -} {% get_pos}
 
-{- Parse a quantified type -}
-FQType :: { QType FType }
-FQType : FType '#'  { QType [] $1 }
+{- Parse a function's quantified type -}
+FQType :: { QType }
+FQType : Pos FType '#'  { QType $1 [] $2 }
 
 {- Parse a simple quantified type -}
-SType :: { QType Type }
-SType : TypeName '#' { QType [] $1 }
+SQType :: { QType }
+SQType : Pos TypeName '#' { QType $1 [] (Type $2) }
 
 {- Parse a function's type -}
-FType :: { FType }
-FType : TypeNames   { FType $ reverse $1 }
+FType :: { Type }
+FType : TypeNames   { Function $ reverse $1 }
 
 {- Parse a list of type names seperated by arrows -}
 TypeNames :: { [TypeName] }

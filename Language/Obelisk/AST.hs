@@ -2,18 +2,17 @@
 module Language.Obelisk.AST 
    (module Language.Obelisk.AST.Types
    ,Named (..)
+   ,SimpleNamed (..)
    ,Obelisk (..)
    ,FDef (..)
    ,Def (..)
    ,Block (..)
-   ,Exp (..))
+   ,Exp (..)
+   ,official_type)
    where
 
 import Language.Obelisk.AST.Types
-
--- | AST elements with names
-class Named ast where
-   name :: ast a m -> a
+import Language.Obelisk.AST.Named
 
 instance Named Def where
    name d =
@@ -31,7 +30,7 @@ newtype Obelisk v m = Obelisk [FDef v m]
 
 -- | Function definition
 data FDef v m =
-   Def m (QType FType) v [v] (Block v m) [Def v m]
+   Def m QType v [v] (Block v m) [Def v m]
    deriving Show
 
 -- | Definitions
@@ -39,8 +38,15 @@ data Def v m =
      -- | Define a function
      FDef (FDef v m)
    | -- | Define a constant
-     Constant m (QType Type) v (Exp v m)
+     Constant m QType v (Exp v m)
    deriving Show
+
+-- | The 'official' type of a definition
+official_type :: Def v m -> QType
+official_type d =
+   case d of
+      FDef (Def _ qt _ _ _ _) -> qt
+      Constant _ qt _ _ -> qt
 
 -- | A block of code
 data Block v m = Block m [Exp v m] 
@@ -61,7 +67,6 @@ data Exp v m =
    | -- | A literal boolean
      OBool m Bool
    deriving Show
-
 
 
 

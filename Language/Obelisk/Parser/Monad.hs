@@ -50,7 +50,7 @@ instance Monad OParser where
             ParseFail err -> ParseFail err
 
    fail err = OParser $ \_ fr ->
-      ParseFail $ compiler_error "Parse error" $ err ++ pretty fr 
+      ParseFail $ pretty $ error_line "Parse error" $ error_section $ fragment_error fr
 -- | Get the current source code position and code fragment
 get_pos :: OParser CodeFragment
 get_pos = OParser $ const ParseOK
