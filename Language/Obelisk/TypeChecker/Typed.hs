@@ -40,7 +40,7 @@ unify t e cf =
    either (Left . more_errors) correct_type $ typeof e
    where
    correct_type et =
-      if t == et
+      if t @== et
          then Right t
          else Left (Just t, [WrongType t et]
    -- Perhaps there are more errors to come....

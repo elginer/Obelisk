@@ -65,12 +65,16 @@ Pos :: { CodeFragment }
 Pos : {- empty -} {% get_pos}
 
 {- Parse a quantified type -}
-QType :: { QType }
-QType : Type '#'  { QType [] $1 }
+FQType :: { QType FType }
+FQType : FType '#'  { QType [] $1 }
 
-{- Parse a type -}
-Type :: { Type }
-Type : TypeNames   { Type $ reverse $1 }
+{- Parse a simple quantified type -}
+SType :: { QType Type }
+SType : TypeName '#' { QType [] $1 }
+
+{- Parse a function's type -}
+FType :: { FType }
+FType : TypeNames   { FType $ reverse $1 }
 
 {- Parse a list of type names seperated by arrows -}
 TypeNames :: { [TypeName] }
@@ -98,13 +102,13 @@ Defs : Defs '(' Def ')'    { $3 : $1 }
 
 {- A function definition -}
 FDef :: { SimpleFDef }
-FDef : Pos QType def var Vars Block WhereClause  { Def $1 $2 $4 $5 $6 $7 }
+FDef : Pos FQType def var Vars Block WhereClause  { Def $1 $2 $4 $5 $6 $7 }
 
 
 {- Define a function or a constant -}
 Def :: { SimpleDef }
-Def : FDef                   { FDef $1 } 
-    | Pos QType let var Exp   { Constant $1 $2 $4 $5 }
+Def : FDef                     { FDef $1 } 
+    | Pos SQType let var Exp   { Constant $1 $2 $4 $5 }
 
 {- A where clause -}
 WhereClause :: { [SimpleDef]}

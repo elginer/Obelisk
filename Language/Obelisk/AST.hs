@@ -1,5 +1,15 @@
 -- | Abstract syntax tree for Obelisk
-module Language.Obelisk.AST where
+module Language.Obelisk.AST 
+   (module Language.Obelisk.AST.Types
+   ,Named (..)
+   ,Obelisk (..)
+   ,FDef (..)
+   ,Def (..)
+   ,Block (..)
+   ,Exp (..))
+   where
+
+import Language.Obelisk.AST.Types
 
 -- | AST elements with names
 class Named ast where
@@ -14,32 +24,6 @@ instance Named Def where
 instance Named FDef where
    name (Def _ _ n _ _ _) = n
 
--- | A quantified type
-data QType = QType 
-   { -- | Type variables used in this type
-     tvars :: [String]
-   , -- | The type
-     typ :: Type}
-   deriving (Show, Eq)
-
--- | A type
-data Type =
-   -- | Multiple type names indicate a function
-   Type [TypeName]
-   deriving (Show, Eq)
-
--- | A type name
-data TypeName = 
-   TypeClassName String
-   | TypeVar String
-   deriving Show
-
--- | The return type of a function's type
-return_type :: QType -> QType
-return_type qtyp@(QType vs (Type typs)) =
-   if null typs
-      then qtyp
-      else QType vs (Type $ [last typs])
 
 -- | The obelisk AST is parametrized over a variable type v, and a metadata type m
 newtype Obelisk v m = Obelisk [FDef v m]
@@ -47,7 +31,7 @@ newtype Obelisk v m = Obelisk [FDef v m]
 
 -- | Function definition
 data FDef v m =
-   Def m QType v [v] (Block v m) [Def v m]
+   Def m (QType FType) v [v] (Block v m) [Def v m]
    deriving Show
 
 -- | Definitions
@@ -55,7 +39,7 @@ data Def v m =
      -- | Define a function
      FDef (FDef v m)
    | -- | Define a constant
-     Constant m QType v (Exp v m)
+     Constant m (QType Type) v (Exp v m)
    deriving Show
 
 -- | A block of code
@@ -77,3 +61,7 @@ data Exp v m =
    | -- | A literal boolean
      OBool m Bool
    deriving Show
+
+
+
+

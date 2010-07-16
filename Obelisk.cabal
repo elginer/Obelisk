@@ -23,6 +23,8 @@ Library
       Language.Obelisk.AST
       Language.Obelisk.AST.Simple
       Language.Obelisk.AST.Transformer
+      Language.Obelisk.AST.Types
+      Language.Obelisk.AST.CodeFragment
    Other-modules:
       Language.Obelisk.TypeChecker.Def
       Language.Obelisk.TypeChecker.Block

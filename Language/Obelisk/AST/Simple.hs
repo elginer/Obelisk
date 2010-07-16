@@ -4,9 +4,7 @@
 -- | A Simple AST, as parsed from source code
 module Language.Obelisk.AST.Simple 
    (module Language.Obelisk.AST
-   ,Fragment (..)
-   ,CodeFragment (..)
-   ,Pretty (..)
+   ,module Language.Obelisk.AST.CodeFragment
    ,SimpleObelisk
    ,SimpleDef
    ,SimpleFDef
@@ -15,26 +13,9 @@ module Language.Obelisk.AST.Simple
    where
 
 import Language.Obelisk.AST
-
-import Language.Obelisk.AST.Pretty
+import Language.Obelisk.CodeFragment
 
 import Text.Parsec.Pos 
-
--- | A code fragment displayed in error reporting makes debugging easier for users
-data CodeFragment = CodeFragment
-   {pos :: SourcePos
-   ,code :: String
-   }
-   deriving Show
-
-instance Pretty CodeFragment where
-   pretty c = unlines $
-      ["\nIn " ++ show (pos c)
-      ,"Near code:"] ++ map ('\t' :) (lines $ code c)
-
--- | Get a code fragment from the ast
-class Fragment ast where
-   fragment :: ast -> CodeFragment
 
 instance Fragment SimpleFDef where
    fragment (Def f _ _ _ _ _) = f 

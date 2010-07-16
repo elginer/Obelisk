@@ -18,8 +18,12 @@ instance TypeOf ScopedExp where
                   (M.lookup v $ types env)
          OInt _ _                  -> Right $ new_type "Int"
          OBool _ _                 -> Right $ bool_type
-            
-{- The typeof an if statement
+           
+{- The typeof a function application
+   If the type of the first expression is 
+-}
+ 
+{- The typeof an if expression
   If has a type only if the types of both branches are the same
   If errors are produced in working out the types of either, attempt to find a type from either branch and relay on the errors
   If both branches have a type and don't produce errors, but the types aren't the same, create a BranchesDontMatch error
