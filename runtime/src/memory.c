@@ -40,7 +40,7 @@ void * new_pointer(size_t size)
 }
 
 /* Create a new chunk */
-chunk_addr new_chunk(size_t size, struct memory * mem)
+chunk_addr new_chunk(size_t size, memory_manager mem)
 {
    /* The address of the chunk we are going to return! */
    chunk_addr zone;
@@ -63,13 +63,13 @@ chunk_addr new_chunk(size_t size, struct memory * mem)
 }
 
 /* Is there enough space to make a new chunk of the given size? */
-int enough_space(size_t size, struct memory * mem)
+int enough_space(size_t size, memory_manager mem)
 {
    return ((int) mem->next + chunk_size(size)) - (int) mem->current < (int) mem->size;
 }
 
 /* Allocate a new chunk */
-chunk_addr allocate(size_t size, struct memory * mem)
+chunk_addr allocate(size_t size, memory_manager mem)
 {
    /* If there is not enough free space for the new chunk */
    if (! enough_space(size, mem))
@@ -82,7 +82,7 @@ chunk_addr allocate(size_t size, struct memory * mem)
 }
 
 /* Grow memory.  Double in size, or increase by at least as much space as 'at_least'. */
-void grow(size_t at_least, struct memory * mem)
+void grow(size_t at_least, memory_manager mem)
 {
    /* The size of currently used memory */
    size_t used;
@@ -121,15 +121,54 @@ void grow(size_t at_least, struct memory * mem)
 
 /* Readdress the chunks in current memory
    The arguments are currently used memory, and then the memory unit */
-void readdress(size_t used, struct memory * mem)
+void readdress(size_t used, memory_manager mem)
 {
    /* Pointer to the chunk we're working on */
    struct chunk * this;
-   
-   /* Loop through all the current chunks, updating their addresses */
-   for(this = mem->current; this <= mem->next; this += chunk_size(this->size))
-   {
-      /* Set the address of the chunk to its own address */
+  
+   /* Loop through all the current chunks, updating their addresses */  
+   CHUNK_LOOP(
+         /* Set the address of the chunk to its own address */
       *(this->addr) = this;
-   }
+   )
+}
+
+/* Create a new memory manager of given size */
+memory_manager new_memory_manager(size_t size)
+{
+   /* The new memory manager */
+   memory_manager mem;
+
+   /* The size of the memory areas */
+   size_t area_size;
+
+   /* Set the size of the memory areas */
+   area_size = size;
+
+   /* Create the new memory manager */
+   mem = (memory_manager) new_pointer(sizeof(amemory_manager));
+
+   /* Initialize the memory manager */
+   mem->current = (struct chunk *) new_pointer(area_size);
+   mem->inactive = (struct chunk *) new_pointer(area_size);
+   mem->next = mem->current;
+   mem->size = area_size;
+}
+
+/* Free the addresses of every chunk */
+
+/* Shutdown the memory manager */
+void shutdown_memory_manager(memory_manager mem)
+{
+   /* The current chunk */
+   struct chunk * this;
+
+   /* Free the address of every chunk */
+   CHUNK_LOOP(
+      free(this->addr);
+   )
+
+   /* Free the memory areas */
+   free(mem->current);
+   free(mem->inactive);
 }
