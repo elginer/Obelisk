@@ -64,17 +64,30 @@ eparse = M.eparse parse
 Pos :: { CodeFragment }
 Pos : {- empty -} {% get_pos}
 
-{- Parse a function's quantified type -}
+{- Parse a type -}
+QType :: { QType }
+QType : FQType   { $1 }
+      | SQType   { $1 }
+
+{- Parse a function's type -}
 FQType :: { QType }
-FQType : Pos FType '#'  { QType $1 [] $2 }
+FQType : Pos FType '#' { QType $1 [] $2 }
 
 {- Parse a simple quantified type -}
 SQType :: { QType }
-SQType : Pos TypeName '#' { QType $1 [] (Type $2) }
+SQType : Pos SType '#' { QType $1 [] $2 }
+
+{- Parse a function's quantified type -}
+FType :: { Type }
+FType : '(' ArgTypes ')'  { $2 }
+
+{- Parse a simple type -}
+SType :: { Type }
+SType : TypeName { Type $1 }
 
 {- Parse a function's type -}
-FType :: { Type }
-FType : TypeNames   { Function $ reverse $1 }
+ArgTypes :: { Type }
+ArgTypes : TypeNames   { Function $ reverse $1 }
 
 {- Parse a list of type names seperated by arrows -}
 TypeNames :: { [TypeName] }
@@ -108,7 +121,7 @@ FDef : Pos FQType def var Vars Block WhereClause  { Def $1 $2 $4 $5 $6 $7 }
 {- Define a function or a constant -}
 Def :: { SimpleDef }
 Def : FDef                     { FDef $1 } 
-    | Pos SQType let var Exp   { Constant $1 $2 $4 $5 }
+    | Pos QType let var Exp   { Constant $1 $2 $4 $5 }
 
 {- A where clause -}
 WhereClause :: { [SimpleDef]}

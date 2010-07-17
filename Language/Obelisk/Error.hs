@@ -11,16 +11,20 @@ module Language.Obelisk.Error
    ,error_line
    ,error_lines
    ,error_section
+   ,error_join
    ,broken_compiler)
    where
 
 import Language.Obelisk.Pretty
+
+import Data.List
 
 -- | A nice looking compiler error
 data CompilerError =
      -- | Error text
      forall p . Pretty p => PrettyError p
    | ErrorMessage [CompilerError]
+   | NoRaise [CompilerError]
 
 instance Pretty CompilerError where
    pretty' ce i =
@@ -28,10 +32,16 @@ instance Pretty CompilerError where
          PrettyError p -> pretty' p i
          ErrorMessage ces ->
             foldr (.) id $ (map (flip pretty' (i + 1))) ces
+         NoRaise ces ->
+            foldr (.) id $ (map (flip pretty' i)) ces
 
 -- | A class for things which can be turned into compiler error reports
 class ErrorReport err where
    report :: err -> CompilerError
+
+-- | Combine multiple errors into one report
+error_join :: [CompilerError] -> CompilerError
+error_join = NoRaise . intersperse (new_error $ "\n" ++ replicate 50 '-' ++ "\n" )
 
 -- | An empty error
 empty_error :: CompilerError
@@ -50,8 +60,9 @@ error_lines ps ce =
 error_line :: Pretty p => p -> CompilerError -> CompilerError
 error_line p ce =
    case ce of
-      PrettyError _ -> ErrorMessage [PrettyError p, ce]
+      PrettyError _ -> NoRaise [PrettyError p, ce]
       ErrorMessage ers -> ErrorMessage $ PrettyError p : ers
+      NoRaise ers -> NoRaise $ PrettyError p : ers
 
 -- | Create a new error section (This appears further up, and with fewer tabs than the rest of the report)
 error_section :: CompilerError -> CompilerError

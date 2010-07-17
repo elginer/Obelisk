@@ -1,0 +1,2 @@
+Small runtime environment for obelisk, written in C.
+src/runtime.c is the entry point.

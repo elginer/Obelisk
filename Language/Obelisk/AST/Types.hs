@@ -47,7 +47,7 @@ instance Pretty Type where
    pretty' typ i = ((pspace i) .) 
       (case typ of
          Type tn -> ((sname tn) ++)
-         Function ts -> foldr (.) id (intersperse (" -> " ++) $ map ((++) . sname) ts))
+         Function ts -> ('(' :) . foldr (.) id (intersperse (" -> " ++) $ map ((++) . sname) ts) . (')' :))
 
 -- | A type name
 data TypeName = 
@@ -84,3 +84,7 @@ arg_types typ@(QType _ _ unqtyp) =
 -- | Create a new simple type
 new_type :: String -> QType
 new_type name = QType inject_fragment [] $ Type (TypeClassName name)
+
+-- | Create a new function type
+new_ftype :: [String] -> QType
+new_ftype = QType inject_fragment [] . Function . map TypeClassName

@@ -5,10 +5,8 @@
 module Language.Obelisk.AST.Scoped
    (module Language.Obelisk.AST
    ,module Language.Obelisk.AST.CodeFragment
-   ,Fragment (..)
    ,ClosureTable (..)
    ,ClosureEntry (..)
-   ,CodeFragment (..)
    ,ScopedObelisk
    ,ScopedDef
    ,ScopedFDef

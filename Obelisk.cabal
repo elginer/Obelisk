@@ -20,6 +20,7 @@ Library
       Language.Obelisk.TypeChecker.Typed
       Language.Obelisk.Emitter
       Language.Obelisk.Error
+      Language.Obelisk.Pretty
       Language.Obelisk.AST
       Language.Obelisk.AST.Simple
       Language.Obelisk.AST.Transformer
@@ -45,4 +46,10 @@ Executable scope
    Other-modules:
       Language.Obelisk.Parser
       Language.Obelisk.Scoper
-      Language.Obelisk.AST.Scoped 
+
+Executable type 
+   Main-is: tests/type.hs
+   Other-modules:
+      Language.Obelisk.TypeChecker
+      Language.Obelisk.Scoper
+      Language.Obelisk.Parser 

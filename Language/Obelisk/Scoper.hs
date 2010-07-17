@@ -4,8 +4,6 @@ module Language.Obelisk.Scoper where
 import Language.Obelisk.AST.Simple
 import Language.Obelisk.AST.Scoped
 
-import Language.Obelisk.AST.Pretty
-
 import Language.Obelisk.Error
 
 import Data.List
@@ -17,11 +15,15 @@ data ScopeError =
    OutOfScope String CodeFragment
    | DuplicateName String CodeFragment
 
-instance Pretty ScopeError where
-   pretty (OutOfScope v cf) = unlines $
-      ("Not in scope: " ++ v ++ "\n\tNear ") : map ("\t\t" ++) (lines (pretty cf))
-   pretty (DuplicateName v cf) = unlines $
-      ("A definition has the same name as another variable or definition in the same scope: " ++ v ++ "\n\tNear ") : map ("\t\t" ++) (lines (pretty cf))
+instance ErrorReport ScopeError where
+   report se =
+      case se of
+         OutOfScope v cf ->
+            error_line ("Not in scope: " ++ v) $ report cf
+
+         DuplicateName v cf ->
+            error_line ("A definition has the same name as another variable or definition in the same scope: " ++ v) $ report cf
+
 -- | Scoping transformation
 class Scoper s where
    scope' :: ClosureTable -- ^ The free variables in the current environment
@@ -83,7 +85,7 @@ escope :: SimpleObelisk -> Either String ScopedObelisk
 escope (Obelisk defs) =
    if null errs
       then Right $ Obelisk scoped
-      else Left $ compiler_error "Scope error" $ intercalate "\n\n" $ map pretty errs
+      else Left $ pretty $ error_join $ map report errs
    where
    errs = duplicate_top_level defs ++ concat (map scope_check scoped)
    scoped = map (scope' $ ClosureTable $ form_env "" $ map FDef defs) defs

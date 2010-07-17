@@ -6,8 +6,8 @@ main = run_tests "success" success >> run_tests "failure" failure
 
 run_tests name =
    mapM_ $ \t -> do
-      putStrLn $ "\n\nThe scoper must report " ++ name ++ "!"
-      putStrLn $ "Test:\n " ++ t
+      putStrLn $ "\n\nThe scoper must report " ++ name ++ ":"
+      putStrLn $ "\n\nTest:\n " ++ t
       case escope $ run_parser name t of
          Right ob -> print ob
          Left err -> putStrLn err

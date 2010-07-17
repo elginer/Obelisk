@@ -4,7 +4,12 @@ module Language.Obelisk.TypeChecker.Typed
    ,Typed (..)
    ,TypeEnvironment (..)
    ,TypeError (..)
+   ,relay
+   ,type_correct
+   ,filter_correct
    ,unify
+   ,unify_types
+   ,unify_types'
    ,void_type
    ,bool_type)
    where
@@ -14,9 +19,11 @@ import Language.Obelisk.AST.Scoped
 
 import Data.Map (Map)
 
+import Control.Arrow
+
 -- | An AST element either has a type, or it will produce a list of type errors and perhaps a type
 class Typed ast where
-   typeof :: ast -> TypeEnvironment -> Either (Maybe QType, [TypeError]) QType
+   typeof :: ast -> TypeEnvironment -> (Maybe QType, [TypeError])
 
 -- | Type environment
 data TypeEnvironment = TypeEnvironment
@@ -33,6 +40,7 @@ data TypeError =
      WrongNumberOfActualArguments Int Int CodeFragment
    | -- | The branches of an if statement do not match
      BranchesDontMatch QType QType CodeFragment
+      deriving Show
 
 instance ErrorReport TypeError where
    report ty_err = error_line "Type error:" $ error_section $
@@ -62,23 +70,39 @@ instance ErrorReport TypeError where
             error_line "But the type of the 'false' branch was:" $
             error_line falseb $ report cf
         
--- | One type may unify with another
-unify :: (Typed ast, Fragment ast) => QType -> ast -> TypeEnvironment -> Either (Maybe QType, [TypeError]) QType
-unify ty ex env =
-   either (Left . more_errors) correct_type $ typeof ex env
-   where
-   correct_type ext =
-      if ty == ext
-         then Right ty
-         else Left (Just ty, [WrongType ty ext $ fragment ex])
-   -- Perhaps there are more errors to come....
-   more_errors (mext, ers) =
-      maybe (Just ty, ers) 
-            (\ext ->
-               if ty == ext
-                  then (Just ty, ers)
-                  else (Just ty, WrongType ty ext (fragment ex) : ers))  
-            mext
+-- | Filter all the correct types
+filter_correct :: [(Maybe QType, [TypeError])] -> [(Maybe QType, [TypeError])]
+filter_correct =
+   filter (null . snd)
+
+-- | The type is correct.  Convert to a form used by the type checker.
+type_correct :: QType -> (Maybe QType, [TypeError])
+type_correct = Just &&& (const [])
+
+-- | An AST element must be unified with a type.  Report any errors in unification.
+unify :: (Typed ast, Fragment ast) => QType -> ast -> TypeEnvironment -> [TypeError]
+unify ty ex env = unify_types' ty (typeof ex env) $ fragment ex
+
+-- | Type unification, where the state of the second type is in question
+unify_types' :: QType -> (Maybe QType, [TypeError]) -> CodeFragment -> [TypeError]
+unify_types' ty (mty_ex, ers) cf =
+   maybe ers (\ty_ex ->
+                maybe ers (: ers) $ unify_types ty ty_ex cf) mty_ex
+
+-- | Type unification.  Can one type be unified with another?  If not, report an error.
+unify_types :: QType -> QType -> CodeFragment -> Maybe TypeError 
+unify_types ty1 ty2 cf =
+   if ty1 == ty2
+      then Nothing
+      else Just $ WrongType ty1 ty2 cf
+
+-- | Choose next course of action based on a type.   
+relay :: (Maybe QType, [TypeError])            -- ^ If there is no type, add these errors, and replace the type with this.
+      -> (QType -> (Maybe QType, [TypeError])) -- ^ If there is a type, apply the type to the function, relaying errors.
+      -> (Maybe QType, [TypeError])            -- ^ The type we are inspecting
+      -> (Maybe QType, [TypeError])            -- ^ The next type
+relay bad good typ =
+   second ((snd typ)++) $ maybe bad good $ fst typ
 
 -- | The void type
 void_type :: QType

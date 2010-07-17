@@ -87,7 +87,7 @@ lex cont = OParser $ \i report ->
    ilex s = do
       setPosition s
       T.whiteSpace obtok
-      cod <- fmap (unlines . take 2 . lines) getInput
+      cod <- fmap (unlines . take 1 . lines) getInput
       t <- tlex
       p <- getPosition
       i <- getInput
