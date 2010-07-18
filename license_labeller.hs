@@ -22,33 +22,27 @@ This file is part of The Obelisk Programming Language.
 
 -}
 
-{-# OPTIONS
-    -XTypeSynonymInstances
-#-}
--- | A Simple AST, as parsed from source code
-module Language.Obelisk.AST.Simple 
-   (module Language.Obelisk.AST
-   ,module Language.Obelisk.AST.CodeFragment
-   ,SimpleObelisk
-   ,SimpleDef
-   ,SimpleFDef
-   ,SimpleExp
-   ,SimpleBlock)
-   where
+import Prelude hiding (readFile)
 
-import Language.Obelisk.AST
-import Language.Obelisk.AST.CodeFragment
+import System.Environment
+import Data.ByteString.Char8 hiding (putStrLn, unlines)
 
-instance Fragment SimpleFDef where
-   fragment (Def f _ _ _ _ _) = f 
+import System.IO hiding (readFile, hGetContents) 
 
--- | The obelisk AST, where variables are strings, and the metadata is a code fragment near the AST component 
-type SimpleObelisk = Obelisk String CodeFragment 
+main = do
+   (cs:cf:as) <- getArgs 
+   copy <- readFile "permission"
+   mapM (add_notice cs cf copy) as
 
-type SimpleFDef = FDef String CodeFragment
+add_notice comment_start comment_finish copy fp = do
+   putStrLn $ "Going to read " ++ fp
+   code <- readFile fp 
+   src <- openFile fp WriteMode 
+   mapM (hPut src) [pack comment_start, pack "\n\n", notice, copy, singleton '\n', pack comment_finish, pack "\n\n", code]
+   hClose src
 
-type SimpleDef = Def String CodeFragment
-
-type SimpleExp = Exp String CodeFragment
-
-type SimpleBlock = Block String CodeFragment
+notice = pack $ unlines
+   ["Copyright 2010 John Morrice"
+   ,""
+   ,"This source file is part of The Obelisk Programming Language and is distributed under the terms of the GNU General Public License"
+   ,""]

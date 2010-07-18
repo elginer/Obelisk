@@ -2,7 +2,7 @@ Name:		Obelisk
 Version:	0.0.1
 Cabal-Version:  >= 1.2
 License:	GPL-3
-License-File:	LICENCE
+License-File:   COPYING	
 Author:		John Morrice
 Category:	Compilers/Interpreters
 Synopsis:       An simple object oriented language, with a strongly typed form of duck-typing.
