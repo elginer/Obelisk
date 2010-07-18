@@ -1,0 +1,30 @@
+The Obelisk Programming Language
+
+From the Obelisk Report:
+	"Obelisk is a general purpose systems programming language.
+         Its type system supports parametric polymorphism (generics), 
+         as well as objects and classes with inheritance (subtype polymorphism).  
+         Obelisk supports anonymous and higher order functions and tail-call optimization."
+
+...well, not quite.  That is what Obelisk aims to be.  This is a work-in progress compiler for the Obelisk programming language.
+
+What you'll need to work on this:
+* The Glasgow Haskell compiler.  I am using version 6.10.4.
+* Cabal-install, a command line interface to GHC package management.
+* A C compiler.  The scripts that build the runtime are rigged to use GCC.  I use C99 and -pedantic.
+
+Current stage: iteration #1
+Objectives: implement a compiler for non-polymorphic, simply typed functions.
+
+What we have:
+In the compiler; Lexical analysis, parse, and type-checking of simple functions.  Check the 'tests' directory.
+
+In the run-time: Basic memory management
+
+Build the compiler with ./build.sh
+Run the tests with ./test.sh
+Build the runtime with ./runtime.sh
+
+In the runtime directory
+Build the tests with ./test.sh
+Execute the runtime tests by hand or within gdb.
