@@ -62,7 +62,7 @@
                // I say, you look very gruntled Jeeves!
                </br>
                </br>
-               (Void # def functional programming</br>
+               ((Void) # def functional programming</br>
                &nbsp;&nbsp;&nbsp;((is fun)))
                </br>
                </br>
@@ -73,7 +73,7 @@
          </div>
          <div class="column code">
             <p>
-               (Void # def functional programming ((is fun)))
+               ((Void) # def functional programming ((is fun)))
             </p>
          </div>
       </div>
@@ -107,10 +107,10 @@
          obelisk: fdef obelisk | fdef</br></br>
 
          # A function definition</br>
-         fdef: '(' ftype 'def' vars block { 'where' '(' { defs } ')' } ')'</br></br>
+         fdef: '(' '(' ftype ')' 'def' vars block { 'where' '(' { defs } ')' } ')'</br></br>
 
          # A function's type</br>
-         ftype: classname | classname '-&gt;' classname </br></br>
+         ftype: classname | ftype '-&gt;' classname </br></br>
 
          # A list of definitions</br>
          defs: def defs | def </br></br>
@@ -153,7 +153,7 @@
       <a name="example2">
          <p class="code">
             // An accumulating implementation of the factorial function.  Tail recursive.</br>
-            (Int -&gt; Int #</br>
+            ((Int -&gt; Int) #</br>
             def factorial x </br>
             &nbsp;&nbsp;&nbsp;((fact 1 x))</br>
             &nbsp;&nbsp;&nbsp;where</br>
@@ -184,8 +184,8 @@
       <a name="example3.1">
          <p class="code">
             // The functions x and y can each return the other, because they share the same scope.</br>
-            (Void # def x (y))</br>
-            (Void # def y (x))</br>
+            ((Void) # def x (y))</br>
+            ((Void) # def y (x))</br>
          </p>
       </a>
       <p>
@@ -194,13 +194,13 @@
       <a name="example3.2">
       <p class="code">
          // Increment an integer by 1</br>
-         (Int -&gt; Int # def inc1 x (y)</br>
+         ((Int -&gt; Int) # def inc1 x (y)</br>
          &nbsp;&nbsp;&nbsp;where</br>
          &nbsp;&nbsp;&nbsp;((Int # let y (x + 1))))
          </br></br>
-         (Int -&gt; Int # def inc2 x ((incer x))</br>
+         ((Int -&gt; Int) # def inc2 x ((incer x))</br>
          &nbsp;&nbsp;&nbsp;where</br>
-         &nbsp;&nbsp;&nbsp;((Int -&gt; Int # def incer z ((z + 1)))))
+         &nbsp;&nbsp;&nbsp;(((Int -&gt; Int) # def incer z ((z + 1)))))
 
       </p>
       </a>
@@ -210,20 +210,20 @@
       <a name="example3.3">
          <p class="code">
             // These are legal</br>
-            (Void # def foo ()</br>
+            ((Void) # def foo ()</br>
             &nbsp;&nbsp;&nbsp;where</br>
-            &nbsp;&nbsp;&nbsp;((Void # def bar (baz))</br>
-            &nbsp;&nbsp;&nbsp;&nbsp;(Void # def baz (bar))))
+            &nbsp;&nbsp;&nbsp;(((Void) # def bar (baz))</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;((Void) # def baz (bar))))
             </br></br>
-            (Void # def foo ()</br>
+            ((Void) # def foo ()</br>
             &nbsp;&nbsp;&nbsp;where</br>
-            &nbsp;&nbsp;&nbsp;((Int -&gt; Int # def bar zob ((zob + 1)))</br>
+            &nbsp;&nbsp;&nbsp;(((Int -&gt; Int) # def bar zob ((zob + 1)))</br>
             &nbsp;&nbsp;&nbsp;&nbsp;(Int # let baz (bar 3))))
             </br></br>
             // This is illegal</br>
-            (Void # def foo ()</br>
+            ((Void) # def foo ()</br>
             &nbsp;&nbsp;&nbsp;where</br>
-            &nbsp;&nbsp;&nbsp;((Int # def bar (baz))</br>
+            &nbsp;&nbsp;&nbsp;(((Int) # def bar (baz))</br>
             &nbsp;&nbsp;&nbsp;&nbsp;(Int # let baz 0)))
          </p>
       </a>
@@ -233,14 +233,14 @@
       <a name="example3.4">
          <p class="code">
          // These are illegal</br>
-         (Void # def foo bar ()</br>
+         ((Void) # def foo bar ()</br>
          &nbsp;&nbsp;&nbsp;where</br>
          &nbsp;&nbsp;&nbsp;((Int # let bar 0)))
          </br></br>
-         (Void # def foo ()</br>
+         ((Void) # def foo ()</br>
          &nbsp;&nbsp;&nbsp;where</br>
          &nbsp;&nbsp;&nbsp;((Int # let bar 0))</br>
-         &nbsp;&nbsp;&nbsp;&nbsp;(Void # def bar ()))
+         &nbsp;&nbsp;&nbsp;&nbsp;((Void) # def bar ()))
          </p>
          <p>
             These rules ensure that there is no ambiguity in the naming of variables.
@@ -253,14 +253,14 @@
       <p>
          Obelisk is a strongly typed language and as such there are certain rules that must be obeyed as regards types.</br></br>
          Firstly, types must be declared before every function or constant definition.</br></br>
-         A single type indicates a simple data type, or a function of no arguments.</br></br>
-         A number of type names seperated by '-&gt;' symbols indicates a function with arguments.  Of these types, all but the last are the types of the function's arguments, while the last is the type of the value the function returns.
+         A single type name indicates a simple data type. </br></br>
+         A function's type is surrounded by brackets, to distinguish it as un-evaluated. It may consist of one type name indicating a function of no arguments, or number of type names seperated by '-&gt;' symbols indicating a function with arguments.  Of these types, all but the last are the types of the function's arguments, while the last is the type of the value the function returns.
       </p>
       <a name>
          <p class="code">
             // The code before the # symbol is the type signature.</br>
             // This is a function of 2 arguments, an Int and a Bool.  It returns an Int.</br>
-            (Int -&gt; Bool -&gt; Int #</br>
+            ((Int -&gt; Bool -&gt; Int) #</br>
             def maybe_inc n should</br>
             &nbsp;&nbsp;&nbsp;((if should</br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((n + m))</br>
@@ -279,13 +279,16 @@
 
          In an <a href="#if">if statement</a>, <span class="code">if test (a) (b)</span> the type of <span class="code">test</span> must be <span class="code">Bool</span>.  Also, the types of <span class="code">a</span> and <span class="code">b</span> must be the same.</br></br>
        
-         It is important to note that a function of no arguments and return type <span class="code">a</span> does not have type equivalence with a variable of type <span class="code">a</span>.  For example:
+         It is important to note that a function whose type is <span class="code">(A)</span> is not equivalent to <span class="code">A</span>.  For example:
       </p>
       <p class="code">
-      // foo's block returns a</br>
-      ((A) # def foo (a))</br></br>
-      
-      // bar calls 
+         // foo's block returns bar. foo has type (A), but bar must have type A. </br>
+         ((A) # def foo (bar)</br>
+         &nbsp;&nbsp;&nbsp;where</br>
+         &nbsp;&nbsp;&nbsp;((A # let bar (some expression))))</br></br>
+      </p>
+      <p>
+         This distinguishes unevaluated functions from values - necessary for a consistent type checking system, especially with higher order functions (unimplemented).
       </p>
    </body>
 </html>
