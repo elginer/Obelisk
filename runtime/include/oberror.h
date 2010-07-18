@@ -2,11 +2,11 @@
 #ifndef ERROR
 #define ERROR
 
-#include "stdlib.h"
+#include <error.h>
+#include <stdlib.h>
 
 /* Macro to report errors and exit. */
 #define FATAL_ERROR(MSG) \
-   perror("Fatal error in Obelisk runtime; " MSG );\
-   exit(EXIT_FAILURE);
+   error(EXIT_FAILURE, 0 ,"Fatal error in Obelisk runtime; " MSG );\
 
 #endif

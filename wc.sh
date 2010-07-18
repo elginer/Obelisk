@@ -1,2 +1,3 @@
 #! /bin/sh
-wc `find -regex '.+\.\(hs\|y\)'` | sort -n
+
+wc `find -regex '.+\.\(hs\|y\|c\)'` | sort -n

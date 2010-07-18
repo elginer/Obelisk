@@ -1,8 +1,8 @@
 #include "object.h"
 #include "memory.h"
-#include "error.h"
+#include "oberror.h"
 
-#include "stdlib.h"
+#include <stdlib.h>
 
 /* Resize a memory area */
 void * resize_pointer(size_t size, void * old)
@@ -48,15 +48,15 @@ chunk_addr new_chunk(size_t size, memory_manager mem)
    /* Request a pointer from the operating system */
    zone = (chunk_addr) new_pointer(sizeof(zone));
 
-   /* Write the address of the new chunk to this pointer */
+   /* Write the address of the new chunk to chnk pointer */
    *zone = mem->next;
 
    /* Initialize the chunk */
    mem->next->size = size;
    mem->next->addr = zone;
 
-   /* Set the next chunk pointer to be after the address of this chunk */
-   mem->next = mem->next + size;
+   /* Set the next chunk pointer to be after the address of chnk chunk */
+   mem->next = (chunk *) ((word *) mem->next + chunk_size(size));
 
    /* Return the address */
    return zone;
@@ -87,9 +87,6 @@ void grow(size_t at_least, memory_manager mem)
    /* The size of currently used memory */
    size_t used;
 
-   /* The new memory area */
-   struct chunk * new_memory;
-
    /* The miniumum size we need to grow by */
    at_least = chunk_size(at_least);
 
@@ -113,7 +110,7 @@ void grow(size_t at_least, memory_manager mem)
    mem->current = resize_pointer(mem->size, mem->current);
 
    /* Set the address of the next chunk */
-   mem->next = (struct chunk *) ((size_t) mem->current + used);
+   mem->next = (chunk *) ((size_t) mem->current + used);
 
    /* readdress the chunks in the current memory region */
    readdress(used, mem);
@@ -124,12 +121,12 @@ void grow(size_t at_least, memory_manager mem)
 void readdress(size_t used, memory_manager mem)
 {
    /* Pointer to the chunk we're working on */
-   struct chunk * this;
-  
+   chunk * chnk;
+ 
    /* Loop through all the current chunks, updating their addresses */  
    CHUNK_LOOP(
          /* Set the address of the chunk to its own address */
-      *(this->addr) = this;
+      *(chnk->addr) = chnk;
    )
 }
 
@@ -149,9 +146,9 @@ memory_manager new_memory_manager(size_t size)
    mem = (memory_manager) new_pointer(sizeof(amemory_manager));
 
    /* Initialize the memory manager */
-   mem->current = (struct chunk *) new_pointer(area_size);
-   mem->inactive = (struct chunk *) new_pointer(area_size);
-   mem->next = mem->current;
+   mem->current = (memory_area) new_pointer(area_size);
+   mem->inactive = (memory_area) new_pointer(area_size);
+   mem->next = (chunk *) mem->current;
    mem->size = area_size;
 }
 
@@ -161,11 +158,11 @@ memory_manager new_memory_manager(size_t size)
 void shutdown_memory_manager(memory_manager mem)
 {
    /* The current chunk */
-   struct chunk * this;
+   chunk * chnk;
 
    /* Free the address of every chunk */
    CHUNK_LOOP(
-      free(this->addr);
+      free(chnk->addr);
    )
 
    /* Free the memory areas */

@@ -1,5 +1,5 @@
 // Test that errors work
-#include "error.h"
+#include "oberror.h"
 
 int main(int argc, char ** argv)
 {

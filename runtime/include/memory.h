@@ -5,18 +5,21 @@
 #include "object.h"
 #include "stdlib.h"
 
+/* A memory area */
+typedef word * memory_area;
+
 /* The structure of the memory sub-system. */
 struct memory
 {
    /* The currently active memory area */
-   struct chunk * current;
+   memory_area current;
 
    /* A currently inactive memory area */
-   struct chunk * inactive;
+   memory_area inactive;
 
    /* A pointer to the next piece of free space 
       in the current area */
-   struct chunk * next;
+   chunk * next;
 
    /* Size of memory */
    size_t size;
@@ -41,9 +44,11 @@ memory_manager new_memory_manager(size_t size);
 /* Shutdown the memory manager */
 void shutdown_memory_manager(memory_manager mem);
 
-/* Macro to loop through chunks.  The current chunk is called 'this' and has type 'struct chunk *'.  It is expected that you declare 'this' before using this macro'.  It is expected that the memory_manager be called 'mem' in this scope. */
+/* Macro to loop through chunks.  The current chunk is called 'chnk' and has type 'chunk *'.  It is expected that you declare 'chnk' before using chnk macro'.  It is expected that the memory_manager be called 'mem' in chnk scope. */
 #define CHUNK_LOOP(ACT) \
-      for(this = mem->current; this <= mem->next; this += chunk_size(this->size)) \
+      for (chnk = (chunk *) mem->current; \
+          chnk < mem->next; \
+          chnk = (chunk *) ((word *) chnk + chunk_size(chnk->size))) \
    { \
    ACT \
    }

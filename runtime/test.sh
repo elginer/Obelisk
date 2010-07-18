@@ -12,5 +12,5 @@ TEST=$1
 shift
 
 # Compile and run tests
-gcc -Iinclude -o tests/$TEST tests/$TEST.c $*
-./tests/$TEST
+gcc -Iinclude -o test_out/$TEST tests/$TEST.c $*
+# ./tests/$TEST

@@ -2,25 +2,28 @@
 #ifndef OBJECT
 #define OBJECT
 
-#include "stdlib.h"
-#include "stdarg.h"
+#include <stdlib.h>
+#include <stdarg.h>
+
+/* An 8-bit word */
+typedef char word;
+
+/* Nice looking alias for a chunk */
+typedef struct chunkS chunk;
+
+/* An address of a chunk, from the perspective of the mutator. */
+typedef chunk ** chunk_addr;
 
 /* A chunk of memory, requested from the memory manager */
-struct chunk
+struct chunkS
 {
    /* The size of this chunk */
    size_t size;
 
    /* The address of this chunk */
-   struct chunk ** addr;
+   chunk_addr addr;
 }
 achunk;
-
-/* An address of a chunk, from the perspective of the mutator. */
-typedef struct chunk ** chunk_addr;
-
-/* The size in memory the a chunk would occupy */
-size_t chunk_size(size_t size);
 
 /* The return type is short */
 typedef short return_type;
@@ -35,7 +38,9 @@ typedef struct function_pointerS function_pointer;
 typedef struct trampolineS trampoline;
 typedef struct return_valS return_val;
 typedef union returnedU returned;
-typedef chunk_addr ** closure_environment;
+
+/* The closure environment is a list of chunk_addresses */
+typedef chunk_addr * closure_environment;
 
 /* A pointer to an obelisk function */
 struct function_pointerS
@@ -82,5 +87,13 @@ struct return_valS
 }
 areturn_val;
 
+/* The size in memory the a chunk would occupy */
+size_t chunk_size(size_t size);
+
+/* Get a pointer to the ith position of the chunk */
+word * obpointer(size_t i, chunk_addr obj);
+
+/* Copy n bytes from obj to the ith position of the chunk */
+void obwrite(word * chu, word * obj, size_t n);
 
 #endif
