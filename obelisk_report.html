@@ -11,7 +11,7 @@
    </head>
    <body>
       <h1 class="banner">The Obelisk Programming Language Report</h2>
-      <h2 class="banner">Copyright John Morrice 2010</h2>
+      <h2 class="banner">Copyright John Morrice 2010.  Contact: spoon@killersmurf.com</h2>
       <h3 class="banner">Released under the terms of the GNU GPL-3.  See the file 'LICENCE'.</h3>
       <p>Obelisk is a general purpose systems programming language.  Its type system supports parametric polymorphism (generics), as well as objects and classes with inheritance (subtype polymorphism).  Obelisk supports anonymous and higher order functions and tail-call optimization.<p>
       <p><b>Contents:</b>
@@ -19,7 +19,7 @@
          &nbsp;&nbsp;&nbsp;<a href="#intro">1. Introduction</a></br>
          &nbsp;&nbsp;&nbsp;<a href="#syntax">2. Syntax</a></br>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#lexicalsyntax">2.1 Lexical syntax</a></br>
-         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#reservedwords">2.1.1 Reserved words</a>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#reservedwords">2.1.1 Reserved words</a></br>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#syntaxproper">2.2 Syntax proper</a></br>
          &nbsp;&nbsp;&nbsp;<a href="#semantics">3. Semantics</a></br>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scope">3.1 Scoping rules</a></br>
@@ -279,12 +279,11 @@
 
          In an <a href="#if">if statement</a>, <span class="code">if test (a) (b)</span> the type of <span class="code">test</span> must be <span class="code">Bool</span>.  Also, the types of <span class="code">a</span> and <span class="code">b</span> must be the same.</br></br>
        
-<h1>OI!!!!!!!!!! GET IT SMELT!!!!!! Must have syntactic representation of difference between unevaluated and evaluated functions!</h1>
          It is important to note that a function of no arguments and return type <span class="code">a</span> does not have type equivalence with a variable of type <span class="code">a</span>.  For example:
       </p>
       <p class="code">
       // foo's block returns a</br>
-      (A # def foo (a))</br></br>
+      ((A) # def foo (a))</br></br>
       
       // bar calls 
       </p>
