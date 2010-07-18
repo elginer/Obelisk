@@ -7,10 +7,11 @@
 
 /* Copying garbage collector. */
 
-/* Collect garbage. */
-void collect(struct memory * m);
+/* A nicer name for the location finder */
+typedef struct location_finder * location_finder;
 
-struct location_finder
+/* Data structure to store new location of objects in O(1) time. */
+struct location_finderS
 {
    /* The start address of the space
       for the objects which are to act as keys. */
@@ -21,7 +22,12 @@ struct location_finder
    struct chunk * to_start;
 };
 
+/* Collect garbage. */
+void collect_garbage(memory_manager m);
+
+/* */
+
 /* Return a new location finder of the given size */
-struct location_finder * new_location_finder(struct chunk * from, struct chunk * to);
+location_finder new_location_finder(struct chunk * from, struct chunk * to);
 
 #endif
