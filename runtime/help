@@ -1,2 +1,10 @@
 Small runtime environment for obelisk, written in C.
-src/runtime.c is the entry point.
+
+Provides memory management.  See include/memory.h
+Provides garbage collection.  See include/garbage.h
+
+Comes with tests
+Try
+./error_test.sh
+And
+./memory_test.sh

@@ -11,6 +11,5 @@ fi
 TEST=$1
 shift
 
-# Compile and run tests
+# Compile test
 gcc -Iinclude -o test_out/$TEST tests/$TEST.c $*
-# ./tests/$TEST

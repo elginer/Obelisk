@@ -62,19 +62,31 @@ chunk_addr new_chunk(size_t size, memory_manager mem)
    return zone;
 }
 
-/* Is there enough space to make a new chunk of the given size? */
-int enough_space(size_t size, memory_manager mem)
+/* The space required to make a new chunk of the given size */
+int space_required(size_t size, memory_manager mem)
 {
-   return ((int) mem->next + chunk_size(size)) - (int) mem->current < (int) mem->size;
+/*   printf("The difference between the current and next memory positions: %d\n", (word *) mem->next - (word *) mem->current);
+   printf("The real size we have to allocate: %u\n", chunk_size(size)); */
+   return (size_t) (((word *) mem->next + chunk_size(size)) - (word *) mem->current);
 }
 
 /* Allocate a new chunk */
 chunk_addr allocate(size_t size, memory_manager mem)
 {
+   /* The space we need to grow by */
+   int required;
+
+/*   printf("\n\nMutator asked us to allocate space of %u\n", size); */
+
+   /* Find the space required */
+   required = space_required(size, mem) - mem->size;
+
+/*   printf("Space required: %d\n", required); */
+
    /* If there is not enough free space for the new chunk */
-   if (! enough_space(size, mem))
+   if (required > 0)
    {
-      grow(size, mem);
+      grow(required, mem);
    }
 
    /* Return the new chunk */
@@ -87,11 +99,14 @@ void grow(size_t at_least, memory_manager mem)
    /* The size of currently used memory */
    size_t used;
 
-   /* The miniumum size we need to grow by */
-   at_least = chunk_size(at_least);
-
    /* Find the size of currently used memory */
-   used = (size_t) mem->next - (size_t) mem->current;
+   used = (size_t) ((word *) mem->next - (word *) mem->current);
+
+/*
+   printf("The size now: %u\n", mem->size);
+   printf("We need to grow at least: %d\n", at_least);
+   printf("We are using: %d\n", used);
+   printf("END REPORT\n\n"); */
 
    /* If doubling the memory isn't enough then the new size is the old_size + at_least */
    if (mem->size > at_least)
@@ -136,20 +151,14 @@ memory_manager new_memory_manager(size_t size)
    /* The new memory manager */
    memory_manager mem;
 
-   /* The size of the memory areas */
-   size_t area_size;
-
-   /* Set the size of the memory areas */
-   area_size = size;
-
    /* Create the new memory manager */
    mem = (memory_manager) new_pointer(sizeof(amemory_manager));
 
    /* Initialize the memory manager */
-   mem->current = (memory_area) new_pointer(area_size);
-   mem->inactive = (memory_area) new_pointer(area_size);
+   mem->current = (memory_area) new_pointer(size);
+   mem->inactive = (memory_area) new_pointer(size);
    mem->next = (chunk *) mem->current;
-   mem->size = area_size;
+   mem->size = size;
 }
 
 /* Free the addresses of every chunk */

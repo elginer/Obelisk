@@ -9,7 +9,7 @@
 #include "stdio.h"
 
 /* The number of reads and writes we are going to do. */
-#define ITERATIONS 5000
+#define ITERATIONS 5000 
 
 /* Request a number of chunks */
 void request_test(size_t max, chunk_addr objs[], memory_manager mem)
@@ -56,7 +56,7 @@ void read_test(size_t max, chunk_addr objs[])
    /* Print out each zone */
    for(i = 0; i < max; i++)
    {  /* Print the contents of the zone */
-      printf("Zone contents: %s", obpointer(0, objs[i]));
+ //     printf("Zone contents: %s", obpointer(0, objs[i]));
    }
 
 
@@ -64,6 +64,7 @@ void read_test(size_t max, chunk_addr objs[])
 
 int main(int argc, int argv)
 {
+
    /* The memory manager */
    memory_manager mem;
 
@@ -71,7 +72,7 @@ int main(int argc, int argv)
    chunk_addr objs[ITERATIONS];
 
    /* Initialize the memory manager */
-   mem = new_memory_manager(ITERATIONS * (chunk_size(20)));
+   mem = new_memory_manager(5); /*ITERATIONS * (chunk_size(20))); */
 
    /* Request chunks from the memory manager */
    request_test(ITERATIONS, objs, mem);
