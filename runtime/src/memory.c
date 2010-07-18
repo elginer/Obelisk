@@ -1,43 +1,7 @@
 #include "object.h"
 #include "memory.h"
-#include "oberror.h"
-
-#include <stdlib.h>
-
-/* Resize a memory area */
-void * resize_pointer(size_t size, void * old)
-{
-   /* Our new pointer */
-   void * new;
-   
-   /* Try to resize the pointer */
-   new = realloc(old, size);
-
-   if (new == NULL)
-   {
-      FATAL_ERROR("Ran out of memory!");
-   }
-
-   return new;
-}
-
-/* Request a new pointer from the operating system */
-void * new_pointer(size_t size)
-{
-   /* Our new pointer */
-   void * ptr;
-
-   /* Try to create a new pointer */
-   ptr = malloc(size);
-
-   /* If the pointer is NULL, raise an error and abort execution! */
-   if (ptr == NULL)
-   {
-      FATAL_ERROR("Ran out of memory!");
-   }
-   
-   return ptr;
-}
+#include "stack.h"
+#include "pointer.h"
 
 /* Create a new chunk */
 chunk_addr new_chunk(size_t size, memory_manager mem)
@@ -58,6 +22,8 @@ chunk_addr new_chunk(size_t size, memory_manager mem)
    /* Set the next chunk pointer to be after the address of chnk chunk */
    mem->next = (chunk *) ((word *) mem->next + chunk_size(size));
 
+
+
    /* Return the address */
    return zone;
 }
@@ -65,9 +31,11 @@ chunk_addr new_chunk(size_t size, memory_manager mem)
 /* The space required to make a new chunk of the given size */
 int space_required(size_t size, memory_manager mem)
 {
+
 /*   printf("The difference between the current and next memory positions: %d\n", (word *) mem->next - (word *) mem->current);
    printf("The real size we have to allocate: %u\n", chunk_size(size)); */
    return (size_t) (((word *) mem->next + chunk_size(size)) - (word *) mem->current);
+
 }
 
 /* Allocate a new chunk */
@@ -159,9 +127,24 @@ memory_manager new_memory_manager(size_t size)
    mem->inactive = (memory_area) new_pointer(size);
    mem->next = (chunk *) mem->current;
    mem->size = size;
+   mem->stack = new_stack();
+
+   /* Return the memory manager */
+   return mem;
 }
 
-/* Free the addresses of every chunk */
+/* Grow the stack, adding space for 'count' chunks */
+void grow_stack(size_t count, chunk_addr * chnks, memory_manager mem)
+{
+   push_new(count, chnks, mem->stack);
+}
+
+/* Shrink the stack */
+void shrink_stack(memory_manager mem)
+{
+   pop(mem->stack);
+}
+
 
 /* Shutdown the memory manager */
 void shutdown_memory_manager(memory_manager mem)
@@ -177,4 +160,10 @@ void shutdown_memory_manager(memory_manager mem)
    /* Free the memory areas */
    free(mem->current);
    free(mem->inactive);
+
+   /* Delete the stack */
+   delete_stack(mem->stack);
+
+   /* Free the memory manager */
+   free(mem);
 }

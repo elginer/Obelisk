@@ -6,7 +6,8 @@
 
 #include "memory.h"
 #include "object.h"
-#include "stdio.h"
+
+#include <stdio.h>
 
 /* The number of reads and writes we are going to do. */
 #define ITERATIONS 5000 

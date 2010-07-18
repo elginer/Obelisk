@@ -3,7 +3,7 @@
 #define MEMORY
 
 #include "object.h"
-#include "stdlib.h"
+#include "stack.h" 
 
 /* A memory area */
 typedef word * memory_area;
@@ -20,6 +20,9 @@ struct memory
    /* A pointer to the next piece of free space 
       in the current area */
    chunk * next;
+
+   /* A data stack from which the garbage collector can find the root set. */
+   data_stack stack;
 
    /* Size of memory */
    size_t size;
@@ -43,6 +46,12 @@ memory_manager new_memory_manager(size_t size);
 
 /* Shutdown the memory manager */
 void shutdown_memory_manager(memory_manager mem);
+
+/* Grow the stack, adding space for 'count' chunks */
+void grow_stack(size_t count, chunk_addr * chnks, memory_manager mem);
+
+/* Shrink the stack */
+void shrink_stack(memory_manager mem);
 
 /* Macro to loop through chunks.  The current chunk is called 'chnk' and has type 'chunk *'.  It is expected that you declare 'chnk' before using chnk macro'.  It is expected that the memory_manager be called 'mem' in chnk scope. */
 #define CHUNK_LOOP(ACT) \
