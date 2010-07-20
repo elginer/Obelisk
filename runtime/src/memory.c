@@ -169,7 +169,7 @@ void grow(stack_pointer top, stack_pointer bottom, size_t at_least, memory_manag
    new_pointer(mem->size, temp_memory)
 
    /* Copy every item on the stack into the new memory.  Update the stack locations. */
-   copy_stack(top, bottom, temp_memory);
+   mem->next = copy_stack(top, bottom, temp_memory);
 
    /* Free the current region. */
    free(mem->current);
