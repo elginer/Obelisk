@@ -12,4 +12,4 @@ TEST=$1
 shift
 
 # Compile test
-gcc -Iinclude -o test_out/$TEST tests/$TEST.c $*
+gcc -Werror -std=c99 -pedantic -Iinclude -o test_out/$TEST tests/$TEST.c $*

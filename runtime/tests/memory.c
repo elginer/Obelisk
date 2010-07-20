@@ -24,9 +24,9 @@ This file is part of The Obelisk Programming Language.
 
 /* Small test for the memory manager.
    Request a large amount of memory, write to it a number of times, and then try to read it back.
-   Test fails on segfault! */
+   Test fails on segfault!
 
-#define DEBUG
+   NOTE: Must be build with -DNO_GARBAGE_COLLECTION */
 
 #include "memory.h"
 #include "object.h"
@@ -46,7 +46,7 @@ void request_test(size_t max, chunk_addr objs[], memory_manager mem)
    for(i = 0; i < max; i++)
    {
       /* get a chunk from the memory manager */
-      objs[i] = allocate(20, mem);
+      objs[i] = allocate(objs, objs + i, 20, mem);
    }
 
 }
@@ -64,7 +64,7 @@ void write_test(size_t max, chunk_addr objs[])
    data = "Comfortably numb?!\n";
 
    /* Write to each chunk */
-   for(i=0; i < max; i++)
+   for(i = 0; i < max; i++)
    {
       /* Write to the chunk */
       obwrite(obpointer(0, objs[i]), data, 20);
@@ -81,13 +81,13 @@ void read_test(size_t max, chunk_addr objs[])
    /* Print out each zone */
    for(i = 0; i < max; i++)
    {  /* Print the contents of the zone */
- //     printf("Zone contents: %s", obpointer(0, objs[i]));
+      printf("Zone contents: %s", obpointer(0, objs[i]));
    }
 
 
 }
 
-int main(int argc, int argv)
+int main(int argc, char ** argv)
 {
 
    /* The memory manager */
@@ -110,4 +110,7 @@ int main(int argc, int argv)
 
    /* Shutdown the memory_manager */
    shutdown_memory_manager(mem);
+
+   /* Return success. */
+   return EXIT_SUCCESS;
 }

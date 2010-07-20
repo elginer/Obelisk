@@ -4,10 +4,31 @@
 
 /* Safely manipulate pointers. */
 
+#include "oberror.h"
+
 /* Safely resize a pointer on C's heap.  Trigger fatal error on failure. */
-void * resize_pointer(size_t size, void * old);
+#define resize_pointer(SIZE, PTR)\
+\
+   /* Try to reSIZE the pointer */ \
+   PTR = realloc(PTR, SIZE);  \
+\
+   if (PTR == NULL) \
+   { \
+      FATAL_ERROR("Ran out of memory!"); \
+   }
 
 /* Safely create a new pointer on C's heap.  Trigger fatal error on failure */
-void * new_pointer(size_t size);
+#define new_pointer(SIZE, PTR)\
+\
+   /* Our new pointer */ \
+\
+   /* Try to create a new pointer */ \
+   PTR = malloc(SIZE); \
+\
+   /* If the pointer is NULL, raise an error and abort execution! */ \
+   if (PTR == NULL) \
+   { \
+      FATAL_ERROR("Ran out of memory!"); \
+   }
 
 #endif

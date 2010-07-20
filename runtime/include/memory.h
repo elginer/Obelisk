@@ -3,7 +3,6 @@
 #define MEMORY
 
 #include "object.h"
-#include "stack.h" 
 
 /* A memory area */
 typedef word * memory_area;
@@ -19,27 +18,23 @@ struct memory
 
    /* A pointer to the next piece of free space 
       in the current area */
-   chunk * next;
-
-   /* A data stack from which the garbage collector can find the root set. */
-   data_stack stack;
+   chunk_addr next;
 
    /* Size of memory */
    size_t size;
 }
 amemory_manager;
 
+/* Nice name for the memory manager */
 typedef struct memory * memory_manager;
 
-/* Grow the size of the available memory.  Grow at least as much as size. */
-void grow(size_t size, memory_manager m);
+/* The stack is a contiguous block of pointers to heap locations */
+typedef chunk_addr * stack_pointer;
 
-/* Allocate a new chunk */
-chunk_addr allocate(size_t size, memory_manager m);
-
-/* Readdress the chunks in current memory
-   The arguments are currently used memory, and then the memory unit */
-void readdress(size_t used, memory_manager m);
+/* Allocate a new chunk on the heap.
+   Pass the stack pointer, and a pointer to the bottom of the stack.
+   They may be used in the case we readdress pointers to the heap. */  
+chunk_addr allocate(stack_pointer spointer, stack_pointer sbottom, size_t size, memory_manager mem);
 
 /* Create a new memory manager of given size */
 memory_manager new_memory_manager(size_t size);
@@ -47,19 +42,12 @@ memory_manager new_memory_manager(size_t size);
 /* Shutdown the memory manager */
 void shutdown_memory_manager(memory_manager mem);
 
-/* Grow the stack, adding space for 'count' chunks */
-void grow_stack(size_t count, chunk_addr * chnks, memory_manager mem);
+/* Create a new chunk */
+chunk_addr new_chunk(size_t size, memory_manager mem);
 
-/* Shrink the stack */
-void shrink_stack(memory_manager mem);
-
-/* Macro to loop through chunks.  The current chunk is called 'chnk' and has type 'chunk *'.  It is expected that you declare 'chnk' before using chnk macro'.  It is expected that the memory_manager be called 'mem' in chnk scope. */
-#define CHUNK_LOOP(ACT) \
-      for (chnk = (chunk *) mem->current; \
-          chnk < mem->next; \
-          chnk = (chunk *) ((word *) chnk + chunk_size(chnk->size))) \
-   { \
-   ACT \
-   }
+/* Move chunks to a current memory area.
+   Re-address the pointers on the stack.
+   Return the end of the area.  */
+chunk_addr copy_stack(stack_pointer top, stack_pointer bottom, memory_area mem);
 
 #endif
