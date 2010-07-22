@@ -1,0 +1,2 @@
+// The define's inner define has an inner define that can see its argument
+((A) # def x y () where (((A) # def z () where (((A) # def q (y))))))

@@ -1,0 +1,3 @@
+// Function returns literal character
+
+((Char) # def foo ('a'))

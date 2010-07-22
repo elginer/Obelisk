@@ -31,6 +31,8 @@ import Language.Obelisk.Parser.Monad
 
 import Language.Obelisk.Lexer.Token
 
+import Language.Obelisk.Error
+
 import Text.Parsec.Token as T
 import Text.Parsec.Language
 import Text.Parsec.String
@@ -41,6 +43,10 @@ import Data.Either
 import Data.Char
 
 import Debug.Trace
+
+-- | Make parsec errors into a compiler error
+instance ErrorReport ParseError where
+   report e = error_lines (lines (show e)) empty_error
 
 -- | Obelisk language definition 
 obdef :: LanguageDef st
@@ -81,9 +87,14 @@ par_close = do
    char ')'
    return TParClose
 
+chomp :: String -> String
+chomp = reverse . chomp_front . reverse . chomp_front 
+   where
+   chomp_front = dropWhile isSpace
+
 -- | Take obelisk source and return a list of tokens or an error.
 ob_lex :: FilePath -> String -> Either ParseError [Token]
-ob_lex = parse plex
+ob_lex fp str = parse plex fp $ chomp str
    where
    plex = do
       ts <- many $ T.whiteSpace obtok >> tlex

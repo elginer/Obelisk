@@ -1,0 +1,3 @@
+// Each define can see the other
+((A) # def x (y))
+((A) # def y (x))

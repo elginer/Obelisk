@@ -1,0 +1,5 @@
+// Incorrect application inside If
+
+((Int -> Bool) # def foo x (x))
+
+((Int) # def bar ((if false ((foo 1)) ((foo 2)))))

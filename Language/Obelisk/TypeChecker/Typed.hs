@@ -22,6 +22,11 @@ This file is part of The Obelisk Programming Language.
 
 -}
 
+{-#
+   OPTIONS
+   -XFlexibleInstances
+#-}
+
 -- | AST elements can be typed
 module Language.Obelisk.TypeChecker.Typed 
    (module Language.Obelisk.AST.Scoped
@@ -65,6 +70,9 @@ data TypeError =
    | -- | The branches of an if statement do not match
      BranchesDontMatch QType QType CodeFragment
       deriving Show
+
+instance ErrorReport [TypeError] where
+   report = error_join . map report
 
 instance ErrorReport TypeError where
    report ty_err = error_line "Type error:" $ error_section $

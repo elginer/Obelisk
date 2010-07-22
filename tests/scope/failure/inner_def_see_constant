@@ -1,0 +1,2 @@
+// In a where clause a define cannot see constants
+((A) # def x () where ((A # let z 0) ((A) # def y (z))))

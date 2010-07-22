@@ -9,9 +9,10 @@ Synopsis:       An simple object oriented language, with a strongly typed form o
 Build-type:	Simple
 
 Library
-   Build-Depends: base>=4, parsec>=3, filepath, containers
+   Build-Depends: base>=4, parsec>=3, filepath, directory, containers
    Exposed-modules:
       Language.Obelisk
+      Language.Obelisk.Test
       Language.Obelisk.Lexer
       Language.Obelisk.Lexer.Token
       Language.Obelisk.Parser

@@ -1,0 +1,7 @@
+// Incorrect multiple expressions inside if
+
+((Bool) # 
+def foo 
+   ((if true 
+      (true true 3) 
+      (true 2 true 4))))

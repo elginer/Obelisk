@@ -1,0 +1,5 @@
+// Wrong number of formal arguments
+
+((Int -> Int -> Int) # def foo x (x))
+
+((Int -> Int) # def bar x y (x))

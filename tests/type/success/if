@@ -1,0 +1,2 @@
+// If statement both branches same
+((Int) # def foo ((if true (0) (1))))

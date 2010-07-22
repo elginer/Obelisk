@@ -68,6 +68,7 @@ instance Typed ScopedExp where
                   (M.lookup v $ types env)
          OInt _ _                  -> type_correct $ new_type "Int"
          OBool _ _                 -> type_correct bool_type
+         OChar _ _                 -> type_correct $ new_type "Char"
            
 {- The typeof a function application
    If the type of the first expression is a function, and each of its formal arguments 

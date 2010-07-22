@@ -1,0 +1,2 @@
+// The define's inner constant can see its argument
+((A) # def x y () where ((A # let z y)))

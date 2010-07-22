@@ -24,6 +24,7 @@ This file is part of The Obelisk Programming Language.
 
 {-# OPTIONS
     -XExistentialQuantification
+    -XTypeSynonymInstances
 #-}
 -- | Nice looking compiler errors.
 module Language.Obelisk.Error
@@ -62,6 +63,10 @@ instance Pretty CompilerError where
 -- | A class for things which can be turned into compiler error reports
 class ErrorReport err where
    report :: err -> CompilerError
+
+-- Strings can be turned to errors
+instance ErrorReport String where
+   report = new_error 
 
 -- | Combine multiple errors into one report
 error_join :: [CompilerError] -> CompilerError

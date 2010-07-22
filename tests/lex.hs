@@ -25,19 +25,11 @@ This file is part of The Obelisk Programming Language.
 -- Ensure that Obelisk source is lexed properly!
 import Language.Obelisk.Lexer
 import Language.Obelisk.Lexer.Token
+import Language.Obelisk.Test
 
 -- Examine the output.  Make sure it is 'okay'.  
 main =
-   mapM lex_test tests
+   test_all "lex" lex_test
 
-lex_test = 
-   either print print . ob_lex "test data"
-
-tests =
-   ["(def nice 'c'"
-   ,"))) 'a' where"
-   ,"123"
-   ,"1 2 3 Because"
-   ,"//howdy\n(def (c) (x c))"
-   ,"/* all is well */ + 1"
-   ,"let let let let 222"]
+lex_test fp src = 
+   ob_lex fp src

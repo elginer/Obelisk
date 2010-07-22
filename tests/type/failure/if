@@ -1,0 +1,3 @@
+// If statement branches different
+
+((Int) # def foo ((if true (0) (false))))

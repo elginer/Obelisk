@@ -1,0 +1,2 @@
+// Two top level functions cannot have the same name
+((A) # def x ()) ((A) # def x ())

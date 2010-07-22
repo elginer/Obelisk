@@ -1,0 +1,3 @@
+// Function's type says Int, but returns Bool
+
+((Int) # def foo (true))

@@ -1,0 +1,3 @@
+// Set constant to self value
+
+((Int -> Bool) # def foo x (true) where ((Bool # let bar (foo x))))

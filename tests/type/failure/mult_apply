@@ -1,0 +1,5 @@
+// Incorrect multiple application
+
+((Bool -> Int) # def foo x ((foo x) (bar x)))
+
+((Int -> Int) # def bar x ((foo x)))

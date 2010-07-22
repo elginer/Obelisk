@@ -1,0 +1,3 @@
+// Return constant in where clause
+
+((Int) # def foo (bar) where ((Int # let bar 0)))

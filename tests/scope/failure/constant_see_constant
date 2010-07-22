@@ -1,0 +1,3 @@
+// A constant in a where clause cannot see other constants
+
+((A) # def x () where ((A # let z 0) (A # let y z)))

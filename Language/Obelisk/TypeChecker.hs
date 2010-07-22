@@ -23,7 +23,12 @@ This file is part of The Obelisk Programming Language.
 -}
 
 -- | Type checker for Obelisk
-module Language.Obelisk.TypeChecker where
+module Language.Obelisk.TypeChecker 
+   (TypeError (..)
+   ,check
+   ,joke_env
+   ,echeck)
+   where
 
 import Language.Obelisk.Error
 

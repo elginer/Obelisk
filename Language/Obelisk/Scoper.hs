@@ -91,6 +91,7 @@ instance ScopeChecker Exp where
             var_check v fr cs
          OInt _ _ -> []
          OBool _ _ -> []
+         OChar _ _ -> []
       where
       var_check v fr (ClosureTable cs) = 
          maybe [OutOfScope v fr] (const []) $ find (\e -> def_name e == v) cs
@@ -164,6 +165,7 @@ instance Scoper Exp where
          OVar fr v -> OVar (env, fr) v
          OInt fr i -> OInt (env, fr) i
          OBool fr b -> OBool (env, fr) b
+         OChar fr c -> OChar (env, fr) c
 
 -- Transform simple to scoped blocks
 instance Scoper Block where

@@ -1,0 +1,2 @@
+// A def in a where clause can see other defs
+((A) # def x () where (((A) # def y (z)) ((A) # def z (y))))
