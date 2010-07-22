@@ -1,0 +1,9 @@
+// Block has a where clause
+
+((Void) #
+def foo 
+   ((nice + cool)
+      where 
+      ((Int # let nice 1)))
+   where
+   ((Int # let cool 2))) 

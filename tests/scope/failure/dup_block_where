@@ -1,0 +1,7 @@
+// Duplicate name in block where
+((Void) #
+def foo
+   (
+   where
+   ((A # let bar 0)
+    ((B) # def bar ()))))

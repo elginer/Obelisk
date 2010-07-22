@@ -51,6 +51,4 @@ type SimpleDef = Def String CodeFragment
 
 type SimpleExp = Exp String CodeFragment
 
-type SimpleWhereExp = WhereExp String CodeFragment
-
 type SimpleBlock = Block String CodeFragment

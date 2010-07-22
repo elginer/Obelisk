@@ -35,7 +35,6 @@ module Language.Obelisk.AST.Scoped
    ,ScopedDef
    ,ScopedFDef
    ,ScopedExp
-   ,ScopedWhereExp
    ,ScopedBlock)
    where
 
@@ -75,15 +74,10 @@ instance Fragment ScopedExp where
          OBool (_, cf) _ -> cf
 
 instance Fragment ScopedBlock where
-   fragment (Block (_,cf) es) =
+   fragment (Block (_,cf) es _) =
       if null es
          then cf
          else fragment $ last es
-
-instance Fragment ScopedWhereExp where
-   fragment (WhereExp exp _) =
-      fragment exp
-         
 
 -- | The scoped AST, with functions having closure tables generated for them.
 type ScopedObelisk = Obelisk String (ClosureTable, CodeFragment)
@@ -95,5 +89,3 @@ type ScopedDef = Def String (ClosureTable, CodeFragment)
 type ScopedExp = Exp String (ClosureTable, CodeFragment)
 
 type ScopedBlock = Block String (ClosureTable, CodeFragment)
-
-type ScopedWhereExp = WhereExp String (ClosureTable, CodeFragment)

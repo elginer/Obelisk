@@ -1,0 +1,7 @@
+// Block where has type error
+((Void) #
+def foo
+   (
+      where
+      (((Char) #
+      def bar (false)))))

@@ -1,0 +1,6 @@
+// Access block where constant
+((Int) #
+def foo
+   (bar
+      where
+      ((Int # let bar 2))))

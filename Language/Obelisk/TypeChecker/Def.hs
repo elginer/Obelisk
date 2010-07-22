@@ -56,7 +56,7 @@ where_errors wh tev =
 
 instance Typed ScopedFDef where
    -- The type of the function is the functions type, but try to see if there are errors in unification in the where clauses
-   typeof (Def (_,cf) typ@(QType _ _ unqtyp) fun_name fargs bl@(Block _ exps) wh) tev =
+   typeof (Def (_,cf) typ@(QType _ _ unqtyp) fun_name fargs bl wh) tev =
       (Just typ, errs)
       where
       errs =
@@ -68,10 +68,6 @@ instance Typed ScopedFDef where
          case unqtyp of
             Type _ -> broken_function_type typ
             Function ts -> ts  
-      frag =
-         if null exps
-            then cf
-            else fragment $ last exps
       new_tev = whfr_tev {types = M.insert fun_name typ $ types whfr_tev}
       whfr_tev = with_where wh with_fargs 
       with_fargs = tev {types = foldr (uncurry M.insert) (types tev) $ zip fargs $ map (new_type . sname) tylist}

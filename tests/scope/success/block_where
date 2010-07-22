@@ -1,0 +1,7 @@
+// See a variable in a block where
+
+((Int) #
+def foo
+   (bar
+      where
+      ((Char # let bar 3))))

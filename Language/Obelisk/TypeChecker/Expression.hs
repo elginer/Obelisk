@@ -43,24 +43,19 @@ import Data.Maybe
 
 import Debug.Trace
 
-instance Typed ScopedWhereExp where
-   -- The type of the WhereExp is the type of the expression, but gather errors from the where clause.
-   typeof (WhereExp exp wh) env =
-      second (++ where_errors wh new_env) $ typeof exp new_env
-      where
-      new_env = with_where wh env
-
 instance Typed ScopedBlock where
    -- The type of the block is the type of the last expression, but try to gather errors from the other expressions
-   typeof (Block _ exps) env =
+   typeof (Block _ exps wh) env = second (++ where_errors wh new_env) $
       case reverse exps of
          (lst:prev) ->
-            let es = concatMap (snd . (flip typeof env)) prev
-                ty_last = typeof lst env
+            let es = concatMap (snd . (flip typeof new_env)) prev
+                ty_last = typeof lst new_env
             in  if null es
                    then ty_last
                    else relay ty_last (const ty_last) (Nothing, es)
-         [] -> type_correct void_type 
+         [] -> type_correct void_type
+      where
+      new_env = with_where wh env 
 
 instance Typed ScopedExp where
    -- The type of expressions

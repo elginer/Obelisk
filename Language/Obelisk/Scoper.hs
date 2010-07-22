@@ -62,7 +62,7 @@ class ScopeChecker s where
 -- Check the function contains no scope errors, including duplicate names
 instance ScopeChecker FDef where
    scope_check (Def (_, cf) _ dname fargs bl wh) = 
-      dup_errs ++ scope_check bl ++ concat (map scope_check wh)
+      dup_errs ++ scope_check bl ++ concatMap scope_check wh
       where
       dup_errs = where_fargs_clash ++ fargs_dup ++ where_dup
       fargs_dup = find_duplicates id (const cf) fargs
@@ -98,7 +98,8 @@ instance ScopeChecker Exp where
 
 -- Check the block contains no scope errors
 instance ScopeChecker Block where
-   scope_check (Block _ es) = concat $ map scope_check es
+   scope_check (Block _ es wh) = 
+      concatMap scope_check es ++ find_duplicates name fragment wh ++ concatMap scope_check wh
 
 -- | Check variables are within scope, alter AST to provide information on which functions need access to which variables (forming a closure over those variables)
 scope :: SimpleObelisk -> ScopedObelisk
@@ -137,15 +138,19 @@ form_env f =
 -- Transform simple to scoped function definitions
 instance Scoper FDef where
    scope' env@(ClosureTable fvs) (Def cf typ name fargs bl wh) =
-      Def (env, cf) typ name fargs (recurse (bl_env) bl) (map (recurse where_env) wh)
+      Def (env, cf) typ name fargs (recurse (bl_env) bl) (map (recurse $ where_env name wh) wh)
       where
       bl_env = form_env name wh
-      where_env = form_env name $ filter (\d ->
-         case d of
-            FDef _ -> True
-            _      -> False) wh
       recurse :: Scoper a => [ClosureEntry] -> a String CodeFragment -> a String (ClosureTable, CodeFragment)
       recurse where_env = scope' (ClosureTable $ fvs ++ map (ClosureEntry name) fargs ++ where_env)
+
+-- | Compute closure environment from where env
+where_env :: String -> [SimpleDef] -> [ClosureEntry]
+where_env name = 
+   form_env name . filter (\d ->
+      case d of
+         FDef _ -> True
+         _      -> False)
 
 -- Transform simple to scoped definitions
 instance Scoper Def where
@@ -169,5 +174,8 @@ instance Scoper Exp where
 
 -- Transform simple to scoped blocks
 instance Scoper Block where
-   scope' env (Block fr es) =
-      Block (env, fr) $ map (scope' env) es
+   scope' (ClosureTable env) (Block fr es wh) =
+      Block (ClosureTable env, fr) 
+            (map (scope' $ ClosureTable $ env ++ form_env "_block" wh) es) 
+            (map (scope' $ ClosureTable $ env ++ where_env "_block" wh) wh)
+

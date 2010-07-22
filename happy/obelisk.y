@@ -125,7 +125,7 @@ Def : FDef                     { FDef $1 }
 
 {- A where clause -}
 WhereClause :: { [SimpleDef]}
-WhereClause : where '(' Defs ')'  { $3 }
+WhereClause : where '(' Defs ')'  { reverse $3 }
             | {- empty -}   { [] }
 
 {- A list of variables -}
@@ -187,13 +187,4 @@ Char : Pos char { OChar $1 $2 }
 
 {- Block of code -}
 Block :: { SimpleBlock }
-Block : Pos '(' WhereExps ')'  { Block $1 (reverse $3) }
-
-{- List of where expressions -}
-WhereExps :: { [SimpleWhereExp] }
-WhereExps : WhereExps WhereExp  { $2 : $1 }
-          | WhereExp            { [$1] }
-
-{- An expression associated with definitions. -}
-WhereExp :: { SimpleWhereExp }
-WhereExp : Exp WhereClause { WhereExp $1 $2 }
+Block : Pos '(' Exps  WhereClause ')'  { Block $1 (reverse $3) $4 }
