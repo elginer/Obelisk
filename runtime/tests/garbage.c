@@ -34,7 +34,7 @@ Fail on segfault or ever increasing memory usage.
 
 #define CHUNK_SIZE 1024
 #define STACK_SIZE 10000
-#define ITERATIONS 5000
+#define ITERATIONS 20000
 
 int main(int argc, char ** argv)
 {

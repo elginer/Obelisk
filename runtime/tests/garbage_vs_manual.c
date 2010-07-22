@@ -4,7 +4,7 @@
 
 #define CHUNK_SIZE 1024
 #define STACK_SIZE 10000
-#define ITERATIONS 5000
+#define ITERATIONS 20000
 
 
 /* Basically the same as the garbage test, but with only c. */

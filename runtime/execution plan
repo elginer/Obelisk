@@ -4,15 +4,4 @@ Every function application, of a function $g, occurs inside another function $f.
 
 Functions are essentially lists of function applications (with a few exceptions).
 
-Hence the first line assembler produced for the $nth function application inside function $f can be associated with a label ReturnObelisk_$f_$n and ExecuteObelisk_$f_$n_$g.
-
-To execute a function, rather than jump immediately to the function, jump to ExecuteObelisk_$f_$n_$g.  
-
-This will jump to Obelisk_$g and the compiler will hard wire a jump back to the label ReturnObelisk_$f_($n + 1)
-
-Advantages:
-Leaves stack clear of pointers to return values, so we can just pass the whole stack to the garbage collector.
-
-Disadvantages:
-Increased code size.
-Will it make optimization more difficult?
+Store the return address after a null byte on the stack.  When reading the stack for active heap objects, anything after a null byte is ignored.

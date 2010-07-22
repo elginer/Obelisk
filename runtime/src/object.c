@@ -52,7 +52,7 @@ word * obpointer(size_t i, chunk_addr zone)
    /* Check if we're in bounds */
    if (i >= zone->size)
    {
-      error(0, 0, "Tried to read at %u on chunk of size %u\n", i, zone->size);
+      error(0, 0, "Tried to read at %zu on chunk of size %zu\n", i, zone->size);
       FATAL_ERROR("Read on chunk out of range.");
    }
 

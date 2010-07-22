@@ -58,7 +58,11 @@ chunk_addr copy_stack(stack_pointer top, stack_pointer bottom, memory_area mem)
 
       /* If the chnk is not 0 then proceed with this iteration. */
       if (chnk == 0)
+      {
+         /* Skip the next */
+         working_top++;
          continue;
+      }
 
       /* Set the chunk to not be moved. */
       chnk->moved = FALSE;
@@ -72,7 +76,11 @@ chunk_addr copy_stack(stack_pointer top, stack_pointer bottom, memory_area mem)
 
       /* If the chnk is not 0 then proceed with this iteration. */
       if (chnk == 0)
+      {
+         /* Skip the next. */
+         working_top++;
          continue;
+      }
 
       /* The size of the current chunk */
       size = chsize(chnk);
@@ -145,7 +153,7 @@ void grow(stack_pointer top, stack_pointer bottom, size_t at_least, memory_manag
 
    /* Report heap growth */
    #ifdef REPORT_HEAP_GROWTH
-      fprintf(stderr, "Current heap size: %u.  Heap must grow by at least: %u\n\n", mem->size, at_least);
+      fprintf(stderr, "Current heap size: %zu.  Heap must grow by at least: %zu\n\n", mem->size, at_least);
    #endif
 
    printf("GROWING\n");
