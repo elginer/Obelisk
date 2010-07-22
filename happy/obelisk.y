@@ -57,6 +57,7 @@ eparse = M.eparse parse
    '#'       { TTypeTerm }
    '('       { TParOpen }
    ')'       { TParClose }
+   char      { TChar $$ }
 
 %%
 
@@ -142,6 +143,7 @@ TExp :: { SimpleExp }
 TExp : Var   { $1 }
     | Int    { $1 }
     | Bool   { $1 }
+    | Char   { $1 }
 
 {- An expression -}
 Exp :: { SimpleExp }
@@ -156,7 +158,7 @@ PExp : Apply { $1 }
 
 {- Function application. -}
 Apply :: { SimpleExp }
-Apply : Pos Exp Exps  { Apply $1 $2 $3 }
+Apply : Pos Exp Exps  { Apply $1 $2 (reverse $3) }
 
 {- A list of expressions -}
 Exps :: { [SimpleExp] }
@@ -179,6 +181,10 @@ Int : Pos int   { OInt $1 $2 }
 Bool :: { SimpleExp }
 Bool : Pos true   { OBool $1 True }
      | Pos false  { OBool $1 False }
+
+{- Literal characters -}
+Char :: { SimpleExp }
+Char : Pos char { OChar $1 $2 }
 
 {- Block of code -}
 Block :: { SimpleBlock }

@@ -34,10 +34,10 @@ lex_test =
    either print print . ob_lex "test data"
 
 tests =
-   ["(def nice"
-   ,"))) where"
+   ["(def nice 'c'"
+   ,"))) 'a' where"
    ,"123"
-   ,"1 2 3"
+   ,"1 2 3 Because"
    ,"//howdy\n(def (c) (x c))"
    ,"/* all is well */ + 1"
    ,"let let let let 222"]

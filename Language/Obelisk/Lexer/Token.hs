@@ -54,7 +54,9 @@ data Token =
    | -- | A function arrow
      TArrow
    | -- | A type terminator
-     TTypeTerm 
+     TTypeTerm
+   | -- | A literal character
+     TChar Char
    | -- The end of file
      TEOF
 
@@ -75,4 +77,5 @@ instance Show Token where
          TArrow    -> "->"
          TTypeTerm -> "#"
          TClassName c -> c
+         TChar      c -> '\'' : c : '\'' : []
          TEOF      -> "end of file"

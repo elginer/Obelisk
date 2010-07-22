@@ -134,5 +134,6 @@ tlex =
    <|> par_close
    <|> fmap TVar (T.identifier obtok)
    <|> fmap TOp (T.operator obtok)
+   <|> fmap TChar (T.charLiteral obtok)
 
       

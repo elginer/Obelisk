@@ -90,6 +90,8 @@ data Exp v m =
      OInt m Integer
    | -- | A literal boolean
      OBool m Bool
+   | -- | A literal character
+     OChar m Char
    deriving Show
 
 
