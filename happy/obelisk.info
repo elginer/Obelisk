@@ -49,7 +49,10 @@ Grammar
 	Bool -> Pos true                                   (40)
 	Bool -> Pos false                                  (41)
 	Char -> Pos char                                   (42)
-	Block -> Pos '(' Exps ')'                          (43)
+	Block -> Pos '(' WhereExps ')'                     (43)
+	WhereExps -> WhereExps WhereExp                    (44)
+	WhereExps -> WhereExp                              (45)
+	WhereExp -> Exp WhereClause                        (46)
 
 -----------------------------------------------------------------------------
 Terminals
@@ -102,6 +105,8 @@ Non-terminals
 	Bool            rules 40, 41
 	Char            rule  42
 	Block           rule  43
+	WhereExps       rules 44, 45
+	WhereExp        rule  46
 
 -----------------------------------------------------------------------------
 States
@@ -294,7 +299,7 @@ State 22
 
 State 23
 
-	Block -> Pos . '(' Exps ')'                         (rule 43)
+	Block -> Pos . '(' WhereExps ')'                    (rule 43)
 
 	'('            shift, and enter state 28
 
@@ -327,63 +332,31 @@ State 27
 
 	WhereClause -> where . '(' Defs ')'                 (rule 20)
 
-	'('            shift, and enter state 30
+	'('            shift, and enter state 39
 
 
 State 28
 
-	Block -> Pos '(' . Exps ')'                         (rule 43)
-
-	int            reduce using rule 35
-	var            reduce using rule 35
-	true           reduce using rule 35
-	false          reduce using rule 35
-	'('            reduce using rule 35
-	')'            reduce using rule 35
-	char           reduce using rule 35
-
-	Exps           goto state 29
-
-State 29
-
-	Exps -> Exps . Exp                                  (rule 36)
-	Block -> Pos '(' Exps . ')'                         (rule 43)
+	Block -> Pos '(' . WhereExps ')'                    (rule 43)
 
 	int            reduce using rule 1
 	var            reduce using rule 1
 	true           reduce using rule 1
 	false          reduce using rule 1
-	'('            shift, and enter state 39
-	')'            shift, and enter state 40
+	'('            shift, and enter state 38
 	char           reduce using rule 1
 
-	Pos            goto state 32
-	TExp           goto state 33
-	Exp            goto state 34
-	Var            goto state 35
-	Int            goto state 36
-	Bool           goto state 37
-	Char           goto state 38
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 31
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
+	WhereExps      goto state 36
+	WhereExp       goto state 37
 
-State 30
-
-	WhereClause -> where '(' . Defs ')'                 (rule 20)
-
-	'('            reduce using rule 16
-	')'            reduce using rule 16
-
-	Defs           goto state 31
-
-State 31
-
-	Defs -> Defs . '(' Def ')'                          (rule 15)
-	WhereClause -> where '(' Defs . ')'                 (rule 20)
-
-	'('            shift, and enter state 51
-	')'            shift, and enter state 52
-
-
-State 32
+State 29
 
 	Var -> Pos . var                                    (rule 38)
 	Int -> Pos . int                                    (rule 39)
@@ -391,14 +364,14 @@ State 32
 	Bool -> Pos . false                                 (rule 41)
 	Char -> Pos . char                                  (rule 42)
 
-	int            shift, and enter state 46
-	var            shift, and enter state 47
-	true           shift, and enter state 48
-	false          shift, and enter state 49
-	char           shift, and enter state 50
+	int            shift, and enter state 49
+	var            shift, and enter state 50
+	true           shift, and enter state 51
+	false          shift, and enter state 52
+	char           shift, and enter state 53
 
 
-State 33
+State 30
 
 	Exp -> TExp .                                       (rule 29)
 
@@ -407,25 +380,28 @@ State 33
 	op             reduce using rule 29
 	true           reduce using rule 29
 	false          reduce using rule 29
+	where          reduce using rule 29
 	'('            reduce using rule 29
 	')'            reduce using rule 29
 	char           reduce using rule 29
 
 
-State 34
+State 31
 
-	Exps -> Exps Exp .                                  (rule 36)
+	WhereExp -> Exp . WhereClause                       (rule 46)
 
-	int            reduce using rule 36
-	var            reduce using rule 36
-	true           reduce using rule 36
-	false          reduce using rule 36
-	'('            reduce using rule 36
-	')'            reduce using rule 36
-	char           reduce using rule 36
+	int            reduce using rule 21
+	var            reduce using rule 21
+	true           reduce using rule 21
+	false          reduce using rule 21
+	where          shift, and enter state 27
+	'('            reduce using rule 21
+	')'            reduce using rule 21
+	char           reduce using rule 21
 
+	WhereClause    goto state 48
 
-State 35
+State 32
 
 	TExp -> Var .                                       (rule 25)
 
@@ -434,12 +410,13 @@ State 35
 	op             reduce using rule 25
 	true           reduce using rule 25
 	false          reduce using rule 25
+	where          reduce using rule 25
 	'('            reduce using rule 25
 	')'            reduce using rule 25
 	char           reduce using rule 25
 
 
-State 36
+State 33
 
 	TExp -> Int .                                       (rule 26)
 
@@ -448,12 +425,13 @@ State 36
 	op             reduce using rule 26
 	true           reduce using rule 26
 	false          reduce using rule 26
+	where          reduce using rule 26
 	'('            reduce using rule 26
 	')'            reduce using rule 26
 	char           reduce using rule 26
 
 
-State 37
+State 34
 
 	TExp -> Bool .                                      (rule 27)
 
@@ -462,12 +440,13 @@ State 37
 	op             reduce using rule 27
 	true           reduce using rule 27
 	false          reduce using rule 27
+	where          reduce using rule 27
 	'('            reduce using rule 27
 	')'            reduce using rule 27
 	char           reduce using rule 27
 
 
-State 38
+State 35
 
 	TExp -> Char .                                      (rule 28)
 
@@ -476,12 +455,48 @@ State 38
 	op             reduce using rule 28
 	true           reduce using rule 28
 	false          reduce using rule 28
+	where          reduce using rule 28
 	'('            reduce using rule 28
 	')'            reduce using rule 28
 	char           reduce using rule 28
 
 
-State 39
+State 36
+
+	Block -> Pos '(' WhereExps . ')'                    (rule 43)
+	WhereExps -> WhereExps . WhereExp                   (rule 44)
+
+	int            reduce using rule 1
+	var            reduce using rule 1
+	true           reduce using rule 1
+	false          reduce using rule 1
+	'('            shift, and enter state 38
+	')'            shift, and enter state 47
+	char           reduce using rule 1
+
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 31
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
+	WhereExp       goto state 46
+
+State 37
+
+	WhereExps -> WhereExp .                             (rule 45)
+
+	int            reduce using rule 45
+	var            reduce using rule 45
+	true           reduce using rule 45
+	false          reduce using rule 45
+	'('            reduce using rule 45
+	')'            reduce using rule 45
+	char           reduce using rule 45
+
+
+State 38
 
 	Exp -> '(' . PExp ')'                               (rule 30)
 
@@ -499,13 +514,22 @@ State 39
 	Apply          goto state 44
 	Infix          goto state 45
 
+State 39
+
+	WhereClause -> where '(' . Defs ')'                 (rule 20)
+
+	'('            reduce using rule 16
+	')'            reduce using rule 16
+
+	Defs           goto state 40
+
 State 40
 
-	Block -> Pos '(' Exps ')' .                         (rule 43)
+	Defs -> Defs . '(' Def ')'                          (rule 15)
+	WhereClause -> where '(' Defs . ')'                 (rule 20)
 
-	where          reduce using rule 43
-	'('            reduce using rule 43
-	')'            reduce using rule 43
+	'('            shift, and enter state 57
+	')'            shift, and enter state 58
 
 
 State 41
@@ -514,21 +538,21 @@ State 41
 	Apply -> Pos . Exp Exps                             (rule 34)
 	Infix -> Pos . Exp op Exp                           (rule 37)
 
-	if             shift, and enter state 58
+	if             shift, and enter state 56
 	int            reduce using rule 1
 	var            reduce using rule 1
 	true           reduce using rule 1
 	false          reduce using rule 1
-	'('            shift, and enter state 39
+	'('            shift, and enter state 38
 	char           reduce using rule 1
 
-	Pos            goto state 32
-	TExp           goto state 33
-	Exp            goto state 57
-	Var            goto state 35
-	Int            goto state 36
-	Bool           goto state 37
-	Char           goto state 38
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 55
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
 
 State 42
 
@@ -541,7 +565,7 @@ State 43
 
 	Exp -> '(' PExp . ')'                               (rule 30)
 
-	')'            shift, and enter state 56
+	')'            shift, and enter state 54
 
 
 State 44
@@ -560,6 +584,41 @@ State 45
 
 State 46
 
+	WhereExps -> WhereExps WhereExp .                   (rule 44)
+
+	int            reduce using rule 44
+	var            reduce using rule 44
+	true           reduce using rule 44
+	false          reduce using rule 44
+	'('            reduce using rule 44
+	')'            reduce using rule 44
+	char           reduce using rule 44
+
+
+State 47
+
+	Block -> Pos '(' WhereExps ')' .                    (rule 43)
+
+	where          reduce using rule 43
+	'('            reduce using rule 43
+	')'            reduce using rule 43
+
+
+State 48
+
+	WhereExp -> Exp WhereClause .                       (rule 46)
+
+	int            reduce using rule 46
+	var            reduce using rule 46
+	true           reduce using rule 46
+	false          reduce using rule 46
+	'('            reduce using rule 46
+	')'            reduce using rule 46
+	char           reduce using rule 46
+
+
+State 49
+
 	Int -> Pos int .                                    (rule 39)
 
 	int            reduce using rule 39
@@ -567,12 +626,13 @@ State 46
 	op             reduce using rule 39
 	true           reduce using rule 39
 	false          reduce using rule 39
+	where          reduce using rule 39
 	'('            reduce using rule 39
 	')'            reduce using rule 39
 	char           reduce using rule 39
 
 
-State 47
+State 50
 
 	Var -> Pos var .                                    (rule 38)
 
@@ -581,12 +641,13 @@ State 47
 	op             reduce using rule 38
 	true           reduce using rule 38
 	false          reduce using rule 38
+	where          reduce using rule 38
 	'('            reduce using rule 38
 	')'            reduce using rule 38
 	char           reduce using rule 38
 
 
-State 48
+State 51
 
 	Bool -> Pos true .                                  (rule 40)
 
@@ -595,12 +656,13 @@ State 48
 	op             reduce using rule 40
 	true           reduce using rule 40
 	false          reduce using rule 40
+	where          reduce using rule 40
 	'('            reduce using rule 40
 	')'            reduce using rule 40
 	char           reduce using rule 40
 
 
-State 49
+State 52
 
 	Bool -> Pos false .                                 (rule 41)
 
@@ -609,12 +671,13 @@ State 49
 	op             reduce using rule 41
 	true           reduce using rule 41
 	false          reduce using rule 41
+	where          reduce using rule 41
 	'('            reduce using rule 41
 	')'            reduce using rule 41
 	char           reduce using rule 41
 
 
-State 50
+State 53
 
 	Char -> Pos char .                                  (rule 42)
 
@@ -623,57 +686,13 @@ State 50
 	op             reduce using rule 42
 	true           reduce using rule 42
 	false          reduce using rule 42
+	where          reduce using rule 42
 	'('            reduce using rule 42
 	')'            reduce using rule 42
 	char           reduce using rule 42
 
 
-State 51
-
-	Defs -> Defs '(' . Def ')'                          (rule 15)
-
-	classname      reduce using rule 1
-	'('            reduce using rule 1
-
-	Pos            goto state 53
-	FDef           goto state 54
-	Def            goto state 55
-
-State 52
-
-	WhereClause -> where '(' Defs ')' .                 (rule 20)
-
-	')'            reduce using rule 20
-
-
-State 53
-
-	FDef -> Pos . FQType def var Vars Block WhereClause    (rule 17)
-	Def -> Pos . QType let var Exp                      (rule 19)
-
-	classname      reduce using rule 1
-	'('            reduce using rule 1
-
-	Pos            goto state 63
-	QType          goto state 64
-	FQType         goto state 65
-	SQType         goto state 66
-
 State 54
-
-	Def -> FDef .                                       (rule 18)
-
-	')'            reduce using rule 18
-
-
-State 55
-
-	Defs -> Defs '(' Def . ')'                          (rule 15)
-
-	')'            shift, and enter state 62
-
-
-State 56
 
 	Exp -> '(' PExp ')' .                               (rule 30)
 
@@ -682,28 +701,29 @@ State 56
 	op             reduce using rule 30
 	true           reduce using rule 30
 	false          reduce using rule 30
+	where          reduce using rule 30
 	'('            reduce using rule 30
 	')'            reduce using rule 30
 	char           reduce using rule 30
 
 
-State 57
+State 55
 
 	Apply -> Pos Exp . Exps                             (rule 34)
 	Infix -> Pos Exp . op Exp                           (rule 37)
 
 	int            reduce using rule 35
 	var            reduce using rule 35
-	op             shift, and enter state 61
+	op             shift, and enter state 64
 	true           reduce using rule 35
 	false          reduce using rule 35
 	'('            reduce using rule 35
 	')'            reduce using rule 35
 	char           reduce using rule 35
 
-	Exps           goto state 60
+	Exps           goto state 63
 
-State 58
+State 56
 
 	If -> Pos if . Exp Block Block                      (rule 24)
 
@@ -711,27 +731,78 @@ State 58
 	var            reduce using rule 1
 	true           reduce using rule 1
 	false          reduce using rule 1
-	'('            shift, and enter state 39
+	'('            shift, and enter state 38
 	char           reduce using rule 1
 
-	Pos            goto state 32
-	TExp           goto state 33
-	Exp            goto state 59
-	Var            goto state 35
-	Int            goto state 36
-	Bool           goto state 37
-	Char           goto state 38
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 62
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
+
+State 57
+
+	Defs -> Defs '(' . Def ')'                          (rule 15)
+
+	classname      reduce using rule 1
+	'('            reduce using rule 1
+
+	Pos            goto state 59
+	FDef           goto state 60
+	Def            goto state 61
+
+State 58
+
+	WhereClause -> where '(' Defs ')' .                 (rule 20)
+
+	int            reduce using rule 20
+	var            reduce using rule 20
+	true           reduce using rule 20
+	false          reduce using rule 20
+	'('            reduce using rule 20
+	')'            reduce using rule 20
+	char           reduce using rule 20
+
 
 State 59
+
+	FDef -> Pos . FQType def var Vars Block WhereClause    (rule 17)
+	Def -> Pos . QType let var Exp                      (rule 19)
+
+	classname      reduce using rule 1
+	'('            reduce using rule 1
+
+	Pos            goto state 69
+	QType          goto state 70
+	FQType         goto state 71
+	SQType         goto state 72
+
+State 60
+
+	Def -> FDef .                                       (rule 18)
+
+	')'            reduce using rule 18
+
+
+State 61
+
+	Defs -> Defs '(' Def . ')'                          (rule 15)
+
+	')'            shift, and enter state 68
+
+
+State 62
 
 	If -> Pos if Exp . Block Block                      (rule 24)
 
 	'('            reduce using rule 1
 
 	Pos            goto state 23
-	Block          goto state 71
+	Block          goto state 67
 
-State 60
+State 63
 
 	Apply -> Pos Exp Exps .                             (rule 34)
 	Exps -> Exps . Exp                                  (rule 36)
@@ -740,19 +811,19 @@ State 60
 	var            reduce using rule 1
 	true           reduce using rule 1
 	false          reduce using rule 1
-	'('            shift, and enter state 39
+	'('            shift, and enter state 38
 	')'            reduce using rule 34
 	char           reduce using rule 1
 
-	Pos            goto state 32
-	TExp           goto state 33
-	Exp            goto state 34
-	Var            goto state 35
-	Int            goto state 36
-	Bool           goto state 37
-	Char           goto state 38
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 66
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
 
-State 61
+State 64
 
 	Infix -> Pos Exp op . Exp                           (rule 37)
 
@@ -760,18 +831,47 @@ State 61
 	var            reduce using rule 1
 	true           reduce using rule 1
 	false          reduce using rule 1
-	'('            shift, and enter state 39
+	'('            shift, and enter state 38
 	char           reduce using rule 1
 
-	Pos            goto state 32
-	TExp           goto state 33
-	Exp            goto state 70
-	Var            goto state 35
-	Int            goto state 36
-	Bool           goto state 37
-	Char           goto state 38
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 65
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
 
-State 62
+State 65
+
+	Infix -> Pos Exp op Exp .                           (rule 37)
+
+	')'            reduce using rule 37
+
+
+State 66
+
+	Exps -> Exps Exp .                                  (rule 36)
+
+	int            reduce using rule 36
+	var            reduce using rule 36
+	true           reduce using rule 36
+	false          reduce using rule 36
+	'('            reduce using rule 36
+	')'            reduce using rule 36
+	char           reduce using rule 36
+
+
+State 67
+
+	If -> Pos if Exp Block . Block                      (rule 24)
+
+	'('            reduce using rule 1
+
+	Pos            goto state 23
+	Block          goto state 76
+
+State 68
 
 	Defs -> Defs '(' Def ')' .                          (rule 15)
 
@@ -779,7 +879,7 @@ State 62
 	')'            reduce using rule 15
 
 
-State 63
+State 69
 
 	FQType -> Pos . FType '#'                           (rule 4)
 	SQType -> Pos . SType '#'                           (rule 5)
@@ -788,17 +888,17 @@ State 63
 	'('            shift, and enter state 12
 
 	FType          goto state 11
-	SType          goto state 68
-	TypeName       goto state 69
+	SType          goto state 74
+	TypeName       goto state 75
 
-State 64
+State 70
 
 	Def -> Pos QType . let var Exp                      (rule 19)
 
-	let            shift, and enter state 67
+	let            shift, and enter state 73
 
 
-State 65
+State 71
 
 	QType -> FQType .                                   (rule 2)
 	FDef -> Pos FQType . def var Vars Block WhereClause    (rule 17)
@@ -807,65 +907,49 @@ State 65
 	let            reduce using rule 2
 
 
-State 66
+State 72
 
 	QType -> SQType .                                   (rule 3)
 
 	let            reduce using rule 3
 
 
-State 67
+State 73
 
 	Def -> Pos QType let . var Exp                      (rule 19)
 
-	var            shift, and enter state 74
+	var            shift, and enter state 78
 
 
-State 68
+State 74
 
 	SQType -> Pos SType . '#'                           (rule 5)
 
-	'#'            shift, and enter state 73
+	'#'            shift, and enter state 77
 
 
-State 69
+State 75
 
 	SType -> TypeName .                                 (rule 7)
 
 	'#'            reduce using rule 7
 
 
-State 70
-
-	Infix -> Pos Exp op Exp .                           (rule 37)
-
-	')'            reduce using rule 37
-
-
-State 71
-
-	If -> Pos if Exp Block . Block                      (rule 24)
-
-	'('            reduce using rule 1
-
-	Pos            goto state 23
-	Block          goto state 72
-
-State 72
+State 76
 
 	If -> Pos if Exp Block Block .                      (rule 24)
 
 	')'            reduce using rule 24
 
 
-State 73
+State 77
 
 	SQType -> Pos SType '#' .                           (rule 5)
 
 	let            reduce using rule 5
 
 
-State 74
+State 78
 
 	Def -> Pos QType let var . Exp                      (rule 19)
 
@@ -873,18 +957,18 @@ State 74
 	var            reduce using rule 1
 	true           reduce using rule 1
 	false          reduce using rule 1
-	'('            shift, and enter state 39
+	'('            shift, and enter state 38
 	char           reduce using rule 1
 
-	Pos            goto state 32
-	TExp           goto state 33
-	Exp            goto state 75
-	Var            goto state 35
-	Int            goto state 36
-	Bool           goto state 37
-	Char           goto state 38
+	Pos            goto state 29
+	TExp           goto state 30
+	Exp            goto state 79
+	Var            goto state 32
+	Int            goto state 33
+	Bool           goto state 34
+	Char           goto state 35
 
-State 75
+State 79
 
 	Def -> Pos QType let var Exp .                      (rule 19)
 
@@ -894,7 +978,7 @@ State 75
 -----------------------------------------------------------------------------
 Grammar Totals
 -----------------------------------------------------------------------------
-Number of rules: 44
+Number of rules: 47
 Number of terminals: 15
-Number of non-terminals: 29
-Number of states: 76
+Number of non-terminals: 31
+Number of states: 80

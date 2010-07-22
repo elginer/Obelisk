@@ -24,9 +24,9 @@ Library
       Language.Obelisk.Pretty
       Language.Obelisk.AST
       Language.Obelisk.AST.Simple
-      Language.Obelisk.AST.Transformer
       Language.Obelisk.AST.Types
       Language.Obelisk.AST.CodeFragment
+      Language.Obelisk.AST.Correct
    Other-modules:
       Language.Obelisk.TypeChecker.Def
       Language.Obelisk.TypeChecker.Expression

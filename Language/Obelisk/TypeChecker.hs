@@ -32,7 +32,7 @@ module Language.Obelisk.TypeChecker
 
 import Language.Obelisk.Error
 
-import Language.Obelisk.AST.Scoped
+import Language.Obelisk.AST.Correct
 
 import Language.Obelisk.TypeChecker.Typed
 import Language.Obelisk.TypeChecker.Def
@@ -42,9 +42,9 @@ import Data.Either
 import qualified Data.Map as M
 
 -- | Type checker
-check :: ScopedObelisk -> ScopedObelisk
+check :: ScopedObelisk -> CorrectObelisk
 check =
-   either (error . pretty . error_join . map report) id . flip echeck joke_env 
+   either (error . pretty . error_join . map report) CorrectObelisk . flip echeck joke_env 
 
 -- | This type checking environment is a bit of a joke
 joke_env :: TypeEnvironment

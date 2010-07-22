@@ -32,6 +32,7 @@ module Language.Obelisk.AST
    ,Def (..)
    ,Block (..)
    ,Exp (..)
+   ,WhereExp (..)
    ,official_type)
    where
 
@@ -73,7 +74,11 @@ official_type d =
       Constant _ qt _ _ -> qt
 
 -- | A block of code
-data Block v m = Block m [Exp v m] 
+data Block v m = Block m [WhereExp v m] 
+   deriving Show
+
+-- | Definitions can be associated with an expression
+data WhereExp v m = WhereExp (Exp v m) [Def v m]
    deriving Show
 
 -- | Expressions in obelisk

@@ -32,6 +32,8 @@ module Language.Obelisk.TypeChecker.Expression where
 import Language.Obelisk.Error
 import Language.Obelisk.TypeChecker.Typed
 
+import {-# SOURCE #-} Language.Obelisk.TypeChecker.Def
+
 import Control.Monad
 import Control.Arrow
 
@@ -40,6 +42,13 @@ import qualified Data.Map as M
 import Data.Maybe
 
 import Debug.Trace
+
+instance Typed ScopedWhereExp where
+   -- The type of the WhereExp is the type of the expression, but gather errors from the where clause.
+   typeof (WhereExp exp wh) env =
+      second (++ where_errors wh new_env) $ typeof exp new_env
+      where
+      new_env = with_where wh env
 
 instance Typed ScopedBlock where
    -- The type of the block is the type of the last expression, but try to gather errors from the other expressions

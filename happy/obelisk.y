@@ -118,7 +118,6 @@ Defs : Defs '(' Def ')'    { $3 : $1 }
 FDef :: { SimpleFDef }
 FDef : Pos FQType def var Vars Block WhereClause  { Def $1 $2 $4 $5 $6 $7 }
 
-
 {- Define a function or a constant -}
 Def :: { SimpleDef }
 Def : FDef                     { FDef $1 } 
@@ -188,4 +187,13 @@ Char : Pos char { OChar $1 $2 }
 
 {- Block of code -}
 Block :: { SimpleBlock }
-Block : Pos '(' Exps ')'  { Block $1 (reverse $3) }
+Block : Pos '(' WhereExps ')'  { Block $1 (reverse $3) }
+
+{- List of where expressions -}
+WhereExps :: { [SimpleWhereExp] }
+WhereExps : WhereExps WhereExp  { $2 : $1 }
+          | WhereExp            { [$1] }
+
+{- An expression associated with definitions. -}
+WhereExp :: { SimpleWhereExp }
+WhereExp : Exp WhereClause { WhereExp $1 $2 }

@@ -22,5 +22,30 @@ This file is part of The Obelisk Programming Language.
 
 -}
 
--- | Transform obelisk AST
-module Language.Obelisk.AST.Transformer where
+{-#
+   OPTIONS
+   -XTypeSynonymInstances
+#-}
+
+-- | Type check definitions
+module Language.Obelisk.TypeChecker.Def where
+
+import Language.Obelisk.Error
+
+import Language.Obelisk.AST.Scoped
+
+import Language.Obelisk.TypeChecker.Typed
+
+import qualified Data.Map as M
+
+import Control.Arrow
+
+-- | Update the type environment with the types described in a where clause
+with_where :: [ScopedDef] -> TypeEnvironment -> TypeEnvironment
+
+-- | The errors from a where clause
+where_errors :: [ScopedDef] -> TypeEnvironment -> [TypeError]
+
+instance Typed ScopedFDef where
+
+instance Typed ScopedDef where
