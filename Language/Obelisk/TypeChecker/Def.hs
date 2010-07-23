@@ -78,4 +78,11 @@ instance Typed ScopedDef where
       case d of
          FDef f -> typeof f env
          Constant (_, cf) t _ e ->
-            (Just t, unify t e env)
+            let success = (Just t, unify t e env)
+            in  case t of
+                   QType _ _ (Type tyn) ->
+                      if sname tyn == "Void"
+                         then (const Nothing) *** (ConstantCannotBeVoid cf :) $ success
+                         else success
+                   _ -> success
+             

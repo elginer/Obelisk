@@ -69,6 +69,8 @@ data TypeError =
      WrongNumberOfActualArguments Int Int CodeFragment
    | -- | The branches of an if statement do not match
      BranchesDontMatch QType QType CodeFragment
+   | -- | Constants cannot be of type Void
+     ConstantCannotBeVoid CodeFragment
       deriving Show
 
 instance ErrorReport [TypeError] where
@@ -101,6 +103,9 @@ instance ErrorReport TypeError where
             error_line trueb $ 
             error_line "But the type of the 'false' branch was:" $
             error_line falseb $ report cf
+
+         ConstantCannotBeVoid cf ->
+            error_line "A constant cannot be void" $ report cf
         
 -- | Filter all the correct types
 filter_correct :: [(Maybe QType, [TypeError])] -> [(Maybe QType, [TypeError])]

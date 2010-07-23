@@ -37,7 +37,7 @@ test :: (ErrorReport a, Show b)
      -> IO () -- ^ Run the test
 test process test success fp =
    readFile fp >>= (\src -> do
-      putStrLn $ "\n-----------------------------------"
+      putStrLn $ '\n' : replicate 50 '*'
       putStrLn $ "Testing " ++ fp ++ ":"
       approp success $ test fp src)
    
