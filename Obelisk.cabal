@@ -5,7 +5,7 @@ License:	GPL-3
 License-File:   COPYING	
 Author:		John Morrice
 Category:	Compilers/Interpreters
-Synopsis:       An simple object oriented language, with a strongly typed form of duck-typing.
+Synopsis:       Obelisk is a general purpose systems programming language.  This package provides the Obelisk report and The Obelisk Compiler.
 Build-type:	Simple
 
 Library
@@ -27,6 +27,8 @@ Library
       Language.Obelisk.AST.Types
       Language.Obelisk.AST.CodeFragment
       Language.Obelisk.AST.Correct
+      Language.Obelisk.Interpreter.Tree
+      Language.Obelisk.Interpreter.Correct
    Other-modules:
       Language.Obelisk.TypeChecker.Def
       Language.Obelisk.TypeChecker.Expression

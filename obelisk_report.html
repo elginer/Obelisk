@@ -7,6 +7,7 @@
       <style type="text/css">
       .code {background-color: #222222; font-size: x-large; font-family: monospace; color: yellow;}
       .banner {text-align: center;}
+      .boring {font-family: monospace; font-size: x-large;}
       div.columnholder {width: 100%; height: 200px;}
       div.column {border: 2px solid yellow; width: 500px; float: left; height: 200px;}
       body {font-family: sans-serif;}
@@ -16,8 +17,11 @@
       <h1 class="banner">The Obelisk Programming Language Report</h1>
       <h2 class="banner">Copyright John Morrice 2010.  Contact: spoon@killersmurf.com</h2>
       <h3 class="banner">Released under the terms of the GNU GPL-3.  See the file 'LICENCE'.</h3>
+      <p class="boring">
+         The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>.
+      </p>
       <p>
-         Obelisk is a general purpose systems programming language.  Its type system supports parametric polymorphism (generics), as well as objects and classes with inheritance (subtype polymorphism).  Obelisk supports anonymous and higher order functions and tail-call optimization.
+         Obelisk is a general purpose systems programming language.  Its type system supports parametric polymorphism (generics), as well as objects and classes with inheritance (subtype polymorphism).  Obelisk supports anonymous and higher order functions and tail-call optimization.  Obelisk aims to have an unambiguous and simple syntax and semantics.
       </p>
       <p><b>Contents:</b>
          <br/>
@@ -29,13 +33,32 @@
          &nbsp;&nbsp;&nbsp;<a href="#semantics">3. Semantics</a><br/>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#scope">3.1 Scoping rules</a><br/>
          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#types">3.2 Types</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#evaluation">3.3 Evaluation</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#application">3.3.1 Application</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#fapplication">3.3.1.1 Function application</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#oapplication">3.3.1.2 Operator application</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#tailcall">3.3.1.3 Tail-call optimization</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#functions">3.3.2 Functions</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#operators">3.3.3 Operators</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#blocks">3.3.4 Blocks</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#if">3.3.5 If statement</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#whereclause">3.3.6 Where clause</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#constants">3.3.6.1 Constants</a><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#functions_where">3.3.6.2 Functions defined within a where clause</a><br/>
+         
       </p>
       <h1>1. Introduction</h1>
       <p>
-         This file is a report on the current state of the Obelisk programming language.  It is structured as a compiler:  each stage in compilation process is described, and in the order of execution of the Obelisk compiler.<br/><br/>
-         What I mean by this is first the lexical rules are described (associated with lexical analysis), before moving on to describe the syntax (associated with parsing, after lexical analysis in the compiler chain), and so on, for all stages of the compiler, or equivalently with all aspects of the Obelisk programming language.<br/><br/>
-         The advantage this approach is that each subsection can be analysed with respect to a single compiler subsystem.  So if you are confused, or you suspect the a subsection of this report to be at odds with the behaviour of the compiler, you can easily find the code which represents that subsection and find clarification.<br/><br/>
-         In aid to that, links to files within appropriate subsystems can be found in italics at the beginning of every subsection.
+         This file is a report on the current state of the Obelisk programming language.  It describes a standard which compliant Obelisk implementations MUST meet.  The Obelisk Compiler is the name of a free compiler which implements this standard.<br/><br/>
+
+
+         This report is structured as the Obelisk compiler:  each stage in compilation process is described, and in the order of execution of The Obelisk compiler.<br/><br/>
+         
+         This means that at first the lexical rules are described (associated with lexical analysis), before moving on to describe the syntax (associated with parsing, after lexical analysis in the compiler chain), and so on, for all stages of the compiler, or equivalently with all aspects of the Obelisk programming language.<br/><br/>
+
+         The advantage this approach is that each subsection can be analysed with respect to a single compiler subsystem.  So if you are confused, or you suspect the a subsection of this report to be at odds with the behaviour of the compiler, you can easily find code which represents that subsection and find clarification.<br/><br/>
+
+         In aid to that, links to files within appropriate subsystems of The Obelisk Compiler can be found in italics at the beginning of every subsection.
       </p>
       <h1> 
          <a name="syntax">
@@ -93,11 +116,13 @@
          Reserved words are identified during lexical analysis.  These reserved words are:
       </p>
       <p class="code">
+         op<br/><br/>
          def<br/><br/>
          where<br/><br/>
          let<br/><br/>
          true<br/><br/>
          false<br/><br/>
+         if<br/><br/>
          #<br/><br/>
          -&gt;
       </p>
@@ -117,7 +142,7 @@
          obelisk: fdef obelisk | fdef<br/><br/>
 
          # A function definition<br/>
-         fdef: '(' '(' ftype ')' 'def' vars block { 'where' '(' { defs } ')' } ')'<br/><br/>
+         fdef: '(' '(' ftype ')' 'def' vars block where_clause ')'<br/><br/>
 
          # A function's type<br/>
          ftype: classname | ftype '-&gt;' classname <br/><br/>
@@ -143,7 +168,10 @@
          if:  'if' exp block block<br/><br/>
 
          # A block of code<br/>
-         block: '(' { exps } ')'<br/><br/>
+         block: '(' { exps } where_clause ')'<br/><br/>
+
+         # A where clause, allowing definitions within a function or block.
+         where_clause: { 'where' '(' { defs } ')' }
 
          # A list of variables <br/>
          vars: var+<br/><br/>
@@ -177,6 +205,99 @@
             3. Semantics
          </a>
       </h1>
+      <p>
+         The following sections describe in detail the semantics of the Obelisk.<br/><br/>
+         This section attempts to briefly summerise Obelisk's semantics using common computer science jargon, and examples comparing Obelisk to the <a href="http://cm.bell-labs.com/cm/cs/cbook/">C programming languge.</a><br/><br/>
+         To get the computer to 'do' something in C, a <a href="#functions">function</a> must be <a href="#fapplication">applied</a> to zero or more arguments.  The same is true for Obelisk, but the syntax is different.  In Obelisk:
+      </p>
+      <p class="code">
+         // Call function foo with arguments bar and baz<br/>
+         (foo bar baz)
+      </p>
+      <p>
+         In C:
+      </p>
+      <p class="code">
+         /* Call function foo with arguments bar and baz. */<br/>
+         foo(bar baz);
+      </p>
+      <p>
+         New functions are defined using the reserved word <span class="code">def</span>.  Importantly, Obelisk functions benefit from <a href="#tailcall">tail-call optimization</a> meaning that calling foo here will not blow the stack:
+      </p>
+      <p class="code">
+         // Mutually recursive functions call each other without growing the stack.<br/>
+         ((Void) #<br/>
+         def foo ((bar)))<br/>
+         <br/>
+         ((Void) #<br/>
+         def bar ((foo)))
+      </p>
+      <p>
+         The C version would grow the stack indefinately until the program crashed:
+      </p>
+      <p class="code">
+      /* Mutually recursive functions call each other, growing the stack.*/<br/>
+      void foo()<br/>
+      {<br/>
+      &nbsp;&nbsp;&nbsp;bar();<br/>
+      }<br/>
+      <br/>
+      void bar()<br/>
+      {<br/>
+      &nbsp;&nbsp;&nbsp;foo();<br/>
+      }
+      </p>
+      <p>
+         In Obelisk, <a href="#functions_where">inner function definitions</a> and <a href="#constants">constants</a> are declared in where clause, which is located either at the end of a function definition, or at the end of a <a href="#blocks">block.</a>  To be more robust, Obelisk takes inspiration from the pure functional language Haskell and hence functions have no variables:  the value of a constant cannot change once it is defined!<br/>
+      </p>
+      <p class="code">
+         // An Obelisk function defining constants within where clauses<br/>
+         ((Int -&gt; Int) #<br/>
+         def foo x<br/>
+         &nbsp;&nbsp;&nbsp;((if ((x &gt; 10))<br/><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Execute this block if x &gt; 10<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((y * x)<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;where<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// y is wihin the scope of the 'then' branch of the if statement.<br/> 
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((Int # let y 10))))<br/><br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Execute this block if x &lt;= 10<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;((z * x)))<br/><br/>
+
+         &nbsp;&nbsp;&nbsp;where<br/>
+         &nbsp;&nbsp;&nbsp;// z is within the scope of the whole function<br/>
+         &nbsp;&nbsp;&nbsp;((Int # let z 20)))
+      </p>
+
+      </p>
+      <p>
+        A comparable C function defining automatic variables:
+      </p>
+      <p class="code">
+         /* A C function with automatic variables */<br/>
+         int foo(int x)<br/>
+         {<br/>
+         &nbsp;&nbsp;&nbsp;/* z is within the scope of the whole function */<br/>
+         &nbsp;&nbsp;&nbsp;int z;<br/>
+         &nbsp;&nbsp;&nbsp;z = 20;<br/>
+         <br/> 
+         &nbsp;&nbsp;&nbsp;if (x &gt; 10)<br/>
+         &nbsp;&nbsp;&nbsp;/* Execute this block if x &gt; 10 */<br/>
+         &nbsp;&nbsp;&nbsp;{<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/* y is within the scope of the 'then' branch of the if statement. */<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;int y;<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;y = 10;<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return y * x;<br/>
+         &nbsp;&nbsp;&nbsp;}<br/>
+         &nbsp;&nbsp;&nbsp;else<br/>
+         &nbsp;&nbsp;&nbsp;/* Execute this block if x &lt;= 10 */<br/>
+         &nbsp;&nbsp;&nbsp;{<br/>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return z * x;<br/>
+         &nbsp;&nbsp;&nbsp;}<br/>
+      }
+      </p>
+      <p>
+         As seen in the last example, Obelisk also supports the <a href="#if">if statement</a> and <a href="#operators">infix operators</a> like + and *.
+      </p>
       <h2>
          <a name="scope">
             3.1 Scope
@@ -276,9 +397,9 @@
 
          The return type of a <a href="#functions">function</a> is the type of its block.<br/><br/>
 
-         A constant cannot have type Void.<br/><br/> 
+         A <a href="#constants">constant</a> in a <a href="#whereclause">where-clause</a> cannot have type Void.<br/><br/> 
 
-         In <a href="#application">function application</a> the type of the each actual argument must match the type of the formal argument to which it is applied.  The overall type of this expression is the return type of the function.<br/><br/>
+         In <a href="#fapplication">function application</a> and <a href="#oapplication">operator application</a> the type of the each actual argument must match the type of the formal argument to which it is applied.  The overall type of this expression is the return type of the function.<br/><br/>
 
          In an <a href="#if">if statement</a>, <span class="code">if test (a) (b)</span> the type of <span class="code">test</span> must be <span class="code">Bool</span>.  Also, the types of <span class="code">a</span> and <span class="code">b</span> must be the same.<br/><br/>
        
@@ -293,5 +414,66 @@
       <p>
          This distinguishes unevaluated functions from values - necessary for a consistent type checking system, especially with higher order functions (unimplemented).
       </p>
+      <h2>
+         <a name="evaluation">
+            3.3 Evaluation
+         </a>
+      </h2>
+      <p>
+         <i>The <a href="Language/Obelisk/Interpreter">interpreter suite</a> is used to test that each phase of <a href="Language/Obelisk/Emitter.hs">code generation</a> preserves the semantics described here.</i>
+      </p>
+      <p>
+         To evaluate an Obelisk program:<br/>
+            Evaluate the <span class="code">main</span> <a href="#functions">function</a>,  <a href="#fapplication">applied</a> to no arguments.  Syntactically, this would look like:
+      </p>
+     <p class="code">
+        (main)
+     </p>
+
+     <h2>
+        <a name="application">
+           3.3.1 Application
+        </a>
+     </h2>
+
+     <p>
+        There are two types of application in Obelisk: <a href="#fappliation">function application</a> and <a href="#oapplication">operator application</a>.  Both types of application MUST support tail-call optimization as described in <a href="#tailcall">3.3.1.3 Tail-call optimization</a>.
+     </p>
+
+     <h2>
+        <a name="fapplication">
+           3.3.1.1 Function application
+        </a>
+     </h2>
+     <p>
+        Obelisk is an eager language.  In Obelisk, the actual arguments in a function application MUST BE evaluated in left to right order.  Then the function MUST be applied to its arguments.   Execution continues as described in <a href="#functions">3.3.3 Functions</a>.
+     </p>
+     <p class="code">
+        // First (bar) is evaluated to x, then baz is evaluated to y, then (foo x y) is evaluated<br/>
+        (foo (bar) baz)
+     </p>
+
+     <h2>
+        3.3.1.2 Operator application
+     </h2>
+     <p>
+        The left argument to the operator MUST be evaluated first, then the right operator MUST be evaluated second, and finally the operator MUST be applied to its arguments.   Execution continues as described in <a href="#functions">3.3.4 Operators</a>.
+     </p>
+     <p class="code">
+        // First (bar) is evaluated to x, then baz is evaluated to y, then (foo x y) is evaluated<br/>
+        (foo (bar) baz)
+     </p>
+
+     <h2>
+        <a name="tailcall">
+           3.3.1.3 Tail call optimization
+        </a>
+     </h2>
+     <p>
+        If the application occurs in the context of tail call, then the application MUST NOT grow the stack.  If an implementation were to grow the stack, then that implementation would not support tail call optimization.<br/><br/>
+
+        If the application does not occur in the context of a tail call, then the application MAY grow the stack.  However, if your implementation can run without ever growing stack, you probably deserve a medal.
+     </p>
+
    </body>
 </html>

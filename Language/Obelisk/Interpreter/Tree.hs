@@ -28,10 +28,15 @@ This file is part of The Obelisk Programming Language.
 #-}
 
 -- | Common tools for interpreters which interpret some form of Abstract Syntax tree.
-module Language.Obelisk.Interpreter where
+module Language.Obelisk.Interpreter.Tree where
+
+import Language.Obelisk.Error
+import Language.Obelisk.AST.CodeFragment
 
 import qualified Data.Map as M
 import Data.Map (Map)
+
+import Data.Maybe
 
 -- | The variables in scope.  Parametrized over a function type.
 newtype Scope f = Scope {unscope :: Map String (Value f)}
@@ -46,5 +51,17 @@ data Value f =
      Int Int
 
 -- | AST elements can be evaluated.  This corrosponds to ONE evaluation step.  The ast is parametrized over a function data type.
-class Eval f f => Eval ast f where
-   eval :: ast -> Scope f -> Value f
+class Eval ast f where
+   eval :: ast -> Scope f -> IO (Maybe (Value f))
+
+-- | Add to scope
+new_var :: String -> Value f -> Scope f -> Scope f
+new_var nm val sc = sc {unscope = M.insert nm val $ unscope sc}
+
+-- | Look up a value in a scope
+lookup_var :: CodeFragment -> String -> Scope f -> Value f
+lookup_var cf nm sc =
+   fromMaybe (broken_compiler ["Interpreter could not find variable:"
+                              , nm] $ report cf)
+             $ M.lookup nm $ unscope sc
+         

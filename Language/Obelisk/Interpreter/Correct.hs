@@ -22,8 +22,12 @@ This file is part of The Obelisk Programming Language.
 
 -}
 
--- | Emit NASM representation of obelisk code
-module Language.Obelisk.Emitter where
+-- | Interpreter for type-checked AST
+module Language.Obelisk.Interpreter.Correct where
 
--- | Emit NASM representation of obelisk code
-emit = undefined
+-- | Interpret 'correct' Obelisk
+interpret :: CorrectObelisk -> IO ()
+interpret = sinterpret . uncorrect
+
+-- | Interpret Scoped Obelisk
+sinterpret :: ScopedObelisk -> IO ()

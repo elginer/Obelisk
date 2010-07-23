@@ -22,8 +22,9 @@ This file is part of The Obelisk Programming Language.
 
 -}
 
--- | Emit NASM representation of obelisk code
-module Language.Obelisk.Emitter where
+-- | Generate the Obelisk report from a selection of source files
+module Language.Obelisk.Report where
 
--- | Emit NASM representation of obelisk code
-emit = undefined
+import System.FilePath
+import System.Directory
+
