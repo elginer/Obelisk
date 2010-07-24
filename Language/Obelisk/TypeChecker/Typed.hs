@@ -43,7 +43,7 @@ module Language.Obelisk.TypeChecker.Typed
    ,bool_type)
    where
 
-import Language.Obelisk.Error
+import Language.Obelisk.Error 
 import Language.Obelisk.AST.Scoped
 
 import Data.Map (Map)

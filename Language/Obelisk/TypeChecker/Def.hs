@@ -30,7 +30,7 @@ This file is part of The Obelisk Programming Language.
 -- | Type check definitions
 module Language.Obelisk.TypeChecker.Def where
 
-import Language.Obelisk.Error
+import Language.Obelisk.Error 
 
 import Language.Obelisk.AST.Scoped
 

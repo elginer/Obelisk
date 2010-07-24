@@ -31,7 +31,7 @@ import Language.Obelisk.Parser.Monad
 
 import Language.Obelisk.Lexer.Token
 
-import Language.Obelisk.Error
+import Error.Report
 
 import Text.Parsec.Token as T
 import Text.Parsec.Language

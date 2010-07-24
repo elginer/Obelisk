@@ -27,7 +27,7 @@ import Language.Obelisk.Parser
 
 import qualified Language.Obelisk.Parser.Monad as M
 
-import Language.Obelisk.Test
+import Test.Simple
 
 main = 
    test_all "parse" parse_test 

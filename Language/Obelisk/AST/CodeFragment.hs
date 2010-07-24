@@ -25,7 +25,7 @@ This file is part of The Obelisk Programming Language.
 -- | Code fragments for nice error reporting
 module Language.Obelisk.AST.CodeFragment where
 
-import Language.Obelisk.Error
+import Error.Report
 
 import Text.Parsec.Pos
 

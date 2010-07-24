@@ -30,7 +30,7 @@ module Language.Obelisk.TypeChecker
    ,echeck)
    where
 
-import Language.Obelisk.Error
+import Error.Report
 
 import Language.Obelisk.AST.Correct
 

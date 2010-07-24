@@ -25,7 +25,8 @@ This file is part of The Obelisk Programming Language.
 -- Ensure that Obelisk source is lexed properly!
 import Language.Obelisk.Lexer
 import Language.Obelisk.Lexer.Token
-import Language.Obelisk.Test
+
+import Test.Simple
 
 -- Examine the output.  Make sure it is 'okay'.  
 main =

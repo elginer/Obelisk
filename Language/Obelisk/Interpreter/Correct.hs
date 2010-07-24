@@ -25,9 +25,12 @@ This file is part of The Obelisk Programming Language.
 -- | Interpreter for type-checked AST
 module Language.Obelisk.Interpreter.Correct where
 
+import Language.Obelisk.AST.Correct
+
 -- | Interpret 'correct' Obelisk
 interpret :: CorrectObelisk -> IO ()
 interpret = sinterpret . uncorrect
 
 -- | Interpret Scoped Obelisk
 sinterpret :: ScopedObelisk -> IO ()
+sinterpret = undefined

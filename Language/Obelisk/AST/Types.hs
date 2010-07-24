@@ -29,12 +29,12 @@ This file is part of The Obelisk Programming Language.
 -- | Types
 module Language.Obelisk.AST.Types where
 
-import Language.Obelisk.Pretty
+import Text.Pretty
 
 import Language.Obelisk.AST.CodeFragment
 import Language.Obelisk.AST.Named
 
-import Language.Obelisk.Error
+import Language.Obelisk.Error 
 
 import Data.List
 

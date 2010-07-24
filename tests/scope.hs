@@ -26,7 +26,7 @@ This file is part of The Obelisk Programming Language.
 import Language.Obelisk.Scoper
 import Language.Obelisk.Parser
 
-import Language.Obelisk.Test
+import Test.Simple
 
 main = test_all "scope" scope_test
 

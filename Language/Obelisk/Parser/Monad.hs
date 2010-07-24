@@ -29,7 +29,7 @@ import Text.Parsec.Pos
 
 import Language.Obelisk.AST.Simple
 
-import Language.Obelisk.Error
+import Error.Report
 
 -- | Our overall parser type
 type Parse = OParser SimpleObelisk

@@ -25,10 +25,9 @@ This file is part of The Obelisk Programming Language.
 -- | Ensure all variables are within scope
 module Language.Obelisk.Scoper where
 
+import Language.Obelisk.Error
 import Language.Obelisk.AST.Simple
 import Language.Obelisk.AST.Scoped
-
-import Language.Obelisk.Error
 
 import Data.List
 import Data.Either
