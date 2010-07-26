@@ -1,4 +1,5 @@
 #! /bin/sh
 
 # Build the runtime
-./runtime/build.sh
+cd runtime;
+./build.sh;

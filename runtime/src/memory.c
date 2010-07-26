@@ -156,8 +156,6 @@ void grow(stack_pointer top, stack_pointer bottom, size_t at_least, memory_manag
       fprintf(stderr, "Current heap size: %zu.  Heap must grow by at least: %zu\n\n", mem->size, at_least);
    #endif
 
-   printf("GROWING\n");
-
    /* If doubling the memory isn't enough then the new size is the old_size + at_least */
    if (mem->size > at_least)
    {

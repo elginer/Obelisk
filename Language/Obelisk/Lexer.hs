@@ -44,10 +44,6 @@ import Data.Char
 
 import Debug.Trace
 
--- | Make parsec errors into a compiler error
-instance ErrorReport ParseError where
-   report e = error_lines (lines (show e)) empty_error
-
 -- | Obelisk language definition 
 obdef :: LanguageDef st
 obdef = LanguageDef 
