@@ -5,10 +5,14 @@ Released under the terms of the GNU General Public License.  See COPYING.
 Contact: John Morrice of spoon@killersmurf.com
 
 From the Obelisk Report:
-	"Obelisk is a general purpose systems programming language.
-         Its type system supports parametric polymorphism (generics), 
-         as well as objects and classes with inheritance (subtype polymorphism).  
-         Obelisk supports anonymous and higher order functions and tail-call optimization."
+         "Obelisk is a general purpose systems programming language.
+
+          Obelisk aims to:
+          Have an expressive type system, but be utterly type-safe.
+          Respect functional purity, with no mutable variables in functions...
+          ...but also to support class-based objects that control the mutable state represented by their instance variables.
+          Be native-code compiling, for speed.
+          Have a robust development methodology. Everything must be tested rigorously because programmers cry when their code-generators break."
 
 ...well, not quite.  That is what Obelisk aims to be.  This is a work-in progress compiler for the Obelisk programming language.
 

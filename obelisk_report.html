@@ -21,7 +21,14 @@
          The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in <a href="http://www.ietf.org/rfc/rfc2119.txt">RFC 2119</a>.
       </p>
       <p>
-         Obelisk is a general purpose systems programming language.  Its type system supports parametric polymorphism (generics), as well as objects and classes with inheritance (subtype polymorphism).  Obelisk supports anonymous and higher order functions and tail-call optimization.  Obelisk aims to have an unambiguous and simple syntax and semantics.
+         Obelisk is a general purpose systems programming language.
+         <br/><br/>
+         Obelisk aims to:
+         <br/>Have an expressive type system, but be utterly type-safe.
+         <br/>Respect functional purity, with no mutable variables in functions...
+         <br/>...but also to support class-based objects that control the mutable state represented by their instance variables.
+         <br/>Be native-code compiling, for speed.
+         <br/>Have a robust development methodology. Everything must be tested rigorously because programmers cry when their code-generators break.  
       </p>
       <p><b>Contents:</b>
          <br/>
