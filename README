@@ -27,7 +27,7 @@ Objectives: implement a compiler for non-polymorphic, simply typed functions.
 What we have:
 In the compiler; Lexical analysis, parse, and type-checking of simple functions.  Check the 'tests' directory.
 
-In the run-time: Basic memory management
+In the run-time: Basic memory management, copying garbage collector.
 
 Build the compiler with ./build.sh
 Run the tests with ./test.sh
