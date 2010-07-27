@@ -1,6 +1,6 @@
 // Access block where constant
-((Int) #
+(Int) #
 def foo
-   (bar
-      where
-      ((Int # let bar 2))))
+   {bar
+   where
+   {Int # let bar 2}}

@@ -57,6 +57,8 @@ eparse = M.eparse parse
    '#'       { TTypeTerm }
    '('       { TParOpen }
    ')'       { TParClose }
+   '{'       { TBraceOpen }
+   '}'       { TBraceClose }
    char      { TChar $$ }
 
 %%
@@ -105,13 +107,13 @@ Obelisk : FDefs   { Obelisk $ reverse $1 }
 
 {- A list of function definitions -}
 FDefs :: { [SimpleFDef] }
-FDefs : FDefs '(' FDef ')'    { $3 : $1 }
+FDefs : FDefs FDef    { $2 : $1 }
      | {- empty -} { [] }
 
 
 {- A list of definitions -}
 Defs :: { [SimpleDef] }
-Defs : Defs '(' Def ')'    { $3 : $1 }
+Defs : Defs Def    { $2 : $1 }
      | {- empty -} { [] }
 
 {- A function definition -}
@@ -125,7 +127,7 @@ Def : FDef                     { FDef $1 }
 
 {- A where clause -}
 WhereClause :: { [SimpleDef]}
-WhereClause : where '(' Defs ')'  { reverse $3 }
+WhereClause : where '{' Defs '}'  { reverse $3 }
             | {- empty -}   { [] }
 
 {- A list of variables -}
@@ -147,17 +149,17 @@ TExp : Var   { $1 }
 {- An expression -}
 Exp :: { SimpleExp }
 Exp : TExp           { $1 }
+    | If             { $1 }
     | '(' PExp ')'   { $2 }
 
 {- An expression found within parenthesis -}
 PExp :: { SimpleExp }
 PExp : Apply { $1 }
      | Infix { $1 }
-     | If    { $1 }
 
 {- Function application. -}
 Apply :: { SimpleExp }
-Apply : Pos Exp Exps  { Apply $1 $2 (reverse $3) }
+Apply : Pos Exp Exps { Apply $1 $2 (reverse $3) }
 
 {- A list of expressions -}
 Exps :: { [SimpleExp] }
@@ -187,4 +189,4 @@ Char : Pos char { OChar $1 $2 }
 
 {- Block of code -}
 Block :: { SimpleBlock }
-Block : Pos '(' Exps  WhereClause ')'  { Block $1 (reverse $3) $4 }
+Block : Pos '{' Exps  WhereClause '}'  { Block $1 (reverse $3) $4 }

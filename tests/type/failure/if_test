@@ -1,5 +1,5 @@
 // Incorrect application in if statement test
 
-((Bool -> Int) # def foo x (0))
+(Bool -> Int) # def foo x {0}
 
-((Void) # def bar ((if (foo true) () ())))
+(Void) # def bar {if (foo true) {} {}}

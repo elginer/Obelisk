@@ -1,2 +1,3 @@
 // A lonesome define cannot see anyone else
-((A) # def x (y))
+(A) #
+def x {y}

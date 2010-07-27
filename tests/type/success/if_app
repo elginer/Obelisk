@@ -1,5 +1,5 @@
 // Application inside If
 
-((Int -> Int) # def foo x (x))
+(Int -> Int) # def foo x {x}
 
-((Int) # def bar ((if false ((foo 1)) ((foo 2)))))
+(Int) # def bar {if false {(foo 1)} {(foo 2)}}

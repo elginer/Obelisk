@@ -1,0 +1,7 @@
+// Apply if statement as function
+(Void) #
+def foo
+{
+   ((if true
+      {} {}) 3)
+}

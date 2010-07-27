@@ -1,3 +1,5 @@
 // Function returns bool, but has type char
 
-((Char) # def foo (true))
+(Char) #
+def foo
+   {true}

@@ -1,5 +1,15 @@
 // Application in if statement test
 
-((Bool -> Bool) # def foo x (x))
+(Bool -> Bool) # 
+def foo x 
+{
+   x
+}
 
-((Void) # def bar ((if (foo true) () ())))
+(Void) #
+def bar 
+{
+   if (foo true)
+      {}
+      {}
+}

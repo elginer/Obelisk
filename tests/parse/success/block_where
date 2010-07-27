@@ -1,9 +1,9 @@
 // Block has a where clause
 
-((Void) #
+(Void) #
 def foo 
-   ((nice + cool)
+   {(nice + cool)
       where 
-      ((Int # let nice 1)))
+      {Int # let nice 1}}
    where
-   ((Int # let cool 2))) 
+   {Int # let cool 2} 

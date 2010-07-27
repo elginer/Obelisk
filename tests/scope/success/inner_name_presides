@@ -1,9 +1,8 @@
 // Definitions in a block's where clause override variables ouside that clause
-((Void) #
+(Void) #
 def foo bar
-   (
-      where
-      ((A # let bar 0)
-       (B # let baz 1)))
+   {where
+      {A # let bar 0
+       B # let baz 1}}
    where
-   ((C # let baz 2)))
+   {C # let baz 2}

@@ -1,1 +1,7 @@
-((A) # def a (b) where ((A # let b a)))
+(A) # def a 
+   {b}
+   where 
+   {
+      A # let b a
+      (C) # def foo {} where {}
+   }

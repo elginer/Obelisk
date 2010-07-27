@@ -1,2 +1,2 @@
 // The define can see its inner constant
-((A) # def x (y) where ((A # let y 'a')))
+(A) # def x {y} where {A # let y 'a'}

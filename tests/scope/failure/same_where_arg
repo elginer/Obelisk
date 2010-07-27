@@ -1,2 +1,6 @@
 // A where clause member cannot share the same name as a function's argument
-((A) # def x y () where ((A # let y 0)))
+(A) # def x y {}
+where 
+{   
+   A # let y 0
+}

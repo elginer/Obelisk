@@ -1,3 +1,10 @@
 // A define cannot see another's where clause
-((A) # def x () where ((A # let z 0)))
-((A) # def y (z))
+(A) # 
+def x {} 
+where 
+{
+   A # let z 0
+}
+
+(A) #
+def y {z}

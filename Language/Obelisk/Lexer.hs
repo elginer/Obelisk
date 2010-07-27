@@ -53,8 +53,8 @@ obdef = LanguageDef
    ,nestedComments = False
    ,identStart     = lower
    ,identLetter    = alphaNum <|> oneOf "_?"
-   ,opStart        = oneOf ":!#$%&*+./<=>@\\^|-~"
-   ,opLetter       = oneOf ":!#$%&*+./<=>@\\^|-~"
+   ,opStart        = oneOf ":!#$%&*+/<=>@\\^|-~"
+   ,opLetter       = oneOf ":!#$%&*+/<=>@\\^|-~"
    ,reservedNames  = ["def", "if", "true", "false", "where", "let"]
    ,reservedOpNames = ["->", "#"]
    ,caseSensitive   = True}
@@ -71,6 +71,17 @@ class_name = do
    rst <- many alphaNum
    return $ TClassName $ fst : rst
 
+-- | Parse the close brace
+bra_close :: Parser Token
+bra_close =
+   char '}' >> return TBraceClose
+
+-- Ooo err matron
+-- | Parse the open brace
+bra_open :: Parser Token
+bra_open =
+   char '{' >> return TBraceOpen
+
 -- | Parse the open parenthesis
 par_open :: Parser Token
 par_open = do
@@ -82,6 +93,12 @@ par_close :: Parser Token
 par_close = do
    char ')'
    return TParClose
+
+-- | A period
+period :: Parser Token
+period = do
+   char '.'
+   return TPeriod
 
 chomp :: String -> String
 chomp = reverse . chomp_front . reverse . chomp_front 
@@ -127,20 +144,23 @@ lex cont = OParser $ \i report ->
 -- | Parse a token with parsec
 tlex :: Parser Token
 tlex =
-   fmap TInt (T.decimal obtok)
-   <|> (T.reserved obtok "true" >> return TTrue)
-   <|> (T.reserved obtok "false" >> return TFalse)
-   <|> (T.reserved obtok "def" >> return TDef)
-   <|> (T.reserved obtok "if" >> return TIf)
-   <|> (T.reserved obtok "where" >> return TWhere)
-   <|> (T.reserved obtok "let" >> return TConstant)
-   <|> (T.reservedOp obtok "->" >> return TArrow)
-   <|> (T.reservedOp obtok "#" >> return TTypeTerm)
-   <|> class_name 
-   <|> par_open
-   <|> par_close
-   <|> fmap TVar (T.identifier obtok)
-   <|> fmap TOp (T.operator obtok)
+   try (fmap TInt (T.decimal obtok))
+   <|> try (T.reserved obtok "true" >> return TTrue)
+   <|> try (T.reserved obtok "false" >> return TFalse)
+   <|> try (T.reserved obtok "def" >> return TDef)
+   <|> try (T.reserved obtok "if" >> return TIf)
+   <|> try (T.reserved obtok "where" >> return TWhere)
+   <|> try (T.reserved obtok "let" >> return TConstant)
+   <|> try (T.reservedOp obtok "->" >> return TArrow)
+   <|> try (T.reservedOp obtok "#" >> return TTypeTerm)
+   <|> try class_name 
+   <|> try par_open
+   <|> try par_close
+   <|> try bra_open
+   <|> try bra_close
+   <|> try (fmap TVar (T.identifier obtok))
+   <|> try (fmap TOp (T.operator obtok))
+   <|> try period
    <|> fmap TChar (T.charLiteral obtok)
 
       

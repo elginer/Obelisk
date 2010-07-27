@@ -1,7 +1,10 @@
 // Block where has type error
-((Void) #
+(Void) #
 def foo
-   (
-      where
-      (((Char) #
-      def bar (false)))))
+{
+   where
+   {
+      (Char) #
+      def bar {false}
+   }
+}

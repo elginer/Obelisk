@@ -1,2 +1,3 @@
 // Function returning Int
-((Int) # def foo (0))
+(Int) #
+def foo {0}

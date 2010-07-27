@@ -1,6 +1,5 @@
-((A) # def x 
-
-
-
-
-() where (((Int -> Double) # let z a)))
+(A) #
+def foo
+   {(foo bar baz)}
+   where
+   {(Double -> Double) # let bar zob}

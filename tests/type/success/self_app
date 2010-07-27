@@ -1,3 +1,5 @@
 // Self function application
 
-((Int -> Int) # def foo x ((foo x)))
+(Int -> Int) # 
+def foo x
+   {(foo x)}

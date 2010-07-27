@@ -1,5 +1,6 @@
 // The result of a void function assigned to a constant
-((Void) #
-def foo ()
+(Void) #
+def foo
+   {}
    where
-   ((Void # let x (foo))))
+   {Void # let x (foo)}

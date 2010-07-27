@@ -57,6 +57,12 @@ data Token =
      TTypeTerm
    | -- | A literal character
      TChar Char
+   | -- | Opening brace
+      TBraceOpen
+   | -- | Closing brace
+      TBraceClose
+   | -- | A period
+      TPeriod
    | -- The end of file
      TEOF
 
@@ -76,6 +82,9 @@ instance Show Token where
          TWhere    -> "where"
          TArrow    -> "->"
          TTypeTerm -> "#"
+         TBraceOpen -> "{"
+         TBraceClose -> "}"
          TClassName c -> c
+         TPeriod      -> "."
          TChar      c -> '\'' : c : '\'' : []
          TEOF      -> "end of file"

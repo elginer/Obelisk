@@ -1,2 +1,5 @@
 // A constant in a where clause can see defs
-((A) # def x () where ((A # let y z) ((A) # def z ())))
+(A) # 
+def x {} 
+   where 
+   {A # let y z (A) # def z {}}
