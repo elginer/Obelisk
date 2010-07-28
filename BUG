@@ -1,5 +1,0 @@
-Compiler reports bug when user attempts function application to simply typed variable.
-
-But it's NOT a bug, just something we must deal with.
-
-Solution:  introduce new type error to cope with this.

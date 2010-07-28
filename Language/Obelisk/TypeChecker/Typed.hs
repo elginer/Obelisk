@@ -40,7 +40,10 @@ module Language.Obelisk.TypeChecker.Typed
    ,unify_types
    ,unify_types'
    ,void_type
-   ,bool_type)
+   ,bool_type
+   ,return_type
+   ,arg_types
+   ,broken_function_type)
    where
 
 import Language.Obelisk.Error 
@@ -71,6 +74,8 @@ data TypeError =
      BranchesDontMatch QType QType CodeFragment
    | -- | Constants cannot be of type Void
      ConstantCannotBeVoid CodeFragment
+   | -- | Simple type was used as function
+     SimpleTypeUsedAsFunction CodeFragment
       deriving Show
 
 instance ErrorReport [TypeError] where
@@ -106,7 +111,32 @@ instance ErrorReport TypeError where
 
          ConstantCannotBeVoid cf ->
             error_line "A constant cannot be void" $ report cf
-        
+
+         SimpleTypeUsedAsFunction cf ->
+            error_line "A simply typed value cannot be used as a function." $ report cf
+
+-- | The function's type was borken
+broken_function_type :: String -> CodeFragment -> a
+broken_function_type msg cf = broken_compiler [msg] $ error_section $ report cf
+
+-- | The return type of a function's type.  Nothing signifies it wasn't a function.  An error must be raised.
+return_type :: QType -> Maybe QType
+return_type qtyp@(QType cf vs typ) =
+   case typ of
+      Type _ -> Nothing
+      Function typs ->
+         if null typs
+            then broken_function_type "The function had no return type!" cf 
+            else Just $ QType cf vs (Type $ last typs)
+
+-- | The list of types of a function's type's arguments.  Nothing signifies it wasn't a function.  An error must be raised.
+arg_types :: QType -> Maybe [QType] 
+arg_types typ@(QType _ _ unqtyp) =
+   case unqtyp of
+      Type _ -> Nothing
+      Function ts -> 
+         Just $ map (new_type . sname) $ init ts
+
 -- | Filter all the correct types
 filter_correct :: [(Maybe QType, [TypeError])] -> [(Maybe QType, [TypeError])]
 filter_correct =

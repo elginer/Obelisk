@@ -87,20 +87,27 @@ apply_typeof cf fun args env =
    where
    failure es = (Nothing, es)
    correct_fu_type fu_ty =
-      if length formal_arg_types /= length args
-         then 
-            failure [WrongNumberOfActualArguments (length formal_arg_types) (length args) cf]
-         else 
-            if length (filter_correct actual_arg_types) == length args
-               then
-                  (Just $ return_type fu_ty
-                  , arg_errors)
-               else
-                  failure $ concatMap snd $ actual_arg_types
+      maybe (Nothing, [SimpleTypeUsedAsFunction cf]) (uncurry with_formal_args) $ do
+         fm <- mformal_arg_types
+         rt <- mreturn_type
+         return (fm, rt)
       where
-      arg_errors = concat $ zipWith (\ty1 ty2 -> (unify_types' ty1 ty2 cf)) formal_arg_types actual_arg_types
+      with_formal_args formal_arg_types return_type =
+         if length formal_arg_types /= length args
+            then 
+               failure [WrongNumberOfActualArguments (length formal_arg_types) (length args) cf]
+            else 
+               if length (filter_correct actual_arg_types) == length args
+                  then
+                     (Just return_type
+                     , arg_errors)
+                  else
+                     failure $ concatMap snd $ actual_arg_types
+         where
+         arg_errors = concat $ zipWith (\ty1 ty2 -> (unify_types' ty1 ty2 cf)) formal_arg_types actual_arg_types
       actual_arg_types = map (flip typeof env) args
-      formal_arg_types = arg_types fu_ty
+      mformal_arg_types = arg_types fu_ty
+      mreturn_type = return_type fu_ty
  
 {- The typeof an if expression
   If has a type only if the types of both branches are the same

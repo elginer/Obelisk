@@ -83,28 +83,6 @@ instance SimpleNamed TypeName where
    sname (TypeClassName nm) = nm
    sname (TypeVar nm) = nm
 
--- | The type of the function was broken
-broken_function_type :: QType -> a
-broken_function_type typ = broken_compiler ["The function had a simple, rather than function type!"] $ report $ fragment typ
-
--- | The return type of a function's type
-return_type :: QType -> QType
-return_type qtyp@(QType cf vs typ) =
-   case typ of
-      Type _ -> broken_function_type qtyp 
-      Function typs ->
-         if null typs
-            then broken_compiler ["The function had no return type!"] $ error_section $ report cf
-            else QType cf vs (Type $ last typs)
-
--- | The list of types of a function's type's arguments
-arg_types :: QType -> [QType] 
-arg_types typ@(QType _ _ unqtyp) =
-   case unqtyp of
-      Type _ -> broken_function_type typ
-      Function ts -> 
-         map (new_type . sname) $ take (length ts - 1) ts
-
 -- | Create a new simple type
 new_type :: String -> QType
 new_type name = QType inject_fragment [] $ Type (TypeClassName name)
