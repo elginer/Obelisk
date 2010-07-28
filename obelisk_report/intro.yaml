@@ -1,0 +1,22 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Introduction
+number: 1
+unique: intro
+text:
+   - "This file is a report on the current state of the Obelisk programming language. It describes a standard which compliant Obelisk implementations MUST meet. The Obelisk Compiler is the name of a free compiler which implements this standard.  In this report The Obelisk Compiler is also referred to as 'the compiler'."
+
+   - "This report is structured as the Obelisk compiler: each stage in compilation process is described, and in the order of execution of The Obelisk compiler."
+
+   - "This means that at first the lexical rules are described (associated with lexical analysis), before moving on to describe the syntax (associated with parsing, after lexical analysis in the compiler chain), and so on, for all stages of the compiler, or equivalently with all aspects of the Obelisk programming language."
+
+   - "The advantage this approach is that each subsection can be analysed with respect to a single compiler subsystem. So if you are confused, or you suspect the a subsection of this report to be at odds with the behaviour of the compiler, you can easily find code which represents that subsection and find clarification."
+
+   - "In aid to that, links to files within appropriate subsystems of The Obelisk Compiler can be found in at the beginning of many sections."
+
+   - "This report contains many pieces of techincal information like code examples, and grammars.   These are rendered thus:"
+   - class: example
+     text: "I am a piece of technical information"

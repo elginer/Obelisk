@@ -1,0 +1,43 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+title: Reserved Words And Special Symbols.
+number: 1
+unique: reserved
+text:
+   - "Reserved words are identified during lexical analysis. These reserved words are:"
+   - class: example
+     wrap: False
+     text:
+        "op
+       \n
+       \ndef
+       \n
+       \nwhere
+       \n
+       \nlet
+       \n
+       \ntrue
+       \n
+       \nfalse
+       \n
+       \nif
+       \n
+       \n->"
+   - "In addition, Obelisk's grammar assigns special significance to these symbols which are also identified during lexing:"
+   - class: example
+     wrap: False
+     text: "'
+           \n
+           \n(
+           \n
+           \n)
+           \n
+           \n\{
+           \n
+           \n}
+           \n
+           \n#
+           \n"
+   - "The primary difference between special symbols and reserved words, is that      an {section identifer identifer} MAY contain a reserved word, but they MUST not contain special symbols."

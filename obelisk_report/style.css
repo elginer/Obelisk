@@ -1,0 +1,20 @@
+/* 
+  Copyright John Morrice 2010
+  This document is part of The Simple Nice-Looking Manual Generator documentation
+  This document is released under the terms of the GNU Free Documentation Licence
+  See the file DOC-COPYING.
+*/
+.intro_banner {text-align: center;}
+.example
+{
+   font-family: monospace; 
+   font-size: x-large; 
+   border-style:solid; 
+   border-width: 0.15em;
+   padding: 0.4em;
+}
+body {font: arial; font-family: sans;}
+.boring {font-weight: bold}
+.rfc {font-family: monospace: font-size: x-large}
+/* The .stage class is for text about a compilation stage */
+.stage {font-style: italic;}

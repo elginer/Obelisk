@@ -1,0 +1,25 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: The Obelisk Programming Language
+banners:
+   - "Copyright John Morrice 2010"
+   - "Contact: spoon@killersmurf.com"
+preamble:
+   - class: boring
+     text: "This document is released under the terms of the GNU Free Documentation License. See the file {external DOC-COPYING DOC-COPYING} for details"
+   - class: rfc
+     text: 
+        "The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as described in {external RFC 2119 http://www.ietf.org/rfc/rfc2119.txt}."
+   - "Obelisk is a general purpose programming language."
+   - "Obelisk aims to:"
+   - "* Be an eagerly evaluated, functional programming language."
+   - "* Support functions with expressive, polymorphic types, but to be utterly type safe."
+   - wrap: False
+     text:
+        "* Respect functional purity, with no mutable variables in functions...
+       \n     ...but also to support a class-based object system, where objects control mutable state, represented by their instance variables"
+   - "* Be supportive of simple and efficient implementation: implementation of an Obelisk compiler which produces competitively fast code should not warrant a PhD dissertation."
+   - "* Be developed in an free and open manner."

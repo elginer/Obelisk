@@ -5,16 +5,22 @@ Released under the terms of the GNU General Public License.  See COPYING.
 Contact: John Morrice of spoon@killersmurf.com
 
 From the Obelisk Report:
-         "Obelisk is a general purpose systems programming language.
+   "Obelisk is a general purpose programming language.
 
-          Obelisk aims to:
-          Have an expressive type system, but be utterly type-safe.
-          Respect functional purity, with no mutable variables in functions...
-          ...but also to support class-based objects that control the mutable state represented by their instance variables.
-          Be native-code compiling, for speed.
-          Have a robust development methodology. Everything must be tested rigorously because programmers cry when their code-generators break."
+    Obelisk aims to:
 
-...well, not quite.  That is what Obelisk aims to be.  This is a work-in progress compiler for the Obelisk programming language.
+    * Be an eagerly evaluated, functional programming language.
+
+    * Support functions with expressive, polymorphic types, but to be utterly type safe.
+
+    * Respect functional purity, with no mutable variables in functions... 
+         ...but also to support a class-based object system, where objects control mutable state, represented by their instance variables
+
+    * Be supportive of simple and efficient implementation: implementation of an Obelisk compiler which produces competitively fast code should not warrant a PhD dissertation.
+
+    * Be developed in an free and open manner."
+
+...well, it's not quite there!  That is what Obelisk aims to be.  This is a work-in progress compiler for the Obelisk programming language.
 
 What you'll need to work on this:
 * The Glasgow Haskell compiler.  I am using version 6.10.4.

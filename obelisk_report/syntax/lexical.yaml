@@ -1,0 +1,37 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Lexical Syntax
+number: 1
+unique: lex
+text:
+   - class: stage
+     text: "Lexical syntax is associated with the {external lexer Language/Obelisk/Lexer.hs}."
+   - "Before parsing, Obelisk source undergoes lexical analysis where comments and whitespace are removed. The legal tokens are then parsed as set out in {section 2.2 Grammar grammar}."
+   - "Whitespace consists of the space character, aswell as the following characters, represented here by their escape codes:"
+   - class: example
+     text: " \\n\\t\\r "
+   - "Obelisk supports both line and block comments."
+   - "Line comments are started by the token {class // example}  and last until the next newline."
+   - "Block comments are started by the token {class /* example} and last until the token {class */ example}. Block comments in Obelisk are not nested."
+
+   - "Here is an example of source code running throught Obelisk's lexical analysis.  The source code before lexical analysis:"
+   - class: example
+     wrap: False
+     text:
+        "// I say, you look very gruntled Jeeves!
+       \n
+       \n(Void) 
+       \n# def functional programming
+       \n\{
+       \n   (is fun)
+       \n}
+       \n
+       \n/* That was a bit pointless
+       \n   but hey ho, it was just an example! */"
+   - "The source code after lexical analysis:"
+   - class: example
+     text:
+        "(Void) # def functional programming \{(is fun)}"

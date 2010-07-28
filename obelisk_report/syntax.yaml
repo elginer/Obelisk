@@ -1,0 +1,10 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Syntax
+number: 2
+unique: syntax
+text:
+   - "This section deals with {section lexical syntax lex} and {section Obelisk's grammar grammar}."
