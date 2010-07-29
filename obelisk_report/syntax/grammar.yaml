@@ -1,0 +1,38 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Grammar
+number: 2
+unique: grammar
+text:
+   - class: stage
+     text: "A parser for Obelisk's grammar is generated from {external this happy file. happy/obelisk.y}"
+   - "Following is the syntax of Obelisk described in EBNF.  {class Obelisk example} is the start symbol."
+   - class: example
+     wrap: False
+     text:
+        "(* Obelisk is source is a list of function definitions. *)
+       \nObelisk: FunctionDefinition*
+       \n
+       \n(* A function definition *)
+       \nFunctionDefinition := FunctionType 'def' FormalArguments Block WhereClause
+       \n
+       \n(* A function's type *)
+       \nFunctionType := '(' ClassName ('->' ClassName)* ')' '#'
+       \n
+       \n(* A name of a data type *)
+       \nClassName := Uppercase IdentChar*
+       \n
+       \n(* Characters permitted in an identifier *)
+       \nIdentChar := Lowercase | Uppercase | Digit | '_' | '?' | '!'
+       \n
+       \n(* Upper case letters *)
+       \nUppercase := 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+       \n
+       \n(* Lowecase characters *)
+       \nLowecase := 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+       \n
+       \n(* Digits *)
+       \nDigit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'"
