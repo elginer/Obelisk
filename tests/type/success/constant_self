@@ -1,7 +1,7 @@
 // Set constant to self value
 
-(Int -> Bool) # 
+(Int -> Bool)  
 def foo x
    {true}
    where 
-   {Bool # let bar (foo x)}
+   {Bool  let bar (foo x)}

@@ -9,7 +9,7 @@ Synopsis:       Obelisk is a general purpose systems programming language.  This
 Build-type:	Simple
 
 Library
-   Build-Depends: base>=4, parsec>=3, filepath, directory, containers, SpoonsUtilities
+   Build-Depends: base>=4, parsec>=3, filepath, directory, containers, spoonutil
    Exposed-modules:
       Language.Obelisk
       Language.Obelisk.Error
@@ -30,27 +30,3 @@ Library
    Other-modules:
       Language.Obelisk.TypeChecker.Def
       Language.Obelisk.TypeChecker.Expression
-
-Executable lex
-   Main-is: tests/lex.hs
-   Other-modules:
-      Language.Obelisk.Lexer
-      Language.Obelisk.Lexer.Token
-
-Executable parse
-   Main-is: tests/parse.hs
-   Other-modules:
-      Language.Obelisk.Parser
-
-Executable scope
-   Main-is: tests/scope.hs
-   Other-modules:
-      Language.Obelisk.Parser
-      Language.Obelisk.Scoper
-
-Executable type 
-   Main-is: tests/type.hs
-   Other-modules:
-      Language.Obelisk.TypeChecker
-      Language.Obelisk.Scoper
-      Language.Obelisk.Parser 

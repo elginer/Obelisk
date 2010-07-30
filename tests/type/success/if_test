@@ -1,12 +1,12 @@
 // Application in if statement test
 
-(Bool -> Bool) # 
+(Bool -> Bool)  
 def foo x 
 {
    x
 }
 
-(Void) #
+(Void) 
 def bar 
 {
    if (foo true)

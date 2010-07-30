@@ -1,5 +1,5 @@
 // Apply if statement as function
-(Void) #
+(Void) 
 def foo
 {
    ((if true

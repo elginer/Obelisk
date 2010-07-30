@@ -1,2 +1,2 @@
 // The define can see its argument
-(A) # def x y {y}
+(A)  def x y {y}

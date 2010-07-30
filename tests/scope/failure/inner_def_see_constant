@@ -1,8 +1,8 @@
 // In a where clause a define cannot see constants
-(A) #
+(A) 
 def x {} 
 where
 {
-   A # let z 0
-   (A) # def y {z}
+   A  let z 0
+   (A)  def y {z}
 }

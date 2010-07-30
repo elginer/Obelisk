@@ -1,7 +1,7 @@
 // Set constant to where clause function value
 
-(Int -> Void) # 
+(Int -> Void)  
 def foo x {}
    where 
-   {Bool # let bar (baz x)
-   (Int -> Bool) # def baz y {true}}
+   {Bool  let bar (baz x)
+   (Int -> Bool)  def baz y {true}}

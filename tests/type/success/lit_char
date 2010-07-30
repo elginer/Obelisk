@@ -1,4 +1,4 @@
 // Function returns literal character
 
-(Char) #
+(Char) 
 def foo {'a'}

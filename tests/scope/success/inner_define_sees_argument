@@ -1,5 +1,5 @@
 // The define's inner define can see its argument
-(A) # 
+(A)  
 def x y {} 
 where
-{(A) # def z {y}}
+{(A)  def z {y}}

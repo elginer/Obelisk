@@ -1,2 +1,2 @@
 // The define can see itself
-(A) # def x {x}
+(A)  def x {x}

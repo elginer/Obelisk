@@ -1,5 +1,5 @@
-(A) #
+(A)
 def foo
    {(foo bar baz)}
    where
-   {(Double -> Double) # let bar zob}
+   {(Double -> Double) let bar zob}

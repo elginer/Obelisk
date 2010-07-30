@@ -56,7 +56,7 @@ obdef = LanguageDef
    ,opStart        = oneOf ":!#$%&*+/<=>@\\^|-~"
    ,opLetter       = oneOf ":!#$%&*+/<=>@\\^|-~"
    ,reservedNames  = ["def", "if", "true", "false", "where", "let"]
-   ,reservedOpNames = ["->", "#"]
+   ,reservedOpNames = ["->"]
    ,caseSensitive   = True}
 
 -- | Obelisk token parser
@@ -152,7 +152,6 @@ tlex =
    <|> try (T.reserved obtok "where" >> return TWhere)
    <|> try (T.reserved obtok "let" >> return TConstant)
    <|> try (T.reservedOp obtok "->" >> return TArrow)
-   <|> try (T.reservedOp obtok "#" >> return TTypeTerm)
    <|> try class_name 
    <|> try par_open
    <|> try par_close

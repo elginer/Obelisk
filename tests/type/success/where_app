@@ -1,11 +1,11 @@
 // Apply function in where clause
 
-(Int) # 
+(Int)  
 def foo
 {
    (bar 1)
 } 
 where
 {
-   (Int -> Int) # def bar x {x}
+   (Int -> Int)  def bar x {x}
 }

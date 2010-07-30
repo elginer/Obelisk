@@ -1,6 +1,6 @@
 // Return constant in where clause
 
-(Int) # 
+(Int)  
 def foo {bar} 
    where
-   {Int # let bar 0}
+   {Int  let bar 0}

@@ -1,4 +1,4 @@
 // Test if statement parsed correctly
-(A) #
+(A) 
 def foo
    {if true {x} {y}}

@@ -1,8 +1,8 @@
 // Wrong number of actual arguments
 
-(Int -> Int -> Int) #
+(Int -> Int -> Int) 
 def foo x y {x}
 
-(Void) # def bar {(foo 1)}
+(Void)  def bar {(foo 1)}
 
-(Void) # def baz {(foo 1 2 3)}
+(Void)  def baz {(foo 1 2 3)}

@@ -1,8 +1,8 @@
 // Two where clause members cannot share the same name
-(A) # 
+(A)  
 def x {} 
 where
 {
-   A # let y 'b'
-   A # let y 1
+   A  let y 'b'
+   A  let y 1
 }

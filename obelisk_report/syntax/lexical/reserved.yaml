@@ -38,6 +38,5 @@ text:
            \n
            \n}
            \n
-           \n#
            \n"
    - "The primary difference between special symbols and reserved words, is that      an {section identifer grammar} MAY contain a reserved word, but they MUST not contain special symbols."

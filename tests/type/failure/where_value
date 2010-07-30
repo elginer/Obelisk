@@ -1,10 +1,10 @@
 // Incorrectly set constant to where clause function value
 
-(Int -> Void) # 
+(Int -> Void)  
 def foo x 
 {}
 where 
 {
-   Bool # let bar (baz x)
-   (Int -> Int) # def baz y {y}
+   Bool  let bar (baz x)
+   (Int -> Int)  def baz y {y}
 }

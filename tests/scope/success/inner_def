@@ -1,6 +1,6 @@
 // The define can see its inner define
-(A) #
+(A) 
    def x
    {y} 
    where
-   {(A) # def y {}}
+   {(A)  def y {}}

@@ -53,8 +53,6 @@ data Token =
      TClassName String
    | -- | A function arrow
      TArrow
-   | -- | A type terminator
-     TTypeTerm
    | -- | A literal character
      TChar Char
    | -- | Opening brace
@@ -81,7 +79,6 @@ instance Show Token where
          TConstant -> "let"
          TWhere    -> "where"
          TArrow    -> "->"
-         TTypeTerm -> "#"
          TBraceOpen -> "{"
          TBraceClose -> "}"
          TClassName c -> c

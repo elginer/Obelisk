@@ -1,13 +1,13 @@
 // Multiple application
 
-(Int -> Int) # 
+(Int -> Int)  
 def foo x
 {
    (foo x)
    (bar x)
 }
 
-(Int -> Int) #
+(Int -> Int) 
 def bar x 
 {
    (foo x)

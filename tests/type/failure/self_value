@@ -1,11 +1,11 @@
 // Incorrectly set constant to self value
 
-(Int -> Bool) #
+(Int -> Bool) 
 def foo x 
 {
    true
 }
 where
 {
-   Int # let bar (foo x)
+   Int  let bar (foo x)
 }

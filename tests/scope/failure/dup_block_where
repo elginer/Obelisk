@@ -1,7 +1,7 @@
 // Duplicate name in block where
-(Void) #
+(Void) 
 def foo
    {
    where
-   {A # let bar 0
-    (B) # def bar {}}}
+   {A  let bar 0
+    (B)  def bar {}}}

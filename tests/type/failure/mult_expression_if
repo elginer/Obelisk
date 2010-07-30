@@ -1,6 +1,6 @@
 // Incorrect multiple expressions inside if
 
-(Bool) # 
+(Bool)  
 def foo 
    {if true 
       {true true 3} 

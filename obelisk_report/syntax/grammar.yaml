@@ -9,30 +9,65 @@ unique: grammar
 text:
    - class: stage
      text: "A parser for Obelisk's grammar is generated from {external this happy file. happy/obelisk.y}"
-   - "Following is the syntax of Obelisk described in EBNF.  {class Obelisk example} is the start symbol."
+   - "Following is the syntax of Obelisk described in {external EBNF http://www.iso.org/iso/catalogue_detail.htm?csnumber=26153}.  {class Obelisk example} is the start symbol."
    - class: example
      wrap: False
      text:
-        "(* Obelisk is source is a list of function definitions. *)
+        "(* Obelisk source is a sequence of function definitions. *)
        \nObelisk: FunctionDefinition*
        \n
+       \n(* Definitions *)
+       \n
        \n(* A function definition *)
-       \nFunctionDefinition := FunctionType 'def' FormalArguments Block WhereClause
+       \nFunction := FunctionType 'def' FunctionName FormalArguments Block WhereClause
        \n
-       \n(* A function's type *)
-       \nFunctionType := '(' ClassName ('->' ClassName)* ')' '#'
+       \n(* Where Clause *)
+       \nWhereClause := 'where' '\{' Definition* '}' | @
        \n
-       \n(* A name of a data type *)
-       \nClassName := Uppercase IdentChar*
+       \n(* Where clause definition *)
+       \nDefinition := Constant | Function
+       \n
+       \n(* Define a constant *)
+       \nConstant := Type 'let' Identifier Expression
+       \n
+       \n(* A function's name *)
+       \nFunctionName := Identifier
+       \n
+       \n(* A function's formal arguments *)
+       \nFormalArguments := Identifier*
+       \n
+       \n(* Expressions *)
+       \n
+       \n(* A block of code *)
+       \nBlock := '\{' Expression* WhereClause '}'
+       \n
+       \n(* An expression *)
+       \nExpression := If | Application | Identifier | Character | Integer
+       \n
+       \n(* If statement *)
+       \nIf := 'if' Expression Block Block
+       \n
+       \n(* Function application *)
+       \nApplication := '(' Expression+ ')'
+       \n
+       \n(* Values *)
+       \n
+       \n(* Character *)
+       \nCharacter := ''' (* Any character *) '''
+       \n
+       \n(* A value's identifier *)
+       \nIdentifier := Lowercase IdentChar*
        \n
        \n(* Characters permitted in an identifier *)
-       \nIdentChar := Lowercase | Uppercase | Digit | '_' | '?' | '!'
+       \nIdentChar := (* An alpha numeric character *) | '_' | '?' | '!'
        \n
-       \n(* Upper case letters *)
-       \nUppercase := 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+       \n(* Types *)
        \n
-       \n(* Lowecase characters *)
-       \nLowecase := 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z'
+       \n(* A type *)
+       \nType := ClassName | FunctionType
        \n
-       \n(* Digits *)
-       \nDigit := '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'"
+       \n(* A function's type *)
+       \nFunctionType := '(' ClassName ('->' ClassName)* ')'
+       \n
+       \n(* A name of a data type *)
+       \nClassName := Uppercase IdentChar*"

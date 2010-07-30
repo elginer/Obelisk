@@ -54,7 +54,6 @@ eparse = M.eparse parse
    let       { TConstant }
    classname { TClassName $$ }
    '->'      { TArrow }
-   '#'       { TTypeTerm }
    '('       { TParOpen }
    ')'       { TParClose }
    '{'       { TBraceOpen }
@@ -74,11 +73,11 @@ QType : FQType   { $1 }
 
 {- Parse a function's type -}
 FQType :: { QType }
-FQType : Pos FType '#' { QType $1 [] $2 }
+FQType : Pos FType { QType $1 [] $2 }
 
 {- Parse a simple quantified type -}
 SQType :: { QType }
-SQType : Pos SType '#' { QType $1 [] $2 }
+SQType : Pos SType { QType $1 [] $2 }
 
 {- Parse a function's quantified type -}
 FType :: { Type }

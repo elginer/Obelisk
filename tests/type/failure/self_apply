@@ -1,3 +1,3 @@
 // Incorrect function self application
 
-(Int -> Int) # def foo x {(foo true)}
+(Int -> Int)  def foo x {(foo true)}

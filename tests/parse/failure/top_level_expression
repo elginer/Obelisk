@@ -1,1 +1,1 @@
-(A # if true (3) (4))
+(A if true (3) (4))

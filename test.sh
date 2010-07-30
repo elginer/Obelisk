@@ -8,4 +8,4 @@ then
 fi
 
 # Run tests
-./dist/build/$1/$1
+runghc tests/$1.hs

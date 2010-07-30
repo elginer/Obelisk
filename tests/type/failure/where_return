@@ -1,11 +1,11 @@
 // Incorrectly return constant in where clause
 
-(Bool) #
+(Bool) 
 def foo 
 {
    bar
 }
 where
 {
-   Int # let bar 0
+   Int  let bar 0
 }

@@ -1,7 +1,7 @@
 // See a variable in a block where
 
-(Int) #
+(Int) 
 def foo
    {bar
       where
-      {Char # let bar 3}}
+      {Char  let bar 3}}
