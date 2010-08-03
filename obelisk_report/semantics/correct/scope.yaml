@@ -46,7 +46,11 @@ text:
    - language: math
      class: example
      wrap: False
-     text: "forsome F. forsome S. forsome Bq. forsome Wcq. forsome Wfq.
+     text: "forsome F. 
+          \nFb member F. Fb = Block.
+          \nWc member F. Wc = Set. forall C. C member Wc. C = ConstantDefinition.
+          \nWf member F. Wf = Set. forall G. G member Wf. G = FunctionDefinition. 
+          \nforsome S. forsome Bq. forsome Wcq. forsome Wfq.
           \nnew_scope(Fb, S, Bq). new_scope(Wc, S, Wcq). new_scope(Wf, S, Wfq).
           \nscope(F, S) iff scope(Fb, Bq) and scope(Wc, Wcq) and scope(Wf, Wfq)"
 
