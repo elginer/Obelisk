@@ -25,6 +25,7 @@ This file is part of The Obelisk Programming Language.
 {-#
    OPTIONS
    -XMultiParamTypeClasses
+   -XFlexibleInstances
 #-}
 
 -- | Common tools for interpreters which interpret some form of Abstract Syntax tree.
@@ -32,6 +33,7 @@ module Language.Obelisk.Interpreter.Tree where
 
 import Language.Obelisk.Error
 import Language.Obelisk.AST.CodeFragment
+import Language.Obelisk.AST
 
 import qualified Data.Map as M
 import Data.Map (Map)
@@ -49,10 +51,20 @@ data Value f =
      Ch Char
    | -- | Integers
      Int Int
+   | -- Booleans
+     Bool Bool
 
 -- | AST elements can be evaluated.  This corrosponds to ONE evaluation step.  The ast is parametrized over a function data type.
 class Eval ast f where
    eval :: ast -> Scope f -> IO (Maybe (Value f))
+
+interpret_error :: String -> CodeFragment -> a
+interpret_error msg frag = broken_compiler [msg] $ error_section $ report frag)
+
+force_eval :: (Fragment e, Eval e) => e -> Scope -> Value
+force_eval ast scope =
+   fromMaybe (interpret_error "AST element did not have a value:" $ fragment ast)
+             (eval ast scope)
 
 -- | Add to scope
 new_var :: String -> Value f -> Scope f -> Scope f

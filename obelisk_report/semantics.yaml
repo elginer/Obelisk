@@ -1,0 +1,18 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Semantics
+number: 3
+unique: semantics
+text:
+   - "Obelisks semantics are described in two parts:"
+   - "* Checking an Obelisk program for {section correctness correct}."
+   - "* {section Run-time semantics runtime} of an Obelisk program."
+   - "The following formal definitions are used throughout this section:"
+   - "The set of available {section Obelisks grammar elements grammar} is defined as {class O example}."
+   - "An Obelisk program {class P example}, which is a valid production of Obelisk's grammar - a list of function definitions.  Hence:"
+   - class: example
+     language: math
+     text: "A member P implies A = FunctionDefinition"

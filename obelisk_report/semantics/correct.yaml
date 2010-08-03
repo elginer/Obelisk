@@ -1,0 +1,13 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Correct Programs 
+number: 1
+unique: correct
+text:
+   - "An Obelisk program must not be executed as specified in the {section run-time semantics runtime} unless it is correct."
+   - "An Obelisk program is correct when it has these two properties:"
+   - "* A program has correct {section scoping scope}."
+   - "* A program exhibits {section type unification unification}."

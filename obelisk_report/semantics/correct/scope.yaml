@@ -1,0 +1,63 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Scope
+number: 1
+unique: scope
+text:
+   - class: stage
+     text: "The {external scoper Language/Obelisk/Scoper.hs} ensures scoping rules are obeyed."
+   
+   - "{class next_scope example} is a relationship between and sets of variables in scope and sets with new members.  
+      It is defined for each grammar element which contains other elements (is a set)."
+   - class: example
+     language: math
+     text: "forall A. A member Sets. forsome S. forsome Q. A member O. A derives next_scope(A, S, Q) implies S subset Q."
+
+   - "Definitions for {class new_scope example} are given below."
+
+   - "{class scope example} is a function from a grammar element and a set of variables in scope to true or false.
+      It is defined for each grammar element in O."
+   - class: example
+     language: math
+     text: "forall A. forsome S. A member O. A derives scope(A, S)"
+
+   - "Definitions for {class scope example} are given below."
+
+   - "Definitions follow:"
+   - "If all the members of set are syntactic elements,
+      with a {class next_scope example} rule
+      then the set has correct scoping when all of its members have correct scoping in the context of some scoping set."
+   - language: math
+     class: example
+     text: "forsome D. forall A. A member D. A member O. forsome S. forsome Q. next_scope(O, S, Q). scope(A, Q) iff scope(D, S)"
+
+   - "Hence a program P only has correct scoping when its elements have correct scoping:"
+   - language: math
+     class: example
+     text: "forall A. A member P. next_scope(P, S, Q). scope(A, Q) iff scope(P, S)"
+
+   - "A function definition {class F example} only has correct scoping when
+     the set of its where clause constants {class Wc example} have correct scoping and
+     the set of its where clause function definitions {class Wf example} have correct scopping and
+     its block {class Fb example} has correct scoping."
+   - language: math
+     class: example
+     wrap: False
+     text: "forsome F. forsome S. forsome Bq. forsome Wcq. forsome Wfq.
+          \nnew_scope(Fb, S, Bq). new_scope(Wc, S, Wcq). new_scope(Wf, S, Wfq).
+          \nscope(F, S) iff scope(Fb, Bq) and scope(Wc, Wcq) and scope(Wf, Wfq)"
+
+   - "{class next_scope example} for the function's block {class Fb example} is defined to be the union of the function's own scope, the function's formal arguments,
+      and all definitions in the where clause." 
+   - language: math
+     class: example
+     text: "next_scope"
+
+  
+   - "For an identifier I to be in scope, the string making up that identifier must be a member of the scoping set S."
+   - class: example
+     language: math
+     text: "forall I. I member S implies scope(I, S)"
