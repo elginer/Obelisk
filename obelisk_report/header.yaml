@@ -21,5 +21,5 @@ preamble:
      text:
         "* Respect functional purity, with no mutable variables in functions...
        \n     ...but also to support a class-based object system, where objects control mutable state, represented by their instance variables"
-   - "* Be supportive of simple and efficient implementation: implementation of an Obelisk compiler which produces competitively fast code should not warrant a PhD dissertation."
+   - "* Be supportive of simple and efficient implementation: writing an Obelisk compiler which produces competitively fast code should not warrant a PhD dissertation."
    - "* Be developed in an free and open manner."

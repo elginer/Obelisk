@@ -1,0 +1,58 @@
+# Copyright John Morrice 2010
+# This document is part of The Obelisk Programming Language documentation.
+# This document is released under the terms of the GNU Free Documentation Licence.
+# See the file DOC-COPYING for copying conditions.
+
+title: Type
+number: 2
+unique: type
+text:
+   - class: stage
+     text: "The {external type checker Language/Obelisk/TypeChecker.hs} attempts type unification."
+
+   - "The process of determining if an Obelisk program exhibits type unification is described here."
+   - "An Obelisk program with unifying types has the following properties when  {section evaluated eval}:"
+   - "* The program can never crash due to the Obelisk {section run-time environment eval} receiving unexpected data.  For example, a function provided as part of an Obelisk implementation which takes a Character for an argument will not be given an Integer as an argument."
+
+   - "{class typeof example} is a relationship between an AST element {class A example}, its type environment {class E example}, and its type {class T example}."
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forall A. A member O.
+       \nforall E. E is SET.
+       \nforsome T. T is Type.
+       \nA derives typeof(A, E, T)"
+
+   - "A relationship {class new_env(A, E, N) example} exists between some AST elements {class A example}, a type environment {class E example}, and a new type environment {class N example}."
+
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forsome A. A member O.
+       \nforall E. E is SET.
+       \nforsome N. N is SET.
+       \nA derives new_env(A, E, N) implies E subset N"
+
+   - "If an AST element {class A example} is a set of other AST elements, and one of its members {class B example} has the type {class {language bottom math} example}, then the type of {class A example} is also {class {language bottom math} example}"
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forall A. A member O. A is SET.
+       \nforall E. E is SET.
+       \nforsome N. N is SET.
+       \nforsome B. B member A. B member O.
+       \nnew_env(A, E, B).
+       \ntypeof(B, N, bottom) implies typeof(A, E, bottom)"
+
+   - "Hence, an Obelisk program {class P example} has unifying types when none of its elements has {class {language bottom math} example} for a type:"
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forall A. A member P.
+       \nforall N. N is SET.
+       \nnew_env(A, empty, N).
+       \ntypeof(A, N, bottom) implies typeof(P, E, bottom)"

@@ -9,12 +9,14 @@ unique: scope
 text:
    - class: stage
      text: "The {external scoper Language/Obelisk/Scoper.hs} ensures scoping rules are obeyed."
-   
+   - "The process of determining if an Obelisk program has correct scoping is described here."
+   - "An Obelisk program with correct scoping has the following properties when  {section evaluated eval}:"
+   - "* The program can never crash due to encountering an identifier it does not associate with data or a function."
    - "{class next_scope example} is a relationship between and sets of variables in scope and sets with new members.  
       It is defined for each grammar element which contains other elements (is a set)."
    - class: example
      language: math
-     text: "forall A. A member Sets. forsome S. forsome Q. A member O. A derives next_scope(A, S, Q) implies S subset Q."
+     text: "forall A. A is SET. forsome S. forsome Q. A member O. A derives next_scope(A, S, Q) implies S subset Q."
 
    - "Definitions for {class new_scope example} are given below."
 
@@ -32,7 +34,12 @@ text:
       then the set has correct scoping when all of its members have correct scoping in the context of some scoping set."
    - language: math
      class: example
-     text: "forsome D. forall A. A member D. A member O. forsome S. forsome Q. next_scope(O, S, Q). scope(A, Q) iff scope(D, S)"
+     text: "forsome D. D member O.  D is SET.
+          \nforall A. A member D.
+          \nforsome S.
+          \nforsome Q. 
+          \nnext_scope(A, S, Q). 
+          \nscope(D, S) iff scope(A, Q)"
 
    - "Hence a program P only has correct scoping when its elements have correct scoping:"
    - language: math
@@ -46,22 +53,57 @@ text:
    - language: math
      class: example
      wrap: False
-     text: "forsome F. 
-          \nFb member F. Fb = Block.
-          \nWc member F. Wc = Set. forall C. C member Wc. C = ConstantDefinition.
-          \nWf member F. Wf = Set. forall G. G member Wf. G = FunctionDefinition. 
-          \nforsome S. forsome Bq. forsome Wcq. forsome Wfq.
-          \nnew_scope(Fb, S, Bq). new_scope(Wc, S, Wcq). new_scope(Wf, S, Wfq).
-          \nscope(F, S) iff scope(Fb, Bq) and scope(Wc, Wcq) and scope(Wf, Wfq)"
+     text: "forall F. F is FUNCTIONDEFINITION.
+          \nforsome FB. Fb member F. Fb is BLOCK.
+          \nforsome Wh. Wh member F. Wh is SET. forall G. G member Wh. G is DEFINITION. 
+          \nforsome A. A is FORMALARGUMENTS. Sa := A union S.
+          \nforsome Bq. new_scope(Fb, Sa, Bq). 
+          \nforsome Whq. new_scope(Wh, Sa, Whq).
+          \nscope(F, S) iff scope(Fb, Bq) and scope(Wh, Whq)"
 
-   - "{class next_scope example} for the function's block {class Fb example} is defined to be the union of the function's own scope, the function's formal arguments,
-      and all definitions in the where clause." 
+   - "{class next_scope example} for the function's block {class Fb example} is the union of the function's own scope, 
+      the function's formal arguments,
+      and all definitions in the where clause.  Using the quantified variables above:" 
    - language: math
      class: example
-     text: "next_scope"
+     wrap: False
+     text: "new_scope(Fb, S, Bq) iff Bq = Wh union S"
 
-  
+   - "{class next_scope example} for a where clause definition is the union of the old scope
+      with the names of the where clause's function definitions."
+   - langugage: math
+     class: example
+     wrap: False
+     text: "forall Wf.  Wf subset Wh.  forall F. F member Wf. F is FUNCTIONDEFINITION.
+          \nnew_scope(Wh, S, Whq) iff Whq = Wf union S."
+
+   - "A block associates a set of expressions with a where clause."
+   - language: math
+     class: example
+     wrap: False
+     text: "forall B. B is BLOCK. 
+          \nforsome Be. Be member B. Fe is SET. forall E. E member Fe. E is EXPRESSION.
+          \nforsome Wh. Wh member B. Wh is SET. forall G. G member Wh. G is DEFINITION. 
+          \nforsome S. forsome Whq. new_scope(Wh, S, Whq).
+          \nscope(B, S) iff scope(Be, Wh union S) and scope(Wh, Whq)"
+
+   - "Following are the rules for the different kinds of expression:"
+
    - "For an identifier I to be in scope, the string making up that identifier must be a member of the scoping set S."
    - class: example
+     wrap: False
      language: math
-     text: "forall I. I member S implies scope(I, S)"
+     text: "forall I. I is IDENTIFIER. 
+          \nforsome S.
+          \nI member S iff scope(I, S)"
+
+   - "Literal values (numbers, characters etc) are always in scope."
+   - class: example
+     language: math
+     text: "forall N. N is LITERAL. forall S. scope(I,S)"
+
+   - "If statements can be considered sets, as they are non-terminal and introduce no new identifiers into the scope.
+      Hence they can be handled as per sets above."
+
+   - "Applications, both infix and prefix can be considered sets of expressions, for the same reasons, hence are handled as for sets above"
+     
