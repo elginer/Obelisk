@@ -61,14 +61,6 @@ text:
           \nforsome Whq. new_scope(Wh, Sa, Whq).
           \nscope(F, S) iff scope(Fb, Bq) and scope(Wh, Whq)"
 
-   - "{class next_scope example} for the function's block {class Fb example} is the union of the function's own scope, 
-      the function's formal arguments,
-      and all definitions in the where clause.  Using the quantified variables above:" 
-   - language: math
-     class: example
-     wrap: False
-     text: "new_scope(Fb, S, Bq) iff Bq = Wh union S"
-
    - "{class next_scope example} for a where clause definition is the union of the old scope
       with the names of the where clause's function definitions."
    - langugage: math
@@ -77,15 +69,26 @@ text:
      text: "forall Wf.  Wf subset Wh.  forall F. F member Wf. F is FUNCTIONDEFINITION.
           \nnew_scope(Wh, S, Whq) iff Whq = Wf union S."
 
+   - "{class next_scope example} for a block {class Fb example} is derived from the block's where clause {class Wh example}"
+   - language: math
+     class: example
+     wrap: False
+     text: "forsome S. forsome Bs.
+          \nforsome B. B is BLOCK.
+          \nforsome Wh. Wh member B. Wh is WHERECLAUSE.
+          \nnew_scope(B, S, Bs) iff Bs = S union Wh"
+
+
    - "A block associates a set of expressions with a where clause."
    - language: math
      class: example
      wrap: False
-     text: "forall B. B is BLOCK. 
-          \nforsome Be. Be member B. Fe is SET. forall E. E member Fe. E is EXPRESSION.
-          \nforsome Wh. Wh member B. Wh is SET. forall G. G member Wh. G is DEFINITION. 
-          \nforsome S. forsome Whq. new_scope(Wh, S, Whq).
-          \nscope(B, S) iff scope(Be, Wh union S) and scope(Wh, Whq)"
+     text: "forsome S.
+          \nforall B. B is BLOCK. new_scope(B, S, Bs).
+          \nforsome Be. forall E. Be member B. E member Be. E is EXPRESSION.
+          \nforsome Wh. Wh member B. Wh is WHERECLAUSE.
+          \nforsome Bl. forsome Whq. new_scope(Wh, S, Whq).
+          \nscope(B, S) iff scope(E, Bs) and scope(Wh, Whq)"
 
    - "Following are the rules for the different kinds of expression:"
 

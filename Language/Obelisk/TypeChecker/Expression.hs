@@ -64,7 +64,7 @@ instance Typed ScopedExp where
 
          If (_,cf) test true false -> if_typeof cf test true false env
          Apply (_, cf) exp args    -> apply_typeof cf exp args env
-         Infix (_, cf) _ _ _       -> broken_compiler ["TypeChecker: infix application not yet supported."] $ report cf
+         Infix (ct, cf) arg1 id arg2 -> apply_typeof cf (OVar (ct, cf) id) [arg1, arg2] env
          OVar (_, cf) v -> 
             -- Either the type of the variable is right there, or the compiler is broken!
             maybe (broken_compiler ["Could not find variable: " ++ v] $ report cf)

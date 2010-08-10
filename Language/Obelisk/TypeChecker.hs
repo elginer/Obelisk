@@ -48,7 +48,13 @@ check =
 
 -- | This type checking environment is a bit of a joke
 joke_env :: TypeEnvironment
-joke_env = TypeEnvironment $ M.fromList [("getc", new_ftype ["Char"]), ("putc", new_ftype ["Char", "Void"])]
+joke_env = TypeEnvironment $ M.fromList [("getc", new_ftype ["Char"])
+                                        ,("putc", new_ftype ["Char", "Void"])
+                                        ,("+", new_ftype ["Int", "Int", "Int"])
+                                        ,("-", new_ftype ["Int", "Int", "Int"])
+                                        ,("==", new_ftype ["Int", "Int", "Int"])
+                                        ,(">", new_ftype ["Int", "Int", "Bool"])
+                                        ,("<", new_ftype ["Int", "Int", "Bool"])]
 
 -- | Ensure type unification succeeds
 echeck :: ScopedObelisk -> TypeEnvironment -> Either [TypeError] ScopedObelisk

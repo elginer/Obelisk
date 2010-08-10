@@ -3,7 +3,7 @@
 # This document is released under the terms of the GNU Free Documentation Licence.
 # See the file DOC-COPYING for copying conditions.
 
-title: Type
+title: Type Unification
 number: 2
 unique: type
 text:
@@ -11,21 +11,60 @@ text:
      text: "The {external type checker Language/Obelisk/TypeChecker.hs} attempts type unification."
 
    - "The process of determining if an Obelisk program exhibits type unification is described here."
-   - "An Obelisk program with unifying types has the following properties when  {section evaluated eval}:"
+   - "An Obelisk program with unifying types has the following properties when {section evaluated eval}:"
    - "* The program can never crash due to the Obelisk {section run-time environment eval} receiving unexpected data.  For example, a function provided as part of an Obelisk implementation which takes a Character for an argument will not be given an Integer as an argument."
 
-   - "{class typeof example} is a relationship between an AST element {class A example}, its type environment {class E example}, and its type {class T example}."
+   - "As can be seen in the {section grammar grammar}, types come in two varieties:"
+   - "* A function type."
+   - "* A simple type."
+
+   - "A function type is a set of types."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forall T. T is FUNCTIONTYPE.
+       \nforall Q. Q member T. Q is TYPE"
+
+   - "A relationship exists between a function type {class T example} and a natural number {class I example}, where I is the number of the arguments expected by the function described by the type."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forall T. T is FUNCTIONTYPE.
+       \nforsome I. I member N.
+       \ntype_arg_count(T, N)."
+
+   - "A relationship exists between a function type {class T example} and its return type {class Q example}"
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forall T. T is FUNCTIONTYPE.
+       \nforsome Q. Q member T. Q is RETURNTYPE.
+       \nreturn(T, Q)."
+
+   - "A relationship exists between a function type {class T example} and the types of its arguments {class A example}"
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forall T. T is FUNCTIONTYPE.
+       \nforall Q. member T. Q is ARGUMENT.
+       \nQs := [Q].
+       \ntype_args(T, Qs)"
+
+   - "{class typeof example} is a relationship between an AST element {class A example}, its type environment {class E example}, and its type {class T example}.  The type environment {class E example} is a set of associations between identifiers and types."
    - class: example
      language: math
      wrap: False
      text: 
         "forall A. A member O.
        \nforall E. E is SET.
-       \nforsome T. T is Type.
+       \nforsome T. T is TYPE.
        \nA derives typeof(A, E, T)"
 
    - "A relationship {class new_env(A, E, N) example} exists between some AST elements {class A example}, a type environment {class E example}, and a new type environment {class N example}."
-
    - class: example
      language: math
      wrap: False
@@ -34,6 +73,15 @@ text:
        \nforall E. E is SET.
        \nforsome N. N is SET.
        \nA derives new_env(A, E, N) implies E subset N"
+
+   - "A relationship exists between some AST elements {class A example} and a type {class T example}, when {class A example} has had a type declared (definitions)."
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forall A. A member O. A is DEFINITION.
+         forsome T. T is TYPE.
+       \nA derives declared(A, T)"
 
    - "If an AST element {class A example} is a set of other AST elements, and one of its members {class B example} has the type {class {language bottom math} example}, then the type of {class A example} is also {class {language bottom math} example}"
    - class: example
@@ -47,7 +95,7 @@ text:
        \nnew_env(A, E, B).
        \ntypeof(B, N, bottom) implies typeof(A, E, bottom)"
 
-   - "Hence, an Obelisk program {class P example} has unifying types when none of its elements has {class {language bottom math} example} for a type:"
+   - "Hence, an Obelisk program {class P example} exhibits type unification when none of its elements has {class {language bottom math} example} for a type:"
    - class: example
      language: math
      wrap: False
@@ -55,4 +103,151 @@ text:
         "forall A. A member P.
        \nforall N. N is SET.
        \nnew_env(A, empty, N).
-       \ntypeof(A, N, bottom) implies typeof(P, E, bottom)"
+       \ntypeof(A, N, bottom) iff typeof(P, E, bottom)"
+
+   - "There is a relationship between a function definition {class F example} and the number of formal arguments {class I example} expected by that function."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forall F. F is FUNCTIONDEFINITION.
+       \nforsome I. I member N.
+       \nfargs(F, I)"
+
+
+   - "A Function definition {class F example} exhibits type unification when its where clause {class Wh example} and its block {class Bl example} exhibit type unification, when the number of its formal arguments is equal to the number of arguments expected by its type, and when return value of its type is of the same type as the type of the block."
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forall F. F is FUNCTIONDEFINITION.
+       \nforsome E. E is SET.
+       \nforsome Fas. type_args(F, Fas).
+       \nEa := E union Fas.
+       \nforsome Bl. Bl is BLOCK.
+       \nforsome Ble. new_env(Bl, Ea, Ble).
+       \nforsome Wh. Wh is WHERECLAUSE.
+       \nforsome Whe. new_env(Wh, Ea, Whe).
+       \nforsome D. declared(F, D).
+       \nforsome T. typeof(F, E, T).
+       \nforsome Q. typeof(Bl, Ble, Q).
+       \nforsome I. fargs(F, I).
+       \nforsome J. type_arg_count(D, J).
+       \nforsome R. return(D, R).
+       \nQ = bottom implies T = bottom or 
+       \ntypeof(Wh, Whe, bottom) implies T = bottom or
+       \nI != j implies T = bottom or
+       \nQ != R implies T = bottom or
+       \nQ = R iff T = D"
+
+   - "The new type environment associated with a where clause {class Wh example} is formed by the addition of the types of the where clause's functions"
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome Wh. Wh is WHERECLAUSE.
+       \nforall Whf. Whf member Wh. Whf is FUNCTION DEFINITION.
+       \nforsome E.
+       \nforsome Whe.
+       \nnew_env(Wh, E, Whe) iff Whe = E union Whe"
+
+   - "A where clause constant {class Wc example} exhibits type unification when its declared type {class D example} 
+      is the same as the type {class Q example} of its expression {class E example}."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome Wc. Wc is CONSTANTDEFINITION.
+       \nforsome E. E member Wc. W is EXPRESSION.
+       \nforsome We. forsome Q. typeof(E, We, Q).
+       \nforsome D. declared(Wc, D).
+       \nforsome T. typeof(Wc, E, T).
+       \nQ = bottom implies T = bottom or
+       \nQ != D implies T = bottom or
+       \nQ = D iff T = D"
+
+   - "There is a relationship between an application {class E example} and the number of actual arguments used {class I example}."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome E. E is APPLICATION.
+       \nforsome I. I member N.
+       \nactual_arg_count(E, I)"
+
+   - "There is a relationship between an application {class E example} and the types of its actual arguments {class Ats example}."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome E. E is APPLICATION.
+       \nforall A. A member E. A is ACTUALARGUMENT.
+       \nAts := forall At. typeof(A, V, At). [At].
+       \nactual_args(E, Ats)"
+
+   - "There is a relationship between an actual argument and the number of the actual argument (The first applied, the second applied, etc)."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome A. A is ACTUALARGUMENT
+       \nforsome I. I member N.
+       \nactual_arg_num(A, I)"
+
+   - "There is a relationship between a type argument and the number of the argument (The first applied, the second applied, etc)."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome A. A is TYPEARGUMENT 
+       \nforsome I. I member N.
+       \ntype_arg_num(A, I)"
+
+
+   - "An application {class E example} exhibits type unification when the applicee {class P example} and the actual arguments {class A example} exhibit type unification, 
+      and the number of actual arguments is equal to the number of arguments,
+      and the types of each actual argument are equal to the matching formal argument {class F example}."
+   - class: example
+     language: math
+     wrap: False
+     text:
+        "forsome V.
+       \nforsome E. E is APPLICATION.
+       \nforsome Et. typeof(E, V, Et).
+       \nforsome P. P member E. P is APPLICEE.
+       \nforsome Pt. typeof(P, V, Pt).
+       \nforsome R. return(Pt, R).
+       \nforall Fts. type_args(Et, Fts).
+       \nforall As. actual_args(E, As).
+       \nforall Fc. type_arg_count(Pt, Fc).
+       \nforall Ac. actual_arg_count(E, Ac).
+       \nforall I. I member N.
+       \nforall A. A member As. actual_arg_num(A, I).
+       \nforall F. F member Fts. type_arg_num(F, I).
+       \nPt = bottom implies Et = bottom or 
+       \nbottom member Ats implies Et = bottom or
+       \nPt != Fc implies Et = bottom or 
+       \nF != A implies Et = bottom or 
+       \nEt = R"
+
+   - "Infix applications behave as for prefix applications."
+
+   - "The type of a literal character is Char"
+   - class: example
+     language: math
+     text: "typeof(LITERAL_CHARACTER, Char)"
+
+   - "The type of a literal integer is INT"
+   - class: example
+     language: math
+     text: "typeof(LITERAL_INTEGER, Int)"
+
+   - "There is a relationship between an identifier {class I example}, a type {class T example} and a type environment {class E example}, whereby the identifier is associated with a type in the environment. Hence, the type of the identifier can be found."
+   - class: example
+     language: math
+     wrap: False
+     text: 
+        "forall I. I is IDENTIFIER.
+        \nforsome E.
+        \nforsome T. T is TYPE. T member E.
+        \ntypeof(I, E, T)"
